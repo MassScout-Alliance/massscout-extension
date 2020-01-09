@@ -279,3 +279,31 @@ test('MatchEntry scoring cumulative Lex7.1 F2', () => {
     // official final score 100, minus second parking robot in endgame
     expect(entry.getTotalScore()).toBe(100 - 5);
 });
+
+test('MatchEntry validation auto cyclesAttempted < delivered', () => {
+    const badAuto: AutonomousPerformance = {
+        deliveredStones: [StoneType.SKYSTONE],
+        cyclesAttempted: 0,
+        stonesOnFoundation: 1,
+        parked: ScoringResult.SCORED,
+        movedFoundation: ScoringResult.FAILED
+    };
+
+    expect(() => new MatchEntry('F2', 12897, AllianceColor.BLUE,
+        badAuto, kEmptyTeleOp, kEmptyEndgame)).toThrow(
+            new RangeError('autonomous cyclesAttempted < num of deliveredStones'));
+});
+
+test('MatchEntry validation auto stonesOnFoundation > delivered', () => {
+    const badAuto: AutonomousPerformance = {
+        deliveredStones: [StoneType.SKYSTONE],
+        cyclesAttempted: 1,
+        stonesOnFoundation: 2,
+        parked: ScoringResult.SCORED,
+        movedFoundation: ScoringResult.FAILED
+    };
+
+    expect(() => new MatchEntry('F2', 4410, AllianceColor.BLUE,
+        badAuto, kEmptyTeleOp, kEmptyEndgame)).toThrow(
+            new RangeError('autonomous stonesOnFoundation > num of deliveredStones'));
+});

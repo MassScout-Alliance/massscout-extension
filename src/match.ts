@@ -26,6 +26,17 @@ export class MatchEntry {
         this.auto = auto;
         this.teleOp = teleOp;
         this.endgame = endgame;
+
+        this.validateAutonomous();
+    }
+
+    private validateAutonomous() {
+        if (this.auto.cyclesAttempted < this.auto.deliveredStones.length) {
+            throw new RangeError('autonomous cyclesAttempted < num of deliveredStones');
+        }
+        if (this.auto.stonesOnFoundation > this.auto.deliveredStones.length) {
+            throw new RangeError('autonomous stonesOnFoundation > num of deliveredStones');
+        }
     }
 
     getAutonomousScore(): number {
