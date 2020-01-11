@@ -8,7 +8,8 @@ module.exports = {
         popup: path.join(__dirname, srcDir + 'popup.ts'),
         options: path.join(__dirname, srcDir + 'options.ts'),
         background: path.join(__dirname, srcDir + 'background.ts'),
-        content_script: path.join(__dirname, srcDir + 'content_script.ts')
+        content_script: path.join(__dirname, srcDir + 'content_script.ts'),
+        performance: path.join(__dirname, srcDir + 'performance.ts')
     },
     output: {
         path: path.join(__dirname, '../dist/js'),

@@ -1,4 +1,4 @@
-import { MatchEntry, AllianceColor, StoneType, ScoringResult, AutonomousPerformance, TeleOpPerformance, EndgamePerformance } from "../match";
+import { MatchEntry, AllianceColor, StoneType, ScoringResult, AutonomousPerformance, TeleOpPerformance, EndgamePerformance, isValidMatchCode } from "../match";
 
 const kEmptyAuto: AutonomousPerformance = {
     deliveredStones: [],
@@ -9,7 +9,8 @@ const kEmptyAuto: AutonomousPerformance = {
 };
 
 const kEmptyTeleOp: TeleOpPerformance = {
-    stonesDelivered: 0,
+    allianceStonesDelivered: 0,
+    neutralStonesDelivered: 0,
     stonesPerLevel: []
 };
 
@@ -27,7 +28,8 @@ test('MatchEntry constructor', () => {
         movedFoundation: ScoringResult.DID_NOT_TRY
     };
     const teleop: TeleOpPerformance = {
-        stonesDelivered: 2,
+        allianceStonesDelivered: 2,
+        neutralStonesDelivered: 1,
         stonesPerLevel: [2, 2, 1, 1]
     };
     const endgame: EndgamePerformance = {
@@ -182,7 +184,8 @@ test('MatchEntry scoring 4.5.2.4 placement', () => {
 
 test('MatchEntry scoring 4.5.3.1 delivery', () => {    
     const teleop: TeleOpPerformance = {
-        stonesDelivered: 2,
+        allianceStonesDelivered: 2,
+        neutralStonesDelivered: 3,
         stonesPerLevel: []
     };
     
@@ -194,7 +197,8 @@ test('MatchEntry scoring 4.5.3.1 delivery', () => {
 
 test('MatchEntry scoring 4.5.3.2 placing', () => {    
     const teleop: TeleOpPerformance = {
-        stonesDelivered: 0,
+        allianceStonesDelivered: 0,
+        neutralStonesDelivered: 0,
         stonesPerLevel: [2]
     };
     
@@ -206,7 +210,8 @@ test('MatchEntry scoring 4.5.3.2 placing', () => {
 
 test('MatchEntry scoring 4.5.3.3 skyscraper bonus', () => {    
     const teleop: TeleOpPerformance = {
-        stonesDelivered: 0,
+        allianceStonesDelivered: 0,
+        neutralStonesDelivered: 2,
         stonesPerLevel: [1, 1, 1, 1]
     };
     
@@ -264,7 +269,8 @@ test('MatchEntry scoring cumulative Lex7.1 F2', () => {
         movedFoundation: ScoringResult.SCORED
     };
     const teleop: TeleOpPerformance = {
-        stonesDelivered: 6,
+        allianceStonesDelivered: 6,
+        neutralStonesDelivered: 1,
         stonesPerLevel: [3, 1, 1, 1, 1, 1, 1, 1]
     };
     const endgame: EndgamePerformance = {
@@ -306,4 +312,52 @@ test('MatchEntry validation auto stonesOnFoundation > delivered', () => {
     expect(() => new MatchEntry('F2', 4410, AllianceColor.BLUE,
         badAuto, kEmptyTeleOp, kEmptyEndgame)).toThrow(
             new RangeError('autonomous stonesOnFoundation > num of deliveredStones'));
+});
+
+test('Qualifiers are valid match codes', () => {
+    expectCodesValid(true, 'Q2', 'Q3', 'Q10', 'Q41', 'Q100');
+});
+
+test('Semifinals are valid match codes', () => {
+    expectCodesValid(true, 'SF1-1', 'SF2-3', 'SF2-1', 'SF1-2');
+});
+
+test('Finals are valid match codes', () => {
+    expectCodesValid(true, 'F1', 'F2', 'F3', 'F4', 'F5');
+});
+
+test('Nonpositive numbers are invalid', () => {
+    expectCodesValid(false, 'Q0', 'SF0-2', 'F0', 'Q-13');
+});
+
+test('Match codes are all uppercase', () => {
+    expectCodesValid(false, 'q3', 'sf1-2', 'f4');
+});
+
+test('Only semifinals 1 and 2 are valid', () => {
+    expectCodesValid(false, 'SF3-1', 'SF4-2');
+});
+
+test('Dirty match codes are invalid', () => {
+    expectCodesValid(false, ' Q14\t', 'Q14 yoov');
+});
+
+function expectCodesValid(expected: boolean, ...codes: string[]) {
+    for (let code of codes) {
+        expect(isValidMatchCode(code)).toBe(expected);
+    }
+}
+
+test('MatchEntry metadata validation match code', () => {
+    expect(() => new MatchEntry('bad', 4410, AllianceColor.BLUE, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame))
+        .toThrowError('Match code "bad" is invalid');
+});
+
+test('MatchEntry metadata validation team number', () => {
+    expect(() => new MatchEntry('Q13', 0, AllianceColor.RED, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame))
+        .toThrowError('Team number 0 is invalid');
+    expect(() => new MatchEntry('Q13', NaN, AllianceColor.RED, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame))
+        .toThrowError('Invalid team number');
+    expect(() => new MatchEntry('Q13', 1.5, AllianceColor.RED, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame))
+        .toThrowError('Team number 1.5 is invalid');
 });

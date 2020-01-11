@@ -28,9 +28,22 @@ export class MatchEntry {
         this.endgame = endgame;
 
         this.validateAutonomous();
+        this.validateMetadata();
     }
 
-    private validateAutonomous() {
+    public validateMetadata() {
+        if (!isValidMatchCode(this.matchCode)) {
+            throw new Error(`Match code "${this.matchCode}" is invalid`);
+        }
+        if (isNaN(this.teamNumber)) {
+            throw new Error(`Invalid team number`);
+        }
+        if (this.teamNumber < 1 || Math.floor(this.teamNumber) !== this.teamNumber) {
+            throw new Error(`Team number ${this.teamNumber} is invalid`);
+        }
+    }
+
+    public validateAutonomous() {
         if (this.auto.cyclesAttempted < this.auto.deliveredStones.length) {
             throw new RangeError('autonomous cyclesAttempted < num of deliveredStones');
         }
@@ -66,7 +79,7 @@ export class MatchEntry {
     getTeleOpScore(): number {
         let score = 0;
         // 4.5.3.1
-        score += this.teleOp.stonesDelivered;
+        score += this.teleOp.allianceStonesDelivered;
         // 4.5.3.2
         score += this.teleOp.stonesPerLevel.reduce((a, b) => a + b, 0);
         // 4.5.3.3
@@ -105,7 +118,8 @@ export interface AutonomousPerformance {
 }
 
 export interface TeleOpPerformance {
-    stonesDelivered: number;
+    allianceStonesDelivered: number;
+    neutralStonesDelivered: number;
     stonesPerLevel: number[];
 }
 
@@ -113,4 +127,11 @@ export interface EndgamePerformance {
     movedFoundation: ScoringResult;
     capstoneLevel?: number;
     parked: ScoringResult;
+}
+
+export type MatchEntrySet = MatchEntry[];
+
+export function isValidMatchCode(matchCode: string): boolean {
+    const matchResult = matchCode.match(/^([QF][1-9][0-9]*)|(SF[12]-[1-9][0-9]*)$/);
+    return matchResult !== null && matchResult[0] === matchCode;
 }
