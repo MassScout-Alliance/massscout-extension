@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,17 +9,18 @@
     <script src="js/vendor.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
 </head>
+
 <body>
-        <header>
-            <h2>MassScout Alliance</h2>
-        </header>
-        <div class="container">
-            <div class="row responsive-label">
-                <div class="col-sm-12 col-md-6 col-lg-12">
-                    <h2>Metadata</h2>
-                    <div class="container responsive-label" id="metadata">
-                        <div class="row">
-                            <!-- <div class="col-sm-4 col-lg-2">
+    <header>
+        <h2>MassScout Alliance</h2>
+    </header>
+    <div class="container">
+        <div class="row responsive-label">
+            <div class="col-sm-12 col-md-6 col-lg-12">
+                <h2>Metadata</h2>
+                <div class="container responsive-label" id="metadata">
+                    <div class="row">
+                        <!-- <div class="col-sm-4 col-lg-2">
                                 <label for="event">Event</label>
 
                             </div>
@@ -36,272 +38,291 @@
                                 <option value="MAWWQU">Wild West Qualifier</option>
                             </select>
                             </div> -->
-                            <div class="col-sm-4 col-lg-2">
-                                <label for="match">Match Code</label>
-                            </div>
-                            <div class="col-sm-8 col-lg-2">
-                                <input id="match" type="text" placeholder="Q2, Q10, SF2-1">
-                            </div>
-                            <div class="col-sm-4 col-lg-2">
-                                <label for="team">Team Number</label>
-                            </div>
-                            <div class="col-sm-8 col-lg-2">
-                                <input type="number" id="team" placeholder="4410, 5273, 10331">
-                            </div>
-                            <div class="col-sm-4 col-lg-2">
-                                <label>Alliance</label>
+                        <div class="col-sm-4 col-lg-2">
+                            <label for="match">Match Code</label>
+                        </div>
+                        <div class="col-sm-8 col-lg-2">
+                            <input id="match" type="text" placeholder="Q2, Q10, SF2-1">
+                        </div>
+                        <div class="col-sm-4 col-lg-2">
+                            <label for="team">Team Number</label>
+                        </div>
+                        <div class="col-sm-8 col-lg-2">
+                            <input type="number" id="team" placeholder="4410, 5273, 10331">
+                        </div>
+                        <div class="col-sm-4 col-lg-2">
+                            <label>Alliance</label>
 
-                            </div>
-                            <div class="col-sm-8 col-lg-2">
-                                Blue
-                                <input type="radio" name="alliance" id="alliance-blue" value="blue" checked>
-                                Red
-                                <input type="radio" name="alliance" id="alliance-red" value="red">
-                            </div>
+                        </div>
+                        <div class="col-sm-8 col-lg-2">
+                            Blue
+                            <input type="radio" name="alliance" id="alliance-blue" value="blue" checked>
+                            Red
+                            <input type="radio" name="alliance" id="alliance-red" value="red">
                         </div>
                     </div>
+                </div>
 
-                        
-                </div>
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <h2>Autonomous</h2>
-                    <div class="container" id="auto-pane">
-                        <div class="row">
-                            <div class="col-sm-6" vertical-stack>
-                                <button class="primary" id="auto-button-attempt">Attempt delivery</button>
-                            </div>
-                            <div class="col-sm-6" id="auto-display-attempt">0</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6" vertical-stack>
-                                <button id="auto-button-deliver-skystone">Skystone delivered!</button>
-                                <button id="auto-button-deliver-stone">Stone delivered!</button i>
-                            </div>
-                            <div class="col-sm-6">
-                                Stones delivered
-                                <div class="container" id="auto-display-delivered">
-                                    </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6" vertical-stack>
-                                <button id="auto-button-placed">Stone placed!</button> 
-                            </div>
-                            <div class="col-sm-6" id="auto-display-placed">
-                                0
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-5" vertical-stack>
-                                Foundation moved?
-                            </div>
-                            <div class="col-sm-7">
-                                Yes
-                                <input type="radio" name="auto-moved" value="Yes">
-                                Failed
-                                <input type="radio" name="auto-moved" value="Failed">
-                                DNT
-                                <input type="radio" name="auto-moved" value="DNT" checked>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-5" vertical-stack>
-                                Parked?
-                            </div>
-                            <div class="col-sm-7">
-                                Yes
-                                <input type="radio" name="auto-parked" value="Yes">
-                                Failed
-                                <input type="radio" name="auto-parked" value="Failed">
-                                DNT
-                                <input type="radio" name="auto-parked" value="DNT" checked>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <h2>TeleOp</h2>
-                    <div class="container" id="teleop-pane">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <button id="teleop-alliance-deliver">Deliver alliance-specific</button>
-    
-                            </div>
-                            <div class="col-sm-6" id="teleop-display-alliance-deliver">
-                                0
-                            </div>
-                            <div class="col-sm-6" vertical-stack>
-                                <button id="teleop-neutral-deliver">Deliver alliance-neutral</button>
-                            </div>
-                            <div class="col-sm-6" id="teleop-display-neutral-deliver">
-                                0
-                            </div>
-                        </div>
-                        <h4>Stacked stones</h4>
-                    <div class="row cols-sm-2" id="teleop-stacked-stones">
-                        <div vertical-stack>
-                            <label>Lev. 1</label>
-                            <input type="number" class="teleop-level" level="1" min="0" max="10" value="0">
-                        </div>
-                        <div vertical-stack>
-                            <label>Lev. 2</label>
-                            <input type="number" class="teleop-level" level="2" min="0" max="10" value="0">
-                        </div>
-                        <div vertical-stack>
-                            <label>Lev. 3</label>
-                            <input type="number" class="teleop-level" level="3" min="0" max="10" value="0">
-                        </div>
-                        <div vertical-stack>
-                            <label>Lev. 4</label>
-                            <input type="number" class="teleop-level" level="4" min="0" max="10" value="0">
-                        </div>
-                        <div vertical-stack>
-                            <label>Lev. 5</label>
-                            <input type="number" class="teleop-level" level="5" min="0" max="10" value="0">
-                        </div>
-                        <div vertical-stack>
-                            <label>Lev. 6</label>
-                            <input type="number" class="teleop-level" level="6" min="0" max="10" value="0">
-                        </div>
-                    </div>
-                    <div class="row cols-sm-2">
-                        <div vertical-stack>
-                            <label>Lev. 7</label>
-                            <input type="number" class="teleop-level" level="7" min="0" max="10" value="0">
-                        </div>
-                        <div vertical-stack>
-                            <label>Lev. 8</label>
-                            <input type="number" class="teleop-level" level="8" min="0" max="10" value="0">
-                        </div>
-                        <div vertical-stack>
-                            <label>Lev. 9</label>
-                            <input type="number" class="teleop-level" level="9" min="0" max="10" value="0">
-                        </div>
-                        <div vertical-stack>
-                            <label>Lev. 10</label>
-                            <input type="number" class="teleop-level" level="10" min="0" max="10" value="0">
-                        </div>
-                        <div vertical-stack>
-                            <label>Lev. 11</label>
-                            <input type="number" class="teleop-level" level="11" min="0" max="10" value="0">
-                        </div>
-                        <div vertical-stack>
-                            <label>Lev. 12</label>
-                            <input type="number" class="teleop-level" level="12" min="0" max="10" value="0">
-                        </div>
-                    </div>
-                    </div>
-                    
-                </div>
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <h2>Endgame</h2>
+
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <h2>Autonomous</h2>
+                <div class="container" id="auto-pane">
                     <div class="row">
-                        <div class="col-sm-5">
-                            Moved foundation?
+                        <div class="col-sm-6" vertical-stack>
+                            <button class="primary" id="auto-button-attempt">Attempt delivery</button>
+                        </div>
+                        <div class="col-sm-6" id="auto-display-attempt">0</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6" vertical-stack>
+                            <button id="auto-button-deliver-skystone">Skystone delivered!</button>
+                            <button id="auto-button-deliver-stone">Stone delivered!</button i>
+                        </div>
+                        <div class="col-sm-6">
+                            Stones delivered
+                            <div class="container" id="auto-display-delivered">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6" vertical-stack>
+                            <button id="auto-button-placed">Stone placed!</button>
+                        </div>
+                        <div class="col-sm-6" id="auto-display-placed">
+                            0
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5" vertical-stack>
+                            Foundation moved?
                         </div>
                         <div class="col-sm-7">
                             Yes
-                            <input type="radio" name="end-found-moved" value="Yes">
+                            <input type="radio" name="auto-moved" value="Yes">
                             Failed
-                            <input type="radio" name="end-found-moved" value="Failed">
+                            <input type="radio" name="auto-moved" value="Failed">
                             DNT
-                            <input type="radio" name="end-found-moved" value="DNT" checked>
+                            <input type="radio" name="auto-moved" value="DNT" checked>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-5">
-                            Capstone capped?
-                        </div>
-                        <div class="col-sm-7">
-                            <label for="end-capped">Capped</label>
-                            <input type="checkbox" name="end-capped" id="end-capped">
-                            <label for="end-capped-level">Level</label>
-                            <input type="number" name="end-capped-level" id="end-capped-level" min="1" max="20" value="1" style="padding: 4px;" disabled>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-5">
-                            Parked in Build Site?
+                        <div class="col-sm-5" vertical-stack>
+                            Parked?
                         </div>
                         <div class="col-sm-7">
                             Yes
-                            <input type="radio" name="end-parked" value="Yes">
+                            <input type="radio" name="auto-parked" value="Yes">
                             Failed
-                            <input type="radio" name="end-parked" value="Failed">
+                            <input type="radio" name="auto-parked" value="Failed">
                             DNT
-                            <input type="radio" name="end-parked" value="DNT" checked>
-                        </div>
-                    </div>  
-                </div>
-                <div class="col-sm-12 col-md-6">
-                    <h2>Scoring</h2>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-8">Autonomous</div>
-                            <div class="col-sm-4 subscore" id="auto-score">0</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-8">TeleOp</div>
-                            <div class="col-sm-4 subscore" id="teleop-score">0</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-8">Endgame</div>
-                            <div class="col-sm-4 subscore" id="endgame-score">0</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-8"><b>TOTAL</b></div>
-                            <div class="col-sm-4 score" id="total-score">0</div>
+                            <input type="radio" name="auto-parked" value="DNT" checked>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm"></div>
-            <div class="col-sm-2" vertical-stack>
-                <button class="primary big" id="submit">Submit</button>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <h2>TeleOp</h2>
+                <div class="container" id="teleop-pane">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <button id="teleop-alliance-deliver">Deliver alliance-specific</button>
+
+                        </div>
+                        <div class="col-sm-6" id="teleop-display-alliance-deliver">
+                            0
+                        </div>
+                        <div class="col-sm-6">
+                            <button id="teleop-neutral-deliver">Deliver alliance-neutral</button>
+                        </div>
+                        <div class="col-sm-6" id="teleop-display-neutral-deliver">
+                            0
+                        </div>
+                    </div>
+                    <h4>Stacked stones</h4>
+                    <div class="container" id="teleop-stacked-stones">
+                        <div class="row cols-sm-2">
+                            <div vertical-stack>
+                                <label>Lev. 1</label>
+                                <input type="number" class="teleop-level" level="1" min="0" max="10" value="0">
+                            </div>
+                            <div vertical-stack>
+                                <label>Lev. 2</label>
+                                <input type="number" class="teleop-level" level="2" min="0" max="10" value="0">
+                            </div>
+                            <div vertical-stack>
+                                <label>Lev. 3</label>
+                                <input type="number" class="teleop-level" level="3" min="0" max="10" value="0">
+                            </div>
+                            <div vertical-stack>
+                                <label>Lev. 4</label>
+                                <input type="number" class="teleop-level" level="4" min="0" max="10" value="0">
+                            </div>
+                            <div vertical-stack>
+                                <label>Lev. 5</label>
+                                <input type="number" class="teleop-level" level="5" min="0" max="10" value="0">
+                            </div>
+                            <div vertical-stack>
+                                <label>Lev. 6</label>
+                                <input type="number" class="teleop-level" level="6" min="0" max="10" value="0">
+                            </div>
+                        </div>
+                        <div class="row cols-sm-2">
+                            <div vertical-stack>
+                                <label>Lev. 7</label>
+                                <input type="number" class="teleop-level" level="7" min="0" max="10" value="0">
+                            </div>
+                            <div vertical-stack>
+                                <label>Lev. 8</label>
+                                <input type="number" class="teleop-level" level="8" min="0" max="10" value="0">
+                            </div>
+                            <div vertical-stack>
+                                <label>Lev. 9</label>
+                                <input type="number" class="teleop-level" level="9" min="0" max="10" value="0">
+                            </div>
+                            <div vertical-stack>
+                                <label>Lev. 10</label>
+                                <input type="number" class="teleop-level" level="10" min="0" max="10" value="0">
+                            </div>
+                            <div vertical-stack>
+                                <label>Lev. 11</label>
+                                <input type="number" class="teleop-level" level="11" min="0" max="10" value="0">
+                            </div>
+                            <div vertical-stack>
+                                <label>Lev. 12</label>
+                                <input type="number" class="teleop-level" level="12" min="0" max="10" value="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <div class="col-sm-1"></div>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <h2>Endgame</h2>
+                <div class="row">
+                    <div class="col-sm-5">
+                        Moved foundation?
+                    </div>
+                    <div class="col-sm-7">
+                        Yes
+                        <input type="radio" name="end-found-moved" value="Yes">
+                        Failed
+                        <input type="radio" name="end-found-moved" value="Failed">
+                        DNT
+                        <input type="radio" name="end-found-moved" value="DNT" checked>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5">
+                        Capstone capped?
+                    </div>
+                    <div class="col-sm-7">
+                        <label for="end-capped">Capped</label>
+                        <input type="checkbox" name="end-capped" id="end-capped">
+                        <label for="end-capped-level">Level</label>
+                        <input type="number" name="end-capped-level" id="end-capped-level" min="1" max="20" value="1"
+                            style="padding: 4px;" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5">
+                        Parked in Build Site?
+                    </div>
+                    <div class="col-sm-7">
+                        Yes
+                        <input type="radio" name="end-parked" value="Yes">
+                        Failed
+                        <input type="radio" name="end-parked" value="Failed">
+                        DNT
+                        <input type="radio" name="end-parked" value="DNT" checked>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <h2>Scoring</h2>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8">Autonomous</div>
+                        <div class="col-sm-4 subscore" id="auto-score">0</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">TeleOp</div>
+                        <div class="col-sm-4 subscore" id="teleop-score">0</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">Endgame</div>
+                        <div class="col-sm-4 subscore" id="endgame-score">0</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8"><b>TOTAL</b></div>
+                        <div class="col-sm-4 score" id="total-score">0</div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm-2" vertical-stack>
+            <button class="primary big" id="submit">Submit</button>
+        </div>
+        <div class="col-sm-1"></div>
+    </div>
+    <br>
+    <code id="output"></code>
     <style>
         .row h2 {
             text-transform: uppercase;
             font-weight: bold;
             display: block;
         }
+
         *[vertical-stack] {
             display: flex;
             flex-direction: column;
         }
+
         .subscore {
             font-family: monospace;
             font-size: 1.3rem;
         }
+
         .score {
             font-family: monospace;
             font-size: 1.6rem;
             font-weight: bold;
         }
+
         #metadata label {
             display: flex;
             flex-direction: row-reverse;
         }
+
         label {
             padding: 0 0;
         }
+
         #auto-display-attempt::before {
             content: "Attempts: ";
         }
+
         #auto-display-placed::before {
             content: "Placed: ";
         }
+
         #teleop-display-alliance-deliver::before {
             content: "Alliance delivered: ";
         }
+
         #teleop-display-neutral-deliver::before {
             content: "Neutral delivered: ";
+        }
+
+        #teleop-stacked-stones input {
+            padding: 4px 4px;
         }
     </style>
     <script src="js/performance.js"></script>
 </body>
+
 </html>

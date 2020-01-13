@@ -1,4 +1,5 @@
-chrome.tabs.create({
-  active: true,
-  url: 'performance.html'
+chrome.windows.create({
+  type: 'popup',
+  url: 'performance.html',
+  focused: true
 });

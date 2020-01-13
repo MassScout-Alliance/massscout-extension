@@ -35,6 +35,12 @@ function updateAutoButtonEnabled() {
     setIdEnabled('auto-button-deliver-stone', canDeliverMoreStones);
     const canStackMoreStones = currentAutoPerformance.stonesOnFoundation < currentAutoPerformance.deliveredStones.length;
     setIdEnabled('auto-button-placed', canStackMoreStones);
+    
+    if (!canDeliverMoreStones && !canStackMoreStones) {
+        $('#auto-button-attempt').addClass('primary');
+    } else {
+        $('#auto-button-attempt').removeClass('primary');
+    }
 }
 
 function updateAutoDisplays() {
@@ -169,7 +175,7 @@ $(() => {
             currentMatchEntry.validateMetadata();
             currentMatchEntry.validateAutonomous();
 
-            console.log(JSON.stringify(currentMatchEntry));
+            $('#output').text(JSON.stringify(currentMatchEntry));
             this.setAttribute('disabled', 'yes');
         } catch (e) {
             alert(e);
@@ -178,4 +184,5 @@ $(() => {
 
     // constructor checks, we can update afterwards
     updateMetadata();
+    updateAutoButtonEnabled();
 });
