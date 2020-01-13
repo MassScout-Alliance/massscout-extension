@@ -1,6 +1,6 @@
 import { MatchEntry, AllianceColor, StoneType, ScoringResult, AutonomousPerformance, TeleOpPerformance, EndgamePerformance, isValidMatchCode } from "../match";
 
-const kEmptyAuto: AutonomousPerformance = {
+export const kEmptyAuto: AutonomousPerformance = {
     deliveredStones: [],
     cyclesAttempted: 0,
     stonesOnFoundation: 0,
@@ -8,13 +8,13 @@ const kEmptyAuto: AutonomousPerformance = {
     movedFoundation: ScoringResult.FAILED 
 };
 
-const kEmptyTeleOp: TeleOpPerformance = {
+export const kEmptyTeleOp: TeleOpPerformance = {
     allianceStonesDelivered: 0,
     neutralStonesDelivered: 0,
     stonesPerLevel: []
 };
 
-const kEmptyEndgame: EndgamePerformance = {
+export const kEmptyEndgame: EndgamePerformance = {
     movedFoundation: ScoringResult.FAILED,
     parked: ScoringResult.FAILED
 };

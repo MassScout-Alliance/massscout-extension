@@ -176,6 +176,7 @@ $(() => {
             currentMatchEntry.validateAutonomous();
 
             $('#output').text(JSON.stringify(currentMatchEntry));
+            // todo
             this.setAttribute('disabled', 'yes');
         } catch (e) {
             alert(e);
