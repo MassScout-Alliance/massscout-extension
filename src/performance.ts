@@ -1,5 +1,6 @@
 import * as $ from 'jquery';
 import { StoneType, MatchEntry, AllianceColor, AutonomousPerformance, ScoringResult, TeleOpPerformance } from './match';
+import { storeMatch, getMatch } from './local-storage';
 
 let currentAutoPerformance: AutonomousPerformance = {
     deliveredStones: [],
@@ -175,9 +176,11 @@ $(() => {
             currentMatchEntry.validateMetadata();
             currentMatchEntry.validateAutonomous();
 
-            $('#output').text(JSON.stringify(currentMatchEntry));
-            // todo
-            this.setAttribute('disabled', 'yes');
+            // $('#output').text(JSON.stringify(currentMatchEntry));
+            storeMatch(currentMatchEntry).then(() => {
+                this.setAttribute('disabled', 'yes');
+                this.innerText = 'Stored';
+            });
         } catch (e) {
             alert(e);
         }

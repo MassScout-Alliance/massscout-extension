@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Manage Entries</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
+    <script src="js/vendor.js"></script>
+</head>
+
+<body>
+    <h1>Entry Management</h1>
+    <div class="card" id="entries">
+        
+    </div>
+    <script defer src="js/manage.js"></script>
+    <style>
+        alliance {
+            display: flex;
+            align-items: center;
+            width: 20px;
+            height: 20px;
+        }
+        alliance[blue] {
+            background-color: #0066b3;
+            border-radius: 100%;
+        }
+        alliance[blue]::after {
+            padding-left: 25px;
+            content: "BLUE";
+            color: #0066b3;
+        }
+
+        alliance[red] {
+            background-color: #ed1c24;
+        }
+        alliance[red]::after {
+            padding-left: 25px;
+            content: "RED";
+            color: #ed1c24;
+        }
+
+        score {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3px;
+            border: 1px solid #222;
+            font-size: 35px;
+            font-family: Consolas, Menlo, 'DejaVu Sans Mono', monospace;
+        }
+
+        score::before {
+            content: "SCORE";
+            font-size: 14px;
+        }
+
+        .icon-delete {
+            background-image: url('assets/delete.svg');
+        }
+        .actions {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: flex-end;
+        }
+        .actions span {
+            cursor: pointer;
+        }
+    </style>
+</body>
+
+</html>
