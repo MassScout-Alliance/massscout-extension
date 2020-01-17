@@ -23,9 +23,13 @@ function getHtmlForEntry(entry: MatchEntry): string {
 }
 
 const kEntryContainer = $('#entries');
+type EntryCompareFn = (a: MatchEntry, b: MatchEntry) => number;
 
-function repopulate() {
+function repopulate(sortFn: EntryCompareFn | null) {
     getAllMatches().then(entries => {
+        if (sortFn != null) {
+            entries = entries.sort(sortFn);
+        }
         kEntryContainer.html(entries.map(getHtmlForEntry).join('\n'));       
     }).catch(alert).then(() => $(attachClickHandlers));
 }
@@ -38,4 +42,21 @@ function attachClickHandlers() {
     });
 }
 
-$(repopulate);
+function applySelectedSortMethod() {
+    const kSortMethods: {[key: string]: EntryCompareFn | null} = {
+        'natural': null,
+        'score': (a, b) => {
+            return b.getTotalScore() - a.getTotalScore();
+        },
+        'team': (a, b) => {
+            return a.teamNumber - b.teamNumber;
+        }
+    };
+    const sorter = kSortMethods[(document.getElementById('sort') as HTMLSelectElement).value];
+    repopulate(sorter);
+}
+
+$(() => {
+    $('#sort').on('change', applySelectedSortMethod);
+    repopulate(null);
+});
