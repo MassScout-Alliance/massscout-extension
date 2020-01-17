@@ -1,30 +1,17 @@
-# Chrome Extension TypeScript Starter
+# MassScout Data Entry Extension
 
-[![Build Status](https://travis-ci.org/chibat/chrome-extension-typescript-starter.svg?branch=master)](https://travis-ci.org/chibat/chrome-extension-typescript-starter)
+[![Build Status](https://travis-ci.com/broad-well/massscout-extension.svg?branch=master)](https://travis-ci.com/broad-well/massscout-extension)
 
-Chrome Extension, TypeScript and Visual Studio Code
+Browser extension that facilitates performance data entry for the MassScout Alliance.
 
-## Prerequisites
+## Why a Browser Extension?
 
-* [node + npm](https://nodejs.org/) (Current Version)
+For scouting data entry, we have the following unique circumstances to consider:
+* Competition venues often do not have Internet access
+* Team members might have Windows laptops, MacBooks, or Chromebooks
+* We must be able to store previous match data within each member's computer for the duration of the event
 
-## Option
-
-* [Visual Studio Code](https://code.visualstudio.com/)
-
-## Includes the following
-
-* TypeScript
-* Webpack
-* Moment.js
-* jQuery
-* Jest
-* Example Code
-    * Chrome Storage
-    * Options Version 2
-    * content script
-    * count up badge number
-    * background
+Because venues often do not have Internet access, we cannot host the data entry solution online. Since team members might have Chromebooks, a cross-platform discrete GUI application would not be optimal. Since offline functionality on Chromebooks is limited to Chrome apps and Chrome extensions, and since Chrome apps are being deprecated soon, a browser extension is our only option left. Such a medium ensures that everyone can collect scouting data electronically at any time.
 
 ## Project Structure
 
