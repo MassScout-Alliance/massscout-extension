@@ -2,3 +2,7 @@ npm-debug.log
 node_modules/
 dist/
 tmp/
+
+*.crx
+# Don't leak my keys!
+*.pem

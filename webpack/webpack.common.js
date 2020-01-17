@@ -10,7 +10,8 @@ module.exports = {
         background: path.join(__dirname, srcDir + 'background.ts'),
         content_script: path.join(__dirname, srcDir + 'content_script.ts'),
         performance: path.join(__dirname, srcDir + 'performance.ts'),
-        manage: path.join(__dirname, srcDir + 'manage.ts')
+        manage: path.join(__dirname, srcDir + 'manage.ts'),
+        export: path.join(__dirname, srcDir + 'export.ts')
     },
     output: {
         path: path.join(__dirname, '../dist/js'),
