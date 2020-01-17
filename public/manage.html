@@ -12,8 +12,14 @@
 
 <body>
     <h1>Entry Management</h1>
+    <label for="sort">Sort by:</label>
+    <select id="sort">
+        <option value="natural">None</option>
+        <option value="score">Total score</option>
+        <option value="team">Team number</option>
+    </select>
     <div class="card" id="entries">
-        
+
     </div>
     <script defer src="js/manage.js"></script>
     <style>
@@ -23,10 +29,12 @@
             width: 20px;
             height: 20px;
         }
+
         alliance[blue] {
             background-color: #0066b3;
             border-radius: 100%;
         }
+
         alliance[blue]::after {
             padding-left: 25px;
             content: "BLUE";
@@ -36,6 +44,7 @@
         alliance[red] {
             background-color: #ed1c24;
         }
+
         alliance[red]::after {
             padding-left: 25px;
             content: "RED";
@@ -60,12 +69,14 @@
         .icon-delete {
             background-image: url('assets/delete.svg');
         }
+
         .actions {
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
             align-items: flex-end;
         }
+
         .actions span {
             cursor: pointer;
         }
