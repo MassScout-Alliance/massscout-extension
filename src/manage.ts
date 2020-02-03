@@ -5,18 +5,27 @@ import { entryKey, getAllMatches, removeMatch } from "./local-storage";
 function getHtmlForEntry(entry: MatchEntry): string {
     const key = entryKey(entry);
     return `<div class="section row entry" match="${key}">
-    <div class="col-sm-3">
+    <div class="col-sm-1">
         <h4>${entry.matchCode}</h4>
         <alliance ${entry.alliance === AllianceColor.RED ? 'red' : 'blue'}></alliance>
     </div>
-    <div class="col-sm-4">
-        <h2>${entry.teamNumber}</h2>
+    <div class="col-sm">
+        <h1>${entry.teamNumber}</h1>
     </div>
-    <div class="col-sm-3">
-        <score>${entry.getTotalScore()}</score>
+    <div class="col-sm-1">
+        <score auto>${entry.getAutonomousScore()}</score>
     </div>
-    <div class="col-sm-2 actions">
-        <span class="icon-edit"></span>
+    <div class="col-sm-1">
+        <score teleop>${entry.getTeleOpScore()}</score>
+    </div>
+    <div class="col-sm-1">
+        <score endgame>${entry.getEndgameScore()}</score>
+    </div>
+    <div class="col-sm-1">
+        <score total>${entry.getTotalScore()}</score>
+    </div>
+    <div class="col-sm-1 actions">
+        <!-- <span class="icon-edit"></span> -->
         <span class="icon-delete" match="${key}"></span>
     </div>
 </div>`;

@@ -9,9 +9,15 @@ export function entryKey(entry: MatchEntry): string {
 }
 
 export function storeMatch(entry: MatchEntry): Promise<null> {
+    return storeMatches([entry]);
+}
+
+export function storeMatches(entries: MatchEntry[]): Promise<null> {
     return new Promise((resolve, _) => {
         let object = {};
-        object[entryKey(entry)] = entry;
+        for (let entry of entries) {
+            object[entryKey(entry)] = entry;
+        }
         chrome.storage.local.set(object, resolve);
     });
 }
@@ -49,7 +55,19 @@ export function removeMatch(key: string): Promise<null> {
     })
 }
 
-function injectFunctionsToMatchEntry(data: object): MatchEntry {
+export function clearAllMatches(): Promise<null> {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.clear(() => {
+            if (chrome.runtime.lastError !== undefined) {
+                reject(chrome.runtime.lastError);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+}
+
+export function injectFunctionsToMatchEntry(data: object): MatchEntry {
     let entry = Object.create(MatchEntry.prototype);
     Object.assign(entry, data);
     return entry;
