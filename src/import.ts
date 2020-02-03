@@ -1,17 +1,106 @@
 import { injectFunctionsToMatchEntry, storeMatch, storeMatches } from "./local-storage";
-import { MatchEntry } from "./match";
+import { MatchEntry, AllianceColor, StoneType, ScoringResult } from "./match";
 import * as $ from 'jquery';
+import * as xlsx from 'xlsx';
 
-interface ImportStrategy {
+interface ImportStrategy<T> {
     displayName: string;
-    readToMatchEntries(contents: string): MatchEntry[];
+    readFile: (file: File) => Promise<T>;
+    readToMatchEntries(contents: T): MatchEntry[];
 }
 
-const kImportStrategies: {[name: string]: ImportStrategy} = {
+export function convertExcelFormat(excelPairings: object, team: number): MatchEntry {
+    const deliveredStones: StoneType[] = [];
+    // assuming all skystones first
+    for (let i = 0; i < excelPairings['# of sky delivered']; i++) {
+        deliveredStones.push(StoneType.SKYSTONE);
+    }
+    for (let i = 0; i < excelPairings['# of Stones deliver']; i++) {
+        deliveredStones.push(StoneType.STONE);
+    }
+    function scoring(key: string): ScoringResult {
+        return excelPairings[key] === 'Y' ? ScoringResult.SCORED : ScoringResult.DID_NOT_TRY;
+    }
+
+    const stonesPerLevel: number[] = new Array(10);
+    for (let level = 1; level <= 10; level++) {
+        stonesPerLevel[level - 1] = excelPairings[`L${level}`];
+    }
+    let maxLevel = 9;
+    // negation means that 0, undefined, null, '' all go to true
+    while (!stonesPerLevel[maxLevel] && maxLevel > 0) {
+        maxLevel--;
+    }
+
+    return new MatchEntry(
+        `Q${excelPairings['Match #']}`,
+        team,
+        excelPairings['Alliance'] === 'Blue' ? AllianceColor.BLUE : AllianceColor.RED,
+        {
+            cyclesAttempted: excelPairings['# of cyc. attempt'],
+            deliveredStones: deliveredStones,
+            stonesOnFoundation: excelPairings['# placed found'],
+            parked: scoring('Auto Park'),
+            movedFoundation: scoring('Auto Found')
+        },
+        {
+            allianceStonesDelivered: excelPairings['Ally Cyc.'],
+            neutralStonesDelivered: excelPairings['Center Cyc.'],
+            stonesPerLevel: stonesPerLevel.slice(0, maxLevel + 1)
+        },
+        {
+            movedFoundation: scoring('End Found'),
+            parked: scoring('End Park'),
+            // lossy!
+            capstoneLevel: excelPairings['Capped'] === 'Y' ? maxLevel : undefined
+        });
+}
+
+export function extractMatchPairings(sheet: object[]): object[] {
+    let matchCount = 0;
+    while (sheet.length > matchCount && 'Match #' in sheet[matchCount]) {
+        ++matchCount;
+    }
+    return sheet.slice(0, matchCount);
+}
+
+export const kImportStrategies: { [name: string]: ImportStrategy<any> } = {
     "original": {
         displayName: "Original",
+        readFile: readFile,
         readToMatchEntries(contents) {
             return JSON.parse(contents).map(injectFunctionsToMatchEntry);
+        }
+    },
+    "excel": {
+        displayName: "Excel",
+        readFile: function readFileAsByteArray(file: File): Promise<Uint8Array> {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsArrayBuffer(file);
+                reader.onload = event => {
+                    if (event.target !== null) {
+                        resolve(new Uint8Array(event.target.result as ArrayBuffer));
+                    } else {
+                        reject();
+                    }
+                }
+            });
+        },
+        readToMatchEntries(contents) {
+            const output: MatchEntry[] = [];
+
+            const spreadsheet = xlsx.read(contents, {type: 'array'});
+            for (let team of spreadsheet.SheetNames.filter(it => it !== 'Averages')) {
+                const sheet: object[] = xlsx.utils.sheet_to_json(spreadsheet.Sheets[team]);
+                const entries = extractMatchPairings(sheet)
+                    .map(pairing => convertExcelFormat(pairing, parseInt(team)));
+                
+                console.info(`Processed ${entries.length} entries of team ${team}`);
+                output.push(...entries);
+            }
+
+            return output;
         }
     }
 };
@@ -36,12 +125,16 @@ export function importFile(file: File, strategyName: string): Promise<null> {
 }
 
 $(() => {
+    for (let strategy in kImportStrategies) {
+        $('select').append(`<option value="${strategy}">${kImportStrategies[strategy].displayName}</option>`);
+    }
+
     $('#import-form').on('submit', event => {
         event.preventDefault();
         const filepicker = document.querySelector('#import-form input[type="file"]')!;
-        const file = (filepicker as HTMLInputElement).files![0];        
+        const file = (filepicker as HTMLInputElement).files![0];
         const strategyName = $('#import-form select').val() as string;
-        
+
         if (file === undefined) {
             alert('Please select a file to import');
             return;
@@ -52,7 +145,8 @@ $(() => {
         }
 
         const strategy = kImportStrategies[strategyName];
-        readFile(file).then(contents => storeMatches(strategy.readToMatchEntries(contents)))
-            .then(_ => $('#import-form input[type="submit"]').attr("value", "Submitted")); // update UI as needed
+        strategy.readFile(file).then(contents => storeMatches(strategy.readToMatchEntries(contents)))
+            .then(_ => $('#import-form input[type="submit"]').attr("value", "Submitted"))
+            .catch(reason => alert(`Failed: ${reason}`));
     });
 });
