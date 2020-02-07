@@ -1,4 +1,4 @@
-import { injectFunctionsToMatchEntry, storeMatch, storeMatches } from "./local-storage";
+import { injectFunctionsToMatchEntry, storeMatches } from "./local-storage";
 import { MatchEntry, AllianceColor, StoneType, ScoringResult } from "./match";
 import * as $ from 'jquery';
 import * as xlsx from 'xlsx';
@@ -19,7 +19,10 @@ export function convertExcelFormat(excelPairings: object, team: number): MatchEn
         deliveredStones.push(StoneType.STONE);
     }
     function scoring(key: string): ScoringResult {
-        return excelPairings[key] === 'Y' ? ScoringResult.SCORED : ScoringResult.DID_NOT_TRY;
+        const raw = excelPairings[key].toUpperCase();
+        if (raw === 'Y') return ScoringResult.SCORED;
+        if (raw === 'DNT') return ScoringResult.DID_NOT_TRY;
+        return ScoringResult.FAILED;
     }
 
     const stonesPerLevel: number[] = new Array(10);
@@ -28,7 +31,7 @@ export function convertExcelFormat(excelPairings: object, team: number): MatchEn
     }
     let maxLevel = 9;
     // negation means that 0, undefined, null, '' all go to true
-    while (!stonesPerLevel[maxLevel] && maxLevel > 0) {
+    while (!stonesPerLevel[maxLevel] && maxLevel >= 0) {
         maxLevel--;
     }
 
@@ -52,7 +55,7 @@ export function convertExcelFormat(excelPairings: object, team: number): MatchEn
             movedFoundation: scoring('End Found'),
             parked: scoring('End Park'),
             // lossy!
-            capstoneLevel: excelPairings['Capped'] === 'Y' ? maxLevel : undefined
+            capstoneLevel: excelPairings['Capped'].toUpperCase() === 'Y' ? maxLevel : undefined
         });
 }
 

@@ -107,12 +107,19 @@ function renderOverviewInsights(insights: TeamOverviewInsights[]) {
     root.html(contents);
 }
 
+function populateTeams(teams: number[]) {
+    const select = $('#team_number');
+    for (let team of teams) {
+        select.append(`<option>${team}</option>`);
+    }
+}
+
 $(() => {
     getAllMatches().then(entries => {
         const teamInsights = collateMatchesByTeam(entries);
-        const teams = Object.keys(teamInsights).map(item => parseInt(item)).sort();
+        const teams = Object.keys(teamInsights).map(item => parseInt(item)).sort((a, b) => a - b);
 
-        console.log(teamInsights);
+        populateTeams(teams);
         renderOverviewInsights(teams.map(team => teamInsights[team]).map(analyzeOverview));
     });
 });

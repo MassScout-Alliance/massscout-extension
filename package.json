@@ -16,6 +16,8 @@
     "url": "https://github.com/chibat/chrome-extension-typescript-starter.git"
   },
   "dependencies": {
+    "@types/chart.js": "^2.9.12",
+    "chart.js": "^2.9.3",
     "jquery": "^3.4.1",
     "moment": "~2.24.0",
     "xlsx": "^0.15.5"

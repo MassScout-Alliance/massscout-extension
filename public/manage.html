@@ -6,18 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Manage Entries</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
+    <link rel="stylesheet" href="css/mini-default.min.css">
     <script src="js/vendor.js"></script>
 </head>
 
 <body>
     <h1>Entry Management</h1>
-    <label for="sort">Sort by:</label>
-    <select id="sort">
-        <option value="natural">None</option>
-        <option value="score">Total score</option>
-        <option value="team">Team number</option>
-    </select>
+    <div class="row">
+        <div class="col-sm-6">
+            <label for="sort">Sort by:</label>
+            <select id="sort">
+                <option value="natural">None</option>
+                <option value="score">Total score</option>
+                <option value="team">Team number</option>
+            </select>
+        </div>
+        <div class="col-sm-6" style="display: flex; flex-direction: column; align-items: flex-end;">
+            <label for="modal-control" class="button secondary">Remove all entries</label>
+            <input type="checkbox" id="modal-control" class="modal">
+            <div role="dialog" aria-labelledby="dialog-title">
+                <div class="card">
+                    <label for="modal-control" class="modal-close" ></label>
+                    <h3 class="section" id="dialog-title">Are you sure?</h3>
+                    <p class="section">Are you absolutely sure that you want to remove all stored entries? <b>This action is not reversible!</b></p>
+                    <div class="section">
+                        <button id="remove-all" class="secondary">Yes, Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card fluid" id="entries">
 
     </div>

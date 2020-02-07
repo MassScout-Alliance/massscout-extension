@@ -4,5 +4,6 @@ dist/
 tmp/
 
 *.crx
+dist.zip
 # Don't leak my keys!
 *.pem

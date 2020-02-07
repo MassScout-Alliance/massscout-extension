@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "MassScout Data Entry",
-  "description": "Scouting data entry application for the MassScout Alliance",
+  "name": "MassScout",
+  "description": "Scouting data entry and team analysis application for the MassScout Alliance",
   "version": "1.0",
 
   "options_ui": {

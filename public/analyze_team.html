@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Analyze Team</title>
+    <link rel="stylesheet" href="css/mini-default.min.css">
+</head>
+<body>
+    <h1 id="team-title"><small>Statistics</small></h1>
+    <div class="row stats">
+        <div class="col-sm-4 col-md-2">
+            <stat match-count>?</stat>
+        </div>
+        <div class="col-sm-4 col-md-2">
+            <stat auto>?</stat>
+        </div>
+        <div class="col-sm-4 col-md-2">
+            <stat teleop>?</stat>
+        </div>
+        <div class="col-sm-4 col-md-2">
+            <stat endgame>?</stat>
+        </div>
+        <div class="col-sm-4 col-md-2">
+            <stat total>?</stat>
+        </div>
+        <div class="col-sm-4 col-md-2">
+            <stat rank>?</stat>
+        </div>
+    </div>
+    <div class="row detailed-stats">
+        <div class="col-sm-12 col-md-4">
+            <fieldset>
+                <legend>Autonomous</legend>
+                <div class="container">
+                    <div class="row" id="auto-skystone-row">
+                        <div class="col-sm-4">
+                            <img src="assets/brick_outline_target_new.png">
+                        </div>
+                        <div class="col-sm-8">
+                            <canvas id="auto-skystone"></canvas>
+                        </div>
+                    </div>
+                    <div class="row" id="auto-stone-row">
+                        <div class="col-sm-4">
+                            <img src="assets/brick_normal_small.png">
+                        </div>
+                        <div class="col-sm-8">
+                            <canvas id="auto-stone"></canvas>
+                        </div>
+                    </div>
+                    <div class="row" id="auto-foundation-row">
+                        <div class="col-sm-4">
+                            <img src="assets/foundation_blue_small.png" style="height: 100px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <canvas id="auto-foundation"></canvas>
+                        </div>
+                    </div>
+                    <div class="row" id="auto-navigate-row">
+                        <div class="col-sm-4">
+                            <img src="assets/parking_blue20.png" style="height: 50px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <canvas id="auto-navigate"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <fieldset>
+                <legend>TeleOp</legend>
+                <div class="container">
+                    <div class="row" id="teleop-as-deliver-row">
+                        <div class="col-sm-4">
+                            <img src="assets/deliver_blue_small.png">
+                        </div>
+                        <div class="col-sm-8">
+                            <canvas id="teleop-as-deliver"></canvas>
+                        </div>
+                    </div>
+                    <div class="row" id="teleop-an-deliver-row">
+                        <div class="col-sm-4">
+                            <img src="assets/deliver_neutral.png">
+                            <!-- Thanks Adham 14875 -->
+                        </div>
+                        <div class="col-sm-8">
+                            <canvas id="teleop-an-deliver"></canvas>
+                        </div>
+                    </div>
+                    <div class="row" id="teleop-level-row">
+                        <div class="col-sm-4">
+                            <img src="assets/tower_blue_small.png" style="height: 130px">
+                        </div>
+                        <div class="col-sm-8">
+                            <canvas id="teleop-level"></canvas>
+                        </div>
+                    </div>
+                    <div class="row" id="teleop-place-row">
+                        <div class="col-sm-4">
+                            <img src="assets/placed_blue_small.png">
+                        </div>
+                        <div class="col-sm-8">
+                            <canvas id="teleop-place"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <fieldset>
+                <legend>Endgame</legend>
+                <div class="container">
+                    <div class="row" id="endgame-foundation-row">
+                        <div class="col-sm-4">
+                            <img src="assets/foundation_blue_small.png" style="height: 100px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <canvas id="endgame-foundation"></canvas>
+                        </div>
+                    </div>
+                    <div class="row" id="endgame-capstone-row">
+                        <div class="col-sm-4">
+                            <img src="assets/capstone_blue_small.png">
+                            MAX ?
+                        </div>
+                        <div class="col-sm-8">
+                            <canvas id="endgame-capstone"></canvas>
+                        </div>
+                    </div>
+                    <div class="row" id="endgame-park-row">
+                        <div class="col-sm-4">
+                            <img src="assets/parking_blue20.png" style="height: 50px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <canvas id="endgame-park"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        
+    </div>
+    <div class="col-sm-12">
+        <fieldset>
+            <legend>Insights</legend>
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <canvas id="relative-rank"></canvas>
+                </div>
+                <div class="col-sm-12 col-md-6" id="describe"></div>
+            </div>
+        </fieldset>
+    </div>
+    <style>
+        .stats {
+            background-color: #ddd;
+            padding: 10px;
+        }
+
+        .detailed-stats .row {
+            height: 150px;
+        }
+
+        .detailed-stats .col-sm-4 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3px;
+            font-size: 35px;
+            font-family: 'JetBrains Mono', Consolas, Menlo, 'DejaVu Sans Mono', monospace;
+        }
+
+        stat::before {
+            font-size: 13px;
+        }
+
+        stat[match-count]::before {
+            content: "# ENTRIES";
+        }
+
+        stat[auto]::before {
+            content: "AUTO AVG";
+        }
+
+        stat[teleop]::before {
+            content: "TELEOP AVG";
+        }
+
+        stat[endgame]::before {
+            content: "ENDGAME AVG";
+        }
+
+        stat[total]::before {
+            content: "TOTAL AVG";
+        }
+
+        stat[rank]::before {
+            content: "RANK #";
+        }
+        </style>
+        <script src="js/vendor.js"></script>
+        <script src="js/analyze_team.js"></script>
+</body>
+</html>

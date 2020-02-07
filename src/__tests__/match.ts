@@ -297,7 +297,7 @@ test('MatchEntry validation auto cyclesAttempted < delivered', () => {
 
     expect(() => new MatchEntry('F2', 12897, AllianceColor.BLUE,
         badAuto, kEmptyTeleOp, kEmptyEndgame)).toThrow(
-            new RangeError('autonomous cyclesAttempted < num of deliveredStones'));
+            new RangeError('12897 F2: autonomous cyclesAttempted < num of deliveredStones'));
 });
 
 test('MatchEntry validation auto stonesOnFoundation > delivered', () => {
@@ -311,7 +311,7 @@ test('MatchEntry validation auto stonesOnFoundation > delivered', () => {
 
     expect(() => new MatchEntry('F2', 4410, AllianceColor.BLUE,
         badAuto, kEmptyTeleOp, kEmptyEndgame)).toThrow(
-            new RangeError('autonomous stonesOnFoundation > num of deliveredStones'));
+            new RangeError('4410 F2: autonomous stonesOnFoundation > num of deliveredStones'));
 });
 
 test('Qualifiers are valid match codes', () => {

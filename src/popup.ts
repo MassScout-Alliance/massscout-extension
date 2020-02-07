@@ -12,3 +12,17 @@ document.getElementById('manage')!.onclick = () => {
     url: 'manage.html'
   });
 };
+
+document.getElementById('import')!.onclick = () => {
+  chrome.tabs.create({
+    active: true,
+    url: 'import.html'
+  });
+};
+
+document.getElementById('analyze')!.onclick = () => {
+  chrome.tabs.create({
+    active: true,
+    url: 'analyze_overview.html'
+  });
+};

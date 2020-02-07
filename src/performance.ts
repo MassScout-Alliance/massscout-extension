@@ -180,6 +180,7 @@ $(() => {
             storeMatch(currentMatchEntry).then(() => {
                 this.setAttribute('disabled', 'yes');
                 this.innerText = 'Stored';
+                $('#message').html('<b>Refresh (Ctrl-R or Cmd-R) to scout another match</b>');
             });
         } catch (e) {
             alert(e);

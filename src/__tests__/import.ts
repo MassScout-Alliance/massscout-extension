@@ -40,10 +40,55 @@ test('Import normal Excel pairings', () => {
     expect(entry.auto.movedFoundation).toBe(ScoringResult.SCORED);
     expect(entry.teleOp.allianceStonesDelivered).toBe(5);
     expect(entry.teleOp.neutralStonesDelivered).toBe(0);
-    expect(entry.endgame.movedFoundation).toBe(ScoringResult.DID_NOT_TRY);
+    expect(entry.endgame.movedFoundation).toBe(ScoringResult.FAILED);
     expect(entry.endgame.capstoneLevel).toBeUndefined();
     expect(entry.endgame.parked).toBe(ScoringResult.SCORED);
     expect(entry.teleOp.stonesPerLevel).toEqual([2, 1, 1, 1, 1]);
+});
+
+test('Import normal Excel pairings without stacking', () => {
+    const pairings = {
+        'Match #': 18,
+        Alliance: 'Blue',
+        '# of cyc. attempt': 1,
+        '# of Stones deliver': 1,
+        '# of sky delivered': 0,
+        '# placed found': 1,
+        'Auto Park': 'Y',
+        'Auto Found': 'Y',
+        'Ally Cyc.': 5,
+        'Center Cyc.': 0,
+        'End Found': 'N',
+        Capped: 'N',
+        'End Park': 'Y',
+        L1: 0,
+        L2: 0,
+        L3: 0,
+        L4: 0,
+        L5: 0,
+        L6: 0,
+        L7: 0,
+        L8: 0,
+        L9: 0,
+        L10: 0,
+        'Average Pts': 47
+    };
+    const entry = convertExcelFormat(pairings, 14875);
+
+    expect(entry.matchCode).toBe("Q18");
+    expect(entry.alliance).toBe(AllianceColor.BLUE);
+    expect(entry.teamNumber).toBe(14875);
+    expect(entry.auto.cyclesAttempted).toBe(1);
+    expect(entry.auto.deliveredStones).toEqual([StoneType.STONE]);
+    expect(entry.auto.stonesOnFoundation).toBe(1);
+    expect(entry.auto.parked).toBe(ScoringResult.SCORED);
+    expect(entry.auto.movedFoundation).toBe(ScoringResult.SCORED);
+    expect(entry.teleOp.allianceStonesDelivered).toBe(5);
+    expect(entry.teleOp.neutralStonesDelivered).toBe(0);
+    expect(entry.endgame.movedFoundation).toBe(ScoringResult.FAILED);
+    expect(entry.endgame.capstoneLevel).toBeUndefined();
+    expect(entry.endgame.parked).toBe(ScoringResult.SCORED);
+    expect(entry.teleOp.stonesPerLevel).toEqual([]);
 });
 
 test('Extract matches from sheet', () => {

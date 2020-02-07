@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Analyze Teams: Overview</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
+    <link rel="stylesheet" href="css/mini-default.min.css">
 </head>
 <body>
     <table class="fluid">
@@ -30,6 +30,12 @@
         <tbody>
         </tbody>
     </table>
+    <form id="analyze_team" action="analyze_team.html" method="GET">
+        <select id="team_number" name="team_number" required>
+
+        </select>
+        <input type="submit" value="Analyze team">
+    </form>
 
     <script src="js/vendor.js"></script>
     <script src="js/analyze_overview.js"></script>

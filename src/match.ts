@@ -45,10 +45,10 @@ export class MatchEntry {
 
     public validateAutonomous() {
         if (this.auto.cyclesAttempted < this.auto.deliveredStones.length) {
-            throw new RangeError('autonomous cyclesAttempted < num of deliveredStones');
+            throw new RangeError(`${this.teamNumber} ${this.matchCode}: autonomous cyclesAttempted < num of deliveredStones`);
         }
         if (this.auto.stonesOnFoundation > this.auto.deliveredStones.length) {
-            throw new RangeError('autonomous stonesOnFoundation > num of deliveredStones');
+            throw new RangeError(`${this.teamNumber} ${this.matchCode}: autonomous stonesOnFoundation > num of deliveredStones`);
         }
     }
 

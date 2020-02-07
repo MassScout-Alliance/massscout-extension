@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 import { MatchEntry, AllianceColor } from "./match";
-import { entryKey, getAllMatches, removeMatch } from "./local-storage";
+import { entryKey, getAllMatches, removeMatch, clearAllMatches } from "./local-storage";
 
 function getHtmlForEntry(entry: MatchEntry): string {
     const key = entryKey(entry);
@@ -68,4 +68,8 @@ function applySelectedSortMethod() {
 $(() => {
     $('#sort').on('change', applySelectedSortMethod);
     repopulate(null);
+    $('#remove-all').on('click', () => {
+        clearAllMatches().then(() => $('.entry').remove())
+            .catch(alert);
+    });
 });
