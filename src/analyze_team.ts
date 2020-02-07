@@ -131,7 +131,8 @@ function populateEndgame(matches: MatchEntry[]) {
 
     populateAverageStat('endgame-capstone-row', capstoneUseData);
     renderBarGraph('endgame-capstone', 'Capped?', matchCodes, capstoneUseData);
-    
+
+    $('#endgame-capstone-row .col-sm-4').append(`<br>MAX LVL ${capstoneMax == -Infinity ? 'N/A' : capstoneMax}`);
 
     populateAverageStat('endgame-park-row', parkData);
     renderBarGraph('endgame-park', 'Parked in Build Site?', matchCodes, parkData);
