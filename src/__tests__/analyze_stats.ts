@@ -1,4 +1,4 @@
-import { stats } from "../analyze_team";
+import { stats } from "../stats";
 
 test('Stats sum', () => {
     expect(stats.sum([1, 5, 9, 3, -4])).toBe(1 + 5 + 9 + 3 - 4);

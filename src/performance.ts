@@ -1,6 +1,7 @@
 import * as $ from 'jquery';
 import { StoneType, MatchEntry, AllianceColor, AutonomousPerformance, ScoringResult, TeleOpPerformance } from './match';
 import { storeMatch, getMatch } from './local-storage';
+import { stats } from './stats';
 
 let currentAutoPerformance: AutonomousPerformance = {
     deliveredStones: [],
@@ -30,9 +31,10 @@ function setIdEnabled(id: string, enabled: boolean) {
 }
 
 function updateAutoButtonEnabled() {    
-    setIdEnabled('auto-button-attempt', true);
+    setIdEnabled('auto-button-attempt', currentAutoPerformance.cyclesAttempted < 6);
     const canDeliverMoreStones = currentAutoPerformance.deliveredStones.length < currentAutoPerformance.cyclesAttempted;
-    setIdEnabled('auto-button-deliver-skystone', canDeliverMoreStones);
+    const canDeliverMoreSkystones = canDeliverMoreStones && stats.count(currentAutoPerformance.deliveredStones, StoneType.SKYSTONE) < 2;
+    setIdEnabled('auto-button-deliver-skystone', canDeliverMoreSkystones);
     setIdEnabled('auto-button-deliver-stone', canDeliverMoreStones);
     const canStackMoreStones = currentAutoPerformance.stonesOnFoundation < currentAutoPerformance.deliveredStones.length;
     setIdEnabled('auto-button-placed', canStackMoreStones);
@@ -64,6 +66,9 @@ function updateAutoDisplays() {
 function updateTeleOpDisplays() {
     $('#teleop-display-alliance-deliver').text(currentTeleOpPerformance.allianceStonesDelivered);
     $('#teleop-display-neutral-deliver').text(currentTeleOpPerformance.neutralStonesDelivered);
+
+    setIdEnabled('teleop-alliance-return', currentTeleOpPerformance.allianceStonesDelivered > 0);
+    setIdEnabled('teleop-neutral-return', currentTeleOpPerformance.neutralStonesDelivered > 0);
 }
 
 function updateScoring() {
@@ -139,6 +144,14 @@ $(() => {
         currentTeleOpPerformance.neutralStonesDelivered++;
     });
 
+    $('#teleop-alliance-return').on('click', () => {
+        currentTeleOpPerformance.allianceStonesDelivered--;
+    });
+
+    $('#teleop-neutral-return').on('click', () => {
+        currentTeleOpPerformance.neutralStonesDelivered--;
+    });
+
     $('#auto-pane button').on('click', () => {
         updateAutoButtonEnabled();
         updateAutoDisplays();
@@ -149,7 +162,7 @@ $(() => {
         setIdEnabled('end-capped-level', checked);
 
         if (!checked) {
-            $('#end-capped-level').val(1);
+            $('#end-capped-level').val(0);
         }
         currentMatchEntry.endgame.capstoneLevel = checked ? parseInt($('#end-capped-level').val() as string) : undefined;
     });

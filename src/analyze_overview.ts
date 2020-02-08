@@ -1,5 +1,8 @@
 import { getAllMatches } from "./local-storage";
 import { MatchEntry, ScoringResult, StoneType } from "./match";
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import * as ag from 'ag-grid-community';
 import * as $ from 'jquery';
 
 export function getEntriesForTeam(teamNumber: number): Promise<MatchEntry[]> {
@@ -14,6 +17,7 @@ interface TeamOverviewInsights {
     stoneDeliveryAverage: number;
     repositionAverage: number;
     navigateAverage: number;
+    averageAutoTotal: number;
 
     // teleop
     allianceSpecificDeliveryAverage: number;
@@ -21,12 +25,14 @@ interface TeamOverviewInsights {
     placementAverage: number;
     stackAverage: number;
     stackMax: number;
+    averageTeleOpTotal: number;
 
     // endgame
     endRepositionAverage: number;
     capstoneAverage: number;
     capstoneMaxLevel: number;
     parkAverage: number;
+    averageEndgameTotal: number;
 
     averageContribution: number;
 }
@@ -52,17 +58,20 @@ export function analyzeOverview(entries: MatchEntry[]): TeamOverviewInsights {
         stoneDeliveryAverage: average(entries.map(entry => count(entry.auto.deliveredStones, StoneType.STONE))),
         repositionAverage: reliability(entries.map(entry => entry.auto.movedFoundation)),
         navigateAverage: reliability(entries.map(entry => entry.auto.parked)),
+        averageAutoTotal: average(entries.map(entry => entry.getAutonomousScore())),
 
         allianceSpecificDeliveryAverage: average(entries.map(entry => entry.teleOp.allianceStonesDelivered)),
         neutralDeliveryAverage: average(entries.map(entry => entry.teleOp.neutralStonesDelivered)),
         placementAverage: average(entries.map(entry => entry.teleOp.stonesPerLevel.reduce((a, b) => a + b, 0))),
         stackAverage: average(entries.map(entry => entry.teleOp.stonesPerLevel.length)),
         stackMax: max(entries.map(entry => entry.teleOp.stonesPerLevel.length)),
+        averageTeleOpTotal: average(entries.map(entry => entry.getTeleOpScore())),
 
         endRepositionAverage: reliability(entries.map(entry => entry.endgame.movedFoundation)),
         capstoneAverage: average(entries.map(entry => entry.endgame.capstoneLevel === undefined ? 0 : 1)),
         capstoneMaxLevel: max(entries.map(entry => entry.endgame.capstoneLevel || 0)),
         parkAverage: reliability(entries.map(entry => entry.endgame.parked)),
+        averageEndgameTotal: average(entries.map(entry => entry.getEndgameScore())),
 
         averageContribution: average(entries.map(entry => entry.getTotalScore()))
     };
@@ -81,30 +90,33 @@ export function collateMatchesByTeam(entries: MatchEntry[]): {[team: number]: Ma
 }
 
 function renderOverviewInsights(insights: TeamOverviewInsights[]) {
-    function htmlForRow(insights: TeamOverviewInsights): string {
-        return `<tr>
-                    <td>${insights.teamNumber}</td>
-                    <td>${insights.skystoneDeliveryAverage + insights.stoneDeliveryAverage}</td>
-                    <td>${insights.repositionAverage}</td>
-                    <td>${insights.navigateAverage}</td>
-                    <td>${insights.allianceSpecificDeliveryAverage}</td>
-                    <td>${insights.neutralDeliveryAverage}</td>
-                    <td>${insights.placementAverage}</td>
-                    <td>${insights.stackAverage}</td>
-                    <td>${insights.stackMax}</td>
-                    <td>${insights.endRepositionAverage}</td>
-                    <td>${insights.capstoneAverage /* we are missing capstone max level */}</td>
-                    <td>${insights.parkAverage}</td>
-                    <td>${insights.averageContribution}</td>
-                </tr>`;
-    }
-    const root = $('tbody');
-    let contents = "";
-
-    for (let insight of insights) {
-        contents += htmlForRow(insight);
-    }
-    root.html(contents);
+    const columns = [
+        {headerName: 'Team', field: 'teamNumber', sortable: true, cellStyle: {fontWeight: 'bold'}, minWidth: 80},
+        {headerName: 'Skystone Avg', field: 'skystoneDeliveryAverage', sortable: true},
+        {headerName: 'Stone Avg', field: 'stoneDeliveryAverage', sortable: true},
+        {headerName: 'Auto Foundation', field: 'repositionAverage', sortable: true},
+        {headerName: 'Navigate', field: 'navigateAverage', sortable: true},
+        {headerName: 'Auto Average', field: 'averageAutoTotal', sortable: true, cellStyle: {fontWeight: 'bold'}},
+        {headerName: 'A-S Delivery', field: 'allianceSpecificDeliveryAverage', sortable: true},
+        {headerName: 'A-N Delivery', field: 'neutralDeliveryAverage', sortable: true},
+        {headerName: 'Placement', field: 'placementAverage', sortable: true},
+        {headerName: 'Stack Avg', field: 'stackAverage', sortable: true},
+        {headerName: 'Stack Max', field: 'stackMax', sortable: true},
+        {headerName: 'TeleOp Average', field: 'averageTeleOpTotal', sortable: true, cellStyle: {fontWeight: 'bold'}},
+        {headerName: 'End Foundation', field: 'endRepositionAverage', sortable: true},
+        {headerName: 'Capstone Avg', field: 'capstoneAverage', sortable: true},
+        {headerName: 'Capstone Max Lvl', field: 'capstoneMaxLevel', sortable: true},
+        {headerName: 'End Park', field: 'parkAverage', sortable: true},
+        {headerName: 'End Average', field: 'averageEndgameTotal', sortable: true, cellStyle: {fontWeight: 'bold'}},
+        {headerName: 'Avg Cont.', field: 'averageContribution', sortable: true, cellStyle: {fontWeight: 'bold'}}
+    ];
+    
+    const grid = new ag.Grid(document.getElementById('table')!, {
+        columnDefs: columns,
+        rowData: insights,
+        pagination: true,
+        onFirstDataRendered: it => it.api.sizeColumnsToFit()
+    });
 }
 
 function populateTeams(teams: number[]) {
