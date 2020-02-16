@@ -39,7 +39,7 @@ function updateAutoButtonEnabled() {
     const canStackMoreStones = currentAutoPerformance.stonesOnFoundation < currentAutoPerformance.deliveredStones.length;
     setIdEnabled('auto-button-placed', canStackMoreStones);
     
-    if (!canDeliverMoreStones && !canStackMoreStones) {
+    if (!canDeliverMoreStones && !canStackMoreStones && currentAutoPerformance.cyclesAttempted < 6) {
         $('#auto-button-attempt').addClass('primary');
     } else {
         $('#auto-button-attempt').removeClass('primary');

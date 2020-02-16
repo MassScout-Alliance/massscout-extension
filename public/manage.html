@@ -39,12 +39,14 @@
     <div class="card fluid" id="entries">
 
     </div>
-    <div class="card">
+    <div class="card fluid">
         <form id="export-type" action="export.html">
             <label for="type">Format:</label>
             <select id="type" name="type">
                 <option value="original">Original</option>
             </select>
+            <label for="filename">Filename:</label>
+            <input type="text" id="filename" name="filename" required>
             <input type="submit" value="Export">
         </form>
     </div>
