@@ -11,6 +11,7 @@ async function getTeamMatches(team: number): Promise<MatchEntry[]> {
 
 function populateTeam(team: number) {
     $('#team-title').prepend(`Team ${team}`);
+    $('title').append(' ' + team);
 }
 
 async function populateTopStats(matches: MatchEntry[]) {

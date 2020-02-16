@@ -315,6 +315,10 @@
             content: "Placed: ";
         }
 
+        #auto-display-delivered .row {
+            align-items: center;
+        }
+
         #teleop-display-alliance-deliver::before {
             content: "Alliance delivered: ";
         }
@@ -325,6 +329,23 @@
 
         #teleop-stacked-stones input {
             padding: 4px 4px;
+        }
+
+        .icon-delete::before {
+            content: "×";
+        }
+
+        .icon-delete {
+            color: red;
+            width: 50px;
+            height: 50px;
+            font-size: 25px;
+            text-align: center;
+            display: flex;
+            line-height: 20px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
         }
     </style>
     <script src="js/performance.js"></script>

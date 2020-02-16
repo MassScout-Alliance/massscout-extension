@@ -49,7 +49,7 @@ function updateAutoButtonEnabled() {
 function updateAutoDisplays() {
     function imageForStone(type: StoneType): JQuery<HTMLElement> {
         const url = type === StoneType.SKYSTONE ? 'assets/brick_outline_target_new.png' : 'assets/brick_normal_small.png';
-        return $(`<div class="row"><img src="${url}"></div>`);
+        return $(`<div class="row"><img src="${url}"><span class="icon-delete auto-stone-return"></span></div>`);
     }
 
     $('#auto-display-attempt').text(currentAutoPerformance.cyclesAttempted);
@@ -61,6 +61,19 @@ function updateAutoDisplays() {
     }
 
     $('#auto-display-placed').text(currentAutoPerformance.stonesOnFoundation);
+    $('.auto-stone-return').on('click', function() {
+        // determine row
+        const row = this.parentElement!;
+        const collection = row.parentElement!;
+        const n = Array.from(collection.children).indexOf(row);
+
+        currentAutoPerformance.deliveredStones.splice(n, 1);
+        currentAutoPerformance.stonesOnFoundation = Math.min(currentAutoPerformance.deliveredStones.length,
+            currentAutoPerformance.stonesOnFoundation);
+        updateAutoButtonEnabled();
+        updateAutoDisplays();
+        updateScoring();
+    });
 }
 
 function updateTeleOpDisplays() {
