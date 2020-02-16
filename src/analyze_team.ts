@@ -249,6 +249,7 @@ function describeTeam(matches: MatchEntry[], team: number, relStats: RelativeSta
 
     {
         const autoCycles = matches.map(it => it.auto.cyclesAttempted);
+        const autoSkystoneCycles = autoCycles.map(it => Math.min(2, it));
         const skystoneAttemptMax = Math.max(...autoCycles);
         const skystoneAttemptSum = stats.sum(autoCycles);
         const autoStones = new Array<StoneType>().concat(...matches.map(it => it.auto.deliveredStones));
@@ -259,7 +260,7 @@ function describeTeam(matches: MatchEntry[], team: number, relStats: RelativeSta
                 `attempted up to ${skystoneAttemptMax} stone(s) per match. For a total of ${skystoneAttemptSum} attempt(s),` +
                 ` ${autoStones.length} stone(s) were delivered, ${autoSkystoneCount} of which were/was (a) Skystone(s). This results` +
                 ` in an any-stone reliability rating of ${expressPercentage(autoStones.length / skystoneAttemptSum)}` +
-                ` and a Skystone reliability rating of ${expressPercentage(autoSkystoneCount / skystoneAttemptSum)}.`);
+                ` and a Skystone reliability rating of ${expressPercentage(autoSkystoneCount / stats.sum(autoSkystoneCycles))}.`);
         } else {
             messages.push(`<b>Autonomous</b>: ${team} never attempted to deliver stones.`);
         }
