@@ -23,8 +23,11 @@ export function storeMatches(entries: MatchEntry[]): Promise<null> {
 }
 
 export function getMatch(code: string, teamNumber: number): Promise<MatchEntry> {
+    return getMatchByKey(formatEntryKey(code, teamNumber));
+}
+
+export function getMatchByKey(key: string): Promise<MatchEntry> {
     return new Promise((resolve, reject) => {
-        const key = formatEntryKey(code, teamNumber);
         chrome.storage.local.get([key], items => {
             if (key in items) {
                 resolve(injectFunctionsToMatchEntry(items[key]));

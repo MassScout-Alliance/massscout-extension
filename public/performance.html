@@ -14,7 +14,7 @@
     <header>
         <div class="row" style="height: 100%;">
             <img src="assets/massscout.png" alt="MassScout Logo" style="height: 100%;">
-            <h1>MassScout Data</h1>
+            <h1 id="title">MassScout Data</h1>
         </div>
     </header>
     <div class="container">
@@ -346,6 +346,11 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+        }
+
+        .input[disabled] {
+            cursor: not-allowed;
+            color: gray;
         }
     </style>
     <script src="js/performance.js"></script>

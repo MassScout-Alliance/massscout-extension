@@ -1,7 +1,8 @@
 import * as $ from 'jquery';
 import { StoneType, MatchEntry, AllianceColor, AutonomousPerformance, ScoringResult, TeleOpPerformance } from './match';
-import { storeMatch, getMatch } from './local-storage';
+import { storeMatch, getMatch, getMatchByKey } from './local-storage';
 import { stats } from './stats';
+import { searchParams } from './utils';
 
 let currentAutoPerformance: AutonomousPerformance = {
     deliveredStones: [],
@@ -49,7 +50,7 @@ function updateAutoButtonEnabled() {
 function updateAutoDisplays() {
     function imageForStone(type: StoneType): JQuery<HTMLElement> {
         const url = type === StoneType.SKYSTONE ? 'assets/brick_outline_target_new.png' : 'assets/brick_normal_small.png';
-        return $(`<div class="row"><img src="${url}"><span class="icon-delete auto-stone-return"></span></div>`);
+        return $(`<div class="row"><img src="${url}"><span class="icon-delete auto-stone-return input"></span></div>`);
     }
 
     $('#auto-display-attempt').text(currentAutoPerformance.cyclesAttempted);
@@ -62,6 +63,8 @@ function updateAutoDisplays() {
 
     $('#auto-display-placed').text(currentAutoPerformance.stonesOnFoundation);
     $('.auto-stone-return').on('click', function() {
+        if (this.getAttribute('disabled') !== null) return;
+        
         // determine row
         const row = this.parentElement!;
         const collection = row.parentElement!;
@@ -94,13 +97,14 @@ function updateScoring() {
     }, 200);
 }
 
+const resultValues = {
+    'Yes': ScoringResult.SCORED,
+    'Failed': ScoringResult.FAILED,
+    'DNT': ScoringResult.DID_NOT_TRY
+};
+
 function wireScoringResult(name: string, writeResult: (result: ScoringResult) => void) {
-    const element = $(`*[name="${name}"]`);
-    const resultValues = {
-        'Yes': ScoringResult.SCORED,
-        'Failed': ScoringResult.FAILED,
-        'DNT': ScoringResult.DID_NOT_TRY
-    };
+    const element = $(`*[name="${name}"]`);    
 
     element.on('click change', function() {
         writeResult(resultValues[(this as HTMLInputElement).value]);
@@ -131,7 +135,54 @@ function updateMetadata() {
     currentMatchEntry.alliance = $('*[name="alliance"]:checked').val() === 'blue' ? AllianceColor.BLUE : AllianceColor.RED;
 }
 
+function updateInputsForReadOnly() {
+    function showScoringResult(result: ScoringResult, name: string) {
+        for (let value in resultValues) {
+            if (resultValues[value] === result) {
+                $(`input[name="${name}"][value="${value}"]`).attr('checked', 'yes');
+            }
+        }
+    }
+
+    // Metadata
+    $('#match').val(currentMatchEntry.matchCode);
+    $('#team').val(currentMatchEntry.teamNumber);
+    const allianceId = currentMatchEntry.alliance === AllianceColor.RED ? "alliance-red" : "alliance-blue";
+    $(`#${allianceId}`).attr('checked', 'true');
+
+    // Autonomous
+    showScoringResult(currentMatchEntry.auto.movedFoundation, 'auto-moved');
+    showScoringResult(currentMatchEntry.auto.parked, 'auto-parked');
+
+    // TeleOp
+    for (let level = 0; level < currentMatchEntry.teleOp.stonesPerLevel.length; level++) {
+        $(`.teleop-level[level="${level + 1}"]`).val(currentMatchEntry.teleOp.stonesPerLevel[level]);
+    }
+
+    // Endgame
+    showScoringResult(currentMatchEntry.endgame.movedFoundation, 'end-found-moved');
+    if (currentMatchEntry.endgame.capstoneLevel != undefined) {
+        $('#end-capped').attr('checked', 'true');
+        $('#end-capped-level').val(currentMatchEntry.endgame.capstoneLevel!);
+    }
+    showScoringResult(currentMatchEntry.endgame.parked, 'end-parked');
+}
+
 $(() => {
+    const matchCode = searchParams().get('match');
+    if (matchCode !== null) {
+        getMatchByKey(matchCode).then(it => {
+            currentMatchEntry = it;
+            currentAutoPerformance = it.auto;
+            currentTeleOpPerformance = it.teleOp;
+            updateAutoDisplays();
+            updateTeleOpDisplays();
+            updateInputsForReadOnly();
+            updateScoring();
+            $('input, button, .input').attr('disabled', 'true');
+        }).catch(() => alert(`No such match: ${matchCode}`));
+        return;
+    }
     
     $('#auto-button-attempt').on('click', () => {
         currentAutoPerformance.cyclesAttempted++;

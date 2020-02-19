@@ -49,27 +49,24 @@ function populateAutonomous(matches: MatchEntry[]) {
     const extractFoundation = it => it.auto.movedFoundation === ScoringResult.SCORED ? 1 : 0;
     const extractPark = it => it.auto.parked === ScoringResult.SCORED ? 1 : 0;
 
+    const skystones = matches.map(extractSkystone);
+    const stones = matches.map(extractStone);
+    const foundations = matches.map(extractFoundation);
+    const parks = matches.map(extractPark);
+
     // TODO move .map to above
 
-    populateAverageStat('auto-skystone-row',
-        matches.map(extractSkystone));
-    renderBarGraph('auto-skystone', '# Skystones delivered',
-        matchCodes, matches.map(extractSkystone));
+    populateAverageStat('auto-skystone-row', skystones);
+    renderBarGraph('auto-skystone', '# Skystones delivered', matchCodes, skystones);
 
-    populateAverageStat('auto-stone-row',
-        matches.map(extractStone));
-    renderBarGraph('auto-stone', '# stones delivered',
-        matchCodes, matches.map(extractStone));
+    populateAverageStat('auto-stone-row', stones);
+    renderBarGraph('auto-stone', '# stones delivered', matchCodes, stones);
     
-    populateAverageStat('auto-foundation-row',
-        matches.map(extractFoundation));
-    renderBarGraph('auto-foundation', 'Foundation moved?',
-        matchCodes, matches.map(extractFoundation))
+    populateAverageStat('auto-foundation-row', foundations);
+    renderBarGraph('auto-foundation', 'Foundation moved?', matchCodes, foundations);
 
-    populateAverageStat('auto-navigate-row',
-        matches.map(extractPark));
-    renderBarGraph('auto-navigate', 'Navigated?',
-        matchCodes, matches.map(extractPark));
+    populateAverageStat('auto-navigate-row', parks);
+    renderBarGraph('auto-navigate', 'Navigated?', matchCodes, parks);
 }
 
 function populateTeleOp(matches: MatchEntry[]) {

@@ -25,7 +25,7 @@ function getHtmlForEntry(entry: MatchEntry): string {
         <score total>${entry.getTotalScore()}</score>
     </div>
     <div class="col-sm-1 actions">
-        <!-- <span class="icon-edit"></span> -->
+        <span class="icon-info" match="${key}"></span>
         <span class="icon-delete" match="${key}"></span>
     </div>
 </div>`;
@@ -48,6 +48,13 @@ function attachClickHandlers() {
         const key = this.getAttribute('match')!;
         removeMatch(key);
         $(`.entry[match="${key}"]`).remove();
+    });
+    $('.icon-info').on('click', function() {
+        chrome.windows.create({
+            type: 'popup',
+            url: `performance.html?match=${this.getAttribute('match')!}`,
+            focused: true
+        });
     });
 }
 
