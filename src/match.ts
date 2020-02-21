@@ -10,6 +10,11 @@ export enum ScoringResult {
     SCORED, FAILED, DID_NOT_TRY
 }
 
+// OK FTC state-of-the-art mobile phone control system
+export enum DisconnectStatus {
+    NO_DISCONNECT, PARTIAL, TOTAL
+}
+
 export class MatchEntry {
     matchCode: string;
     teamNumber: number;
@@ -17,15 +22,20 @@ export class MatchEntry {
     auto: AutonomousPerformance;
     teleOp: TeleOpPerformance;
     endgame: EndgamePerformance;
+    disconnect: DisconnectStatus;
+    remarks?: string;
 
     constructor(matchCode: string, teamNumber: number, alliance: AllianceColor,
-        auto: AutonomousPerformance, teleOp: TeleOpPerformance, endgame: EndgamePerformance) {
+        auto: AutonomousPerformance, teleOp: TeleOpPerformance, endgame: EndgamePerformance,
+        disconnect: DisconnectStatus, remarks?: string) {
         this.matchCode = matchCode;
         this.teamNumber = teamNumber;
         this.alliance = alliance;
         this.auto = auto;
         this.teleOp = teleOp;
         this.endgame = endgame;
+        this.disconnect = disconnect;
+        this.remarks = remarks;
 
         this.validateAutonomous();
         this.validateMetadata();
@@ -40,6 +50,9 @@ export class MatchEntry {
         }
         if (this.teamNumber < 1 || Math.floor(this.teamNumber) !== this.teamNumber) {
             throw new Error(`Team number ${this.teamNumber} is invalid`);
+        }
+        if (this.disconnect === DisconnectStatus.TOTAL && this.getTotalScore() > 0) {
+            throw new Error('A totally disconnected team cannot score points');
         }
     }
 

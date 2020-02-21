@@ -1,5 +1,5 @@
-import { injectFunctionsToMatchEntry, storeMatches } from "./local-storage";
-import { MatchEntry, AllianceColor, StoneType, ScoringResult } from "./match";
+import { parseEntry, storeMatches } from "./local-storage";
+import { MatchEntry, AllianceColor, StoneType, ScoringResult, DisconnectStatus } from "./match";
 import * as $ from 'jquery';
 import * as xlsx from 'xlsx';
 
@@ -56,7 +56,8 @@ export function convertExcelFormat(excelPairings: object, team: number): MatchEn
             parked: scoring('End Park'),
             // lossy!
             capstoneLevel: excelPairings['Capped'].toUpperCase() === 'Y' ? maxLevel : undefined
-        });
+        },
+        DisconnectStatus.NO_DISCONNECT);
 }
 
 export function extractMatchPairings(sheet: object[]): object[] {
@@ -72,7 +73,7 @@ export const kImportStrategies: { [name: string]: ImportStrategy<any> } = {
         displayName: "Original",
         readFile: readFile,
         readToMatchEntries(contents) {
-            return JSON.parse(contents).map(injectFunctionsToMatchEntry);
+            return JSON.parse(contents).map(parseEntry);
         }
     },
     "excel": {

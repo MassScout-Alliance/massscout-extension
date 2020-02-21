@@ -111,7 +111,7 @@ function renderOverviewInsights(insights: TeamOverviewInsights[]) {
         {headerName: 'Avg Cont.', field: 'averageContribution', sortable: true, cellStyle: {fontWeight: 'bold'}}
     ];
     
-    const grid = new ag.Grid(document.getElementById('table')!, {
+    new ag.Grid(document.getElementById('table')!, {
         columnDefs: columns,
         rowData: insights,
         pagination: true,

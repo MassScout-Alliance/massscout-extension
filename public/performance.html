@@ -41,27 +41,43 @@
                                 <option value="MAWWQU">Wild West Qualifier</option>
                             </select>
                             </div> -->
-                        <div class="col-sm-4 col-lg-2">
+                        <div class="col-sm-4 col-lg-1">
                             <label for="match">Match Code</label>
                         </div>
-                        <div class="col-sm-8 col-lg-2">
+                        <div class="col-sm-8 col-lg-3">
                             <input id="match" type="text" placeholder="Q2, Q10, SF2-1">
                         </div>
-                        <div class="col-sm-4 col-lg-2">
-                            <label for="team">Team Number</label>
+                        <div class="col-sm-4 col-lg-1">
+                            <label for="team">Team #</label>
                         </div>
-                        <div class="col-sm-8 col-lg-2">
+                        <div class="col-sm-8 col-lg-3">
                             <input type="number" id="team" placeholder="12345">
                         </div>
-                        <div class="col-sm-4 col-lg-2">
+                        <div class="col-sm-4 col-lg-1">
                             <label>Alliance</label>
-
                         </div>
-                        <div class="col-sm-8 col-lg-2">
-                            Blue
+                        <div class="col-sm-8 col-lg-3 inline-labels">
+                            <label for="alliance-blue" style="color: #0066b3">Blue</label>
                             <input type="radio" name="alliance" id="alliance-blue" value="blue" checked>
-                            Red
+                            <label for="alliance-red" style="color: #ed1c24">Red</label>
                             <input type="radio" name="alliance" id="alliance-red" value="red">
+                        </div>
+                        <div class="col-sm-4 col-lg-1">
+                            <label>Disconnect</label>
+                        </div>
+                        <div class="col-sm-8 col-lg-3 inline-labels">
+                            <label for="disconnect-none">None</label>
+                            <input type="radio" name="disconnect" id="disconnect-none" value="none" checked>
+                            <label for="disconnect-partial">Partial</label>
+                            <input type="radio" name="disconnect" id="disconnect-partial" value="partial">
+                            <label for="disconnect-total">Total</label>
+                            <input type="radio" name="disconnect" id="disconnect-total" value="total">
+                        </div>
+                        <div class="col-sm-4 col-lg-1">
+                            <label>Remarks</label>
+                        </div>
+                        <div class="col-sm-8 col-lg-3">
+                            <textarea class="input" name="remarks" id="remarks" rows="1" placeholder="Additional comments..." style="min-width: 100%; max-width: 100%;"></textarea>
                         </div>
                     </div>
                 </div>
@@ -98,7 +114,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-5" vertical-stack>
-                            Foundation moved?
+                            <b>Foundation moved?</b>
                         </div>
                         <div class="col-sm-7">
                             Yes
@@ -111,7 +127,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-5" vertical-stack>
-                            Parked?
+                            <b>Parked?</b>
                         </div>
                         <div class="col-sm-7">
                             Yes
@@ -206,7 +222,7 @@
                 <h2>Endgame</h2>
                 <div class="row">
                     <div class="col-sm-5">
-                        Moved foundation?
+                        <b>Moved foundation?</b>
                     </div>
                     <div class="col-sm-7">
                         Yes
@@ -219,7 +235,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-5">
-                        Capstone capped?
+                        <b>Capstone capped?</b>
                     </div>
                     <div class="col-sm-7">
                         <label for="end-capped">Capped</label>
@@ -231,7 +247,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-5">
-                        Parked in Build Site?
+                        <b>Parked in Build Site?</b>
                     </div>
                     <div class="col-sm-7">
                         Yes
@@ -268,7 +284,7 @@
     </div>
     <div class="row">
         <div class="col-sm" id="message"></div>
-        <div class="col-sm-2" vertical-stack>
+        <div class="col-sm-3 col-md-2" vertical-stack>
             <button class="primary big" id="submit">Submit</button>
         </div>
         <div class="col-sm-1"></div>
@@ -301,6 +317,7 @@
         #metadata label {
             display: flex;
             flex-direction: row-reverse;
+            font-weight: bold;
         }
 
         label {
@@ -351,6 +368,11 @@
         .input[disabled] {
             cursor: not-allowed;
             color: gray;
+        }
+
+        .inline-labels label {
+            display: inline !important;
+            font-weight: normal !important;
         }
     </style>
     <script src="js/performance.js"></script>

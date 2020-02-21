@@ -1,4 +1,4 @@
-import { MatchEntry, AllianceColor, StoneType, ScoringResult, AutonomousPerformance, TeleOpPerformance, EndgamePerformance, isValidMatchCode } from "../match";
+import { MatchEntry, AllianceColor, StoneType, ScoringResult, AutonomousPerformance, TeleOpPerformance, EndgamePerformance, isValidMatchCode, DisconnectStatus } from "../match";
 
 export const kEmptyAuto: AutonomousPerformance = {
     deliveredStones: [],
@@ -37,7 +37,7 @@ test('MatchEntry constructor', () => {
         parked: ScoringResult.FAILED,
     }
     const entry = new MatchEntry('Q3', 5273, AllianceColor.RED,
-        auto, teleop, endgame);
+        auto, teleop, endgame, DisconnectStatus.NO_DISCONNECT, "some remarks");
 
     expect(entry.matchCode).toBe('Q3');
     expect(entry.teamNumber).toBe(5273);
@@ -45,6 +45,8 @@ test('MatchEntry constructor', () => {
     expect(entry.auto).toBe(auto);
     expect(entry.teleOp).toBe(teleop);
     expect(entry.endgame).toBe(endgame);
+    expect(entry.disconnect).toBe(DisconnectStatus.NO_DISCONNECT);
+    expect(entry.remarks).toBe("some remarks");
 });
 
 test('MatchEntry scoring 4.5.2.1 foundation', () => {    
@@ -57,7 +59,7 @@ test('MatchEntry scoring 4.5.2.1 foundation', () => {
     };
     
     const entry = new MatchEntry('Q4', 4410, AllianceColor.RED,
-        auto, kEmptyTeleOp, kEmptyEndgame);
+        auto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getAutonomousScore()).toBe(10);
 });
@@ -72,7 +74,7 @@ test('MatchEntry scoring 4.5.2.2a 1 skystone', () => {
     };
     
     const entry = new MatchEntry('Q4', 4410, AllianceColor.RED,
-        auto, kEmptyTeleOp, kEmptyEndgame);
+        auto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getAutonomousScore()).toBe(10);
 });
@@ -87,7 +89,7 @@ test('MatchEntry scoring 4.5.2.2a 2 skystones', () => {
     };
     
     const entry = new MatchEntry('Q4', 4410, AllianceColor.RED,
-        auto, kEmptyTeleOp, kEmptyEndgame);
+        auto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getAutonomousScore()).toBe(20);
 });
@@ -102,7 +104,7 @@ test('MatchEntry scoring 4.5.2.2a 1 skystone 1 stone', () => {
     };
     
     const entry = new MatchEntry('Q4', 4410, AllianceColor.RED,
-        auto, kEmptyTeleOp, kEmptyEndgame);
+        auto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getAutonomousScore()).toBe(12);
 });
@@ -117,7 +119,7 @@ test('MatchEntry scoring 4.5.2.2a 2 stones', () => {
     };
     
     const entry = new MatchEntry('Q4', 4410, AllianceColor.RED,
-        auto, kEmptyTeleOp, kEmptyEndgame);
+        auto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getAutonomousScore()).toBe(4);
 });
@@ -132,7 +134,7 @@ test('MatchEntry scoring 4.5.2.2b Sky-Stone-Sky', () => {
     };
     
     const entry = new MatchEntry('Q4', 4410, AllianceColor.RED,
-        auto, kEmptyTeleOp, kEmptyEndgame);
+        auto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getAutonomousScore()).toBe(10 + 2 + 2);
 });
@@ -147,7 +149,7 @@ test('MatchEntry scoring 4.5.2.2b Sky-Stone-Stone-Sky', () => {
     };
     
     const entry = new MatchEntry('Q4', 4410, AllianceColor.RED,
-        auto, kEmptyTeleOp, kEmptyEndgame);
+        auto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getAutonomousScore()).toBe(10 + 2 + 2 + 2);
 });
@@ -162,7 +164,7 @@ test('MatchEntry scoring 4.5.2.3 parking', () => {
     };
     
     const entry = new MatchEntry('Q4', 4410, AllianceColor.RED,
-        auto, kEmptyTeleOp, kEmptyEndgame);
+        auto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getAutonomousScore()).toBe(5);
 });
@@ -177,7 +179,7 @@ test('MatchEntry scoring 4.5.2.4 placement', () => {
     };
     
     const entry = new MatchEntry('Q4', 4410, AllianceColor.RED,
-        auto, kEmptyTeleOp, kEmptyEndgame);
+        auto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getAutonomousScore()).toBe(10 + 2 + 2*4);
 });
@@ -190,7 +192,7 @@ test('MatchEntry scoring 4.5.3.1 delivery', () => {
     };
     
     const entry = new MatchEntry('SF2-2', 10331, AllianceColor.RED,
-        kEmptyAuto, teleop, kEmptyEndgame);
+        kEmptyAuto, teleop, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getTeleOpScore()).toBe(2);
 });
@@ -203,7 +205,7 @@ test('MatchEntry scoring 4.5.3.2 placing', () => {
     };
     
     const entry = new MatchEntry('SF2-2', 10331, AllianceColor.RED,
-        kEmptyAuto, teleop, kEmptyEndgame);
+        kEmptyAuto, teleop, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getTeleOpScore()).toBe(2 + 2*1);
 });
@@ -216,7 +218,7 @@ test('MatchEntry scoring 4.5.3.3 skyscraper bonus', () => {
     };
     
     const entry = new MatchEntry('F1', 5273, AllianceColor.BLUE,
-        kEmptyAuto, teleop, kEmptyEndgame);
+        kEmptyAuto, teleop, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getTeleOpScore()).toBe(4 + 4*2);
 });
@@ -229,7 +231,7 @@ test('MatchEntry scoring 4.5.4.1 capstone', () => {
     };
     
     const entry = new MatchEntry('F2', 5273, AllianceColor.BLUE,
-        kEmptyAuto, kEmptyTeleOp, endgame);
+        kEmptyAuto, kEmptyTeleOp, endgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getEndgameScore()).toBe(5 + 3);
 });
@@ -242,7 +244,7 @@ test('MatchEntry scoring 4.5.4.2 foundation', () => {
     };
     
     const entry = new MatchEntry('SF2-2', 4410, AllianceColor.BLUE,
-        kEmptyAuto, kEmptyTeleOp, endgame);
+        kEmptyAuto, kEmptyTeleOp, endgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getEndgameScore()).toBe(15);
 });
@@ -255,7 +257,7 @@ test('MatchEntry scoring 4.5.4.3 parking', () => {
     };
     
     const entry = new MatchEntry('F1', 5273, AllianceColor.BLUE,
-        kEmptyAuto, kEmptyTeleOp, endgame);
+        kEmptyAuto, kEmptyTeleOp, endgame, DisconnectStatus.NO_DISCONNECT);
 
     expect(entry.getEndgameScore()).toBe(5);
 });
@@ -280,7 +282,7 @@ test('MatchEntry scoring cumulative Lex7.1 F2', () => {
     };
 
     const entry = new MatchEntry('F2', 8644, AllianceColor.RED,
-        auto, teleop, endgame);
+        auto, teleop, endgame, DisconnectStatus.NO_DISCONNECT);
 
     // official final score 100, minus second parking robot in endgame
     expect(entry.getTotalScore()).toBe(100 - 5);
@@ -296,7 +298,7 @@ test('MatchEntry validation auto cyclesAttempted < delivered', () => {
     };
 
     expect(() => new MatchEntry('F2', 12897, AllianceColor.BLUE,
-        badAuto, kEmptyTeleOp, kEmptyEndgame)).toThrow(
+        badAuto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT)).toThrow(
             new RangeError('12897 F2: autonomous cyclesAttempted < num of deliveredStones'));
 });
 
@@ -310,7 +312,7 @@ test('MatchEntry validation auto stonesOnFoundation > delivered', () => {
     };
 
     expect(() => new MatchEntry('F2', 4410, AllianceColor.BLUE,
-        badAuto, kEmptyTeleOp, kEmptyEndgame)).toThrow(
+        badAuto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT)).toThrow(
             new RangeError('4410 F2: autonomous stonesOnFoundation > num of deliveredStones'));
 });
 
@@ -349,15 +351,24 @@ function expectCodesValid(expected: boolean, ...codes: string[]) {
 }
 
 test('MatchEntry metadata validation match code', () => {
-    expect(() => new MatchEntry('bad', 4410, AllianceColor.BLUE, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame))
+    expect(() => new MatchEntry('bad', 4410, AllianceColor.BLUE, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT))
         .toThrowError('Match code "bad" is invalid');
 });
 
 test('MatchEntry metadata validation team number', () => {
-    expect(() => new MatchEntry('Q13', 0, AllianceColor.RED, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame))
+    expect(() => new MatchEntry('Q13', 0, AllianceColor.RED, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT))
         .toThrowError('Team number 0 is invalid');
-    expect(() => new MatchEntry('Q13', NaN, AllianceColor.RED, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame))
+    expect(() => new MatchEntry('Q13', NaN, AllianceColor.RED, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT))
         .toThrowError('Invalid team number');
-    expect(() => new MatchEntry('Q13', 1.5, AllianceColor.RED, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame))
+    expect(() => new MatchEntry('Q13', 1.5, AllianceColor.RED, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT))
         .toThrowError('Team number 1.5 is invalid');
 });
+
+test('MatchEntry points scored when fully disconnected', () => {
+    expect(() => new MatchEntry('Q14', 10331, AllianceColor.BLUE, kEmptyAuto, {
+        allianceStonesDelivered: 2,
+        neutralStonesDelivered: 0,
+        stonesPerLevel: []
+    }, kEmptyEndgame, DisconnectStatus.TOTAL))
+        .toThrowError('A totally disconnected team cannot score points');
+})

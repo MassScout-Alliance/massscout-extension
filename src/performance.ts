@@ -1,5 +1,5 @@
 import * as $ from 'jquery';
-import { StoneType, MatchEntry, AllianceColor, AutonomousPerformance, ScoringResult, TeleOpPerformance } from './match';
+import { StoneType, MatchEntry, AllianceColor, AutonomousPerformance, ScoringResult, TeleOpPerformance, DisconnectStatus } from './match';
 import { storeMatch, getMatch, getMatchByKey } from './local-storage';
 import { stats } from './stats';
 import { searchParams } from './utils';
@@ -19,7 +19,7 @@ let currentTeleOpPerformance: TeleOpPerformance = {
 let currentMatchEntry = new MatchEntry('Q1', 1, AllianceColor.BLUE, currentAutoPerformance, currentTeleOpPerformance, {
     movedFoundation: ScoringResult.DID_NOT_TRY,
     parked: ScoringResult.DID_NOT_TRY
-});
+}, DisconnectStatus.NO_DISCONNECT);
 
 // valid condition: cyclesAttempted >= deliveredStones.length >= stonesOnFoundation
 
@@ -129,10 +129,19 @@ function updateStackedStones() {
     currentMatchEntry.teleOp.stonesPerLevel = stones.slice(0, actualLength);
 }
 
+const disconnectValues = {
+    'none': DisconnectStatus.NO_DISCONNECT,
+    'partial': DisconnectStatus.PARTIAL,
+    'total': DisconnectStatus.TOTAL
+};
+
 function updateMetadata() {
     currentMatchEntry.matchCode = $('#match').val() as string;
     currentMatchEntry.teamNumber = parseInt($('#team').val() as string);
     currentMatchEntry.alliance = $('*[name="alliance"]:checked').val() === 'blue' ? AllianceColor.BLUE : AllianceColor.RED;
+    
+    currentMatchEntry.disconnect = disconnectValues[$('*[name="disconnect"]:checked').val() as string];
+    currentMatchEntry.remarks = $('#remarks').val() as string|undefined;
 }
 
 function updateInputsForReadOnly() {
@@ -149,6 +158,12 @@ function updateInputsForReadOnly() {
     $('#team').val(currentMatchEntry.teamNumber);
     const allianceId = currentMatchEntry.alliance === AllianceColor.RED ? "alliance-red" : "alliance-blue";
     $(`#${allianceId}`).attr('checked', 'true');
+    for (let value in disconnectValues) {
+        if (disconnectValues[value] === currentMatchEntry.disconnect) {
+            $(`input[name="disconnect"][value="${value}"]`).attr('checked', 'yes');
+        }
+    }
+    $('#remarks').text(currentMatchEntry.remarks || '');
 
     // Autonomous
     showScoringResult(currentMatchEntry.auto.movedFoundation, 'auto-moved');
@@ -235,7 +250,7 @@ $(() => {
         currentMatchEntry.endgame.capstoneLevel = parseInt((this as HTMLInputElement).value as string);
     });
 
-    $('#metadata input').on('change', updateMetadata);
+    $('#metadata input, #metadata .input').on('change', updateMetadata);
 
     wireScoringResult('auto-moved', result => currentAutoPerformance.movedFoundation = result);
     wireScoringResult('auto-parked', result => currentAutoPerformance.parked = result);
@@ -249,11 +264,12 @@ $(() => {
     $('button').on('click', updateScoring);
 
     $('#submit').on('click', function() {
+        updateMetadata();
         try {
             currentMatchEntry.validateMetadata();
             currentMatchEntry.validateAutonomous();
 
-            // $('#output').text(JSON.stringify(currentMatchEntry));
+            $('#output').text(JSON.stringify(currentMatchEntry));
             storeMatch(currentMatchEntry).then(() => {
                 this.setAttribute('disabled', 'yes');
                 this.innerText = 'Stored';
