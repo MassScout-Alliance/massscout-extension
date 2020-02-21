@@ -13,13 +13,6 @@ document.getElementById('manage')!.onclick = () => {
   });
 };
 
-document.getElementById('import')!.onclick = () => {
-  chrome.tabs.create({
-    active: true,
-    url: 'import.html'
-  });
-};
-
 document.getElementById('analyze')!.onclick = () => {
   chrome.tabs.create({
     active: true,

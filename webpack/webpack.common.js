@@ -11,7 +11,6 @@ module.exports = {
         performance: path.join(__dirname, srcDir + 'performance.ts'),
         manage: path.join(__dirname, srcDir + 'manage.ts'),
         export: path.join(__dirname, srcDir + 'export.ts'),
-        import: path.join(__dirname, srcDir + 'import.ts'),
         analyze_overview: path.join(__dirname, srcDir + 'analyze_overview.ts'),
         analyze_team: path.join(__dirname, srcDir + 'analyze_team.ts')
     },

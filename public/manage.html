@@ -13,6 +13,41 @@
 <body>
     <h1>Entry Management</h1>
     <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <form id="export-type" action="export.html">
+                <h3>Export</h3>
+                <div class="row">
+                    <div class="col-sm-12 col-md-4">
+                        <label for="type">Format:</label>
+                        <select id="type" name="type" required>
+                            <option value="original">Original</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <label for="filename">Filename:</label>
+                        <input type="text" id="filename" name="filename" required style="max-width: 150px;">
+                    </div>
+                    <div class="col-sm">
+                        <input type="submit" value="Export">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <form id="import-form">
+                <h3>Import</h3>
+                <div class="row">
+                    <label for="import-strategies">Format:</label>
+                    <select id="import-strategies" required>
+                    </select>
+                    <label for="import-file" id="file-select" class="button">Select file...</label>
+                    <input type="file" id="import-file" style="display:none">
+                    <span id="import-display"></span>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-sm-6">
             <label for="sort">Sort by:</label>
             <select id="sort">
@@ -38,17 +73,6 @@
     </div>
     <div class="card fluid" id="entries">
 
-    </div>
-    <div class="card fluid">
-        <form id="export-type" action="export.html">
-            <label for="type">Format:</label>
-            <select id="type" name="type">
-                <option value="original">Original</option>
-            </select>
-            <label for="filename">Filename:</label>
-            <input type="text" id="filename" name="filename" required>
-            <input type="submit" value="Export">
-        </form>
     </div>
     <script defer src="js/manage.js"></script>
     <style>

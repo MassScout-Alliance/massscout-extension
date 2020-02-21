@@ -127,30 +127,3 @@ export function importFile(file: File, strategyName: string): Promise<null> {
     return readFile(file)
         .then(contents => storeMatches(kImportStrategies[strategyName].readToMatchEntries(contents)));
 }
-
-$(() => {
-    for (let strategy in kImportStrategies) {
-        $('select').append(`<option value="${strategy}">${kImportStrategies[strategy].displayName}</option>`);
-    }
-
-    $('#import-form').on('submit', event => {
-        event.preventDefault();
-        const filepicker = document.querySelector('#import-form input[type="file"]')!;
-        const file = (filepicker as HTMLInputElement).files![0];
-        const strategyName = $('#import-form select').val() as string;
-
-        if (file === undefined) {
-            alert('Please select a file to import');
-            return;
-        }
-        if (strategyName == undefined) {
-            alert("Please select an import strategy (format)");
-            return;
-        }
-
-        const strategy = kImportStrategies[strategyName];
-        strategy.readFile(file).then(contents => storeMatches(strategy.readToMatchEntries(contents)))
-            .then(_ => $('#import-form input[type="submit"]').attr("value", "Submitted"))
-            .catch(reason => alert(`Failed: ${reason}`));
-    });
-});
