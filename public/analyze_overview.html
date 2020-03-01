@@ -11,12 +11,35 @@
    <div id="table" class="ag-theme-balham fluid container" style="height: 70vh; padding: 20px;">
 
    </div>
-    <form id="analyze_team" action="analyze_team.html" method="GET">
-        <select id="team_number" name="team_number" required>
-
-        </select>
-        <input type="submit" value="Analyze team">
-    </form>
+   <div class="row">
+       <div class="col-sm-12 col-md-6">
+           <form id="analyze_team" action="analyze_team.html" method="GET">
+               <select id="team_number" name="team_number" required>
+       
+               </select>
+               <input type="submit" value="Analyze team">
+           </form>
+       </div>
+       <div class="col-sm-12 col-md-6">
+           <div class="container" id="favorites" v-cloak>
+               <h3>⭐ Favorites</h3>
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-4" v-for="team in teams" v-cloak>{{ team }} <span v-on:click="removeFavorite(team)" style="color:red;cursor: pointer">×</span></div>
+                        </div>
+                        <i id="no-favorites" style="color: #666;" v-if="teams.length === 0">No favorite teams...</i>
+                    </div>
+                    <div class="col-sm-5">
+                        <select v-model="newFavorite" id="favorite-next">
+                            <option v-for="team in allTeams" :value="team" v-cloak>{{ team }}</option>
+                        </select>
+                        <button id="add-favorite" v-on:click="addFavorite(newFavorite)">Add Favorite</button>
+                    </div>
+                </div>
+            </div>
+       </div>
+   </div>
 
     <script src="js/vendor.js"></script>
     <script src="js/analyze_overview.js"></script>

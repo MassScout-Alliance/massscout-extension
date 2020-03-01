@@ -8,6 +8,7 @@
         "outDir": "dist/js",
         "noEmitOnError": true,
         "strictNullChecks": true,
+        "strict": true,
         "typeRoots": [ "node_modules/@types" ]
     }
 }

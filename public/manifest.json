@@ -3,7 +3,7 @@
 
   "name": "MassScout",
   "description": "Scouting data entry and team analysis application for the MassScout Alliance",
-  "version": "1.0.1",
+  "version": "1.1.0",
 
   "options_ui": {
     "page": "options.html",
@@ -15,9 +15,7 @@
     "default_popup": "popup.html"
   },
 
-  "background": {
-    "scripts": ["js/vendor.js", "js/background.js"]
-  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
   "permissions": [
     "storage"

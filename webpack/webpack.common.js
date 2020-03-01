@@ -6,8 +6,6 @@ const srcDir = '../src/';
 module.exports = {
     entry: {
         popup: path.join(__dirname, srcDir + 'popup.ts'),
-        options: path.join(__dirname, srcDir + 'options.ts'),
-        background: path.join(__dirname, srcDir + 'background.ts'),
         performance: path.join(__dirname, srcDir + 'performance.ts'),
         manage: path.join(__dirname, srcDir + 'manage.ts'),
         export: path.join(__dirname, srcDir + 'export.ts'),
@@ -41,7 +39,10 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.ts', '.tsx', '.js']
+        extensions: ['.ts', '.tsx', '.js'],
+        alias: {
+          'vue$': 'vue/dist/vue.esm.js'
+        }
     },
     plugins: [
         // exclude locale files in moment

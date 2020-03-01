@@ -71,7 +71,7 @@
             </div>
         </div>
     </div>
-    <div class="card fluid" id="entries">
+    <div class="collapse" id="entries">
 
     </div>
     <script defer src="js/manage.js"></script>
@@ -150,6 +150,11 @@
 
         .actions span {
             cursor: pointer;
+        }
+
+        /* Fix mini.css accordion scrolling */
+        .collapse>[type="checkbox"] {
+            display: none !important;
         }
     </style>
 </body>

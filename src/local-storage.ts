@@ -101,3 +101,29 @@ export function populateDefaults(data: object): object {
 export function parseEntry(entry: object): MatchEntry {
     return injectFunctionsToMatchEntry(populateDefaults(entry));
 }
+
+export function getOptionsItem(key: string): Promise<object> {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get('options', result => {
+            const rejectFn = () => reject(`missing options item '${key}'`);
+
+            if (!('options' in result)) {
+                chrome.storage.local.set({'options': {}}, rejectFn);
+            } else if (key in result.options) {
+                resolve(result.options[key]);
+            } else {
+                rejectFn();
+            }
+        });
+    });
+}
+
+export function setOptionsItem(key: string, value: object): Promise<null> {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get('options', result => {
+            const existingOptions = 'options' in result ? result.options : {};
+            existingOptions[key] = value;
+            chrome.storage.local.set({'options': existingOptions}, resolve);
+        });
+    });
+}

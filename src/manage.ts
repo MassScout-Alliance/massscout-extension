@@ -2,6 +2,7 @@ import * as $ from 'jquery';
 import { MatchEntry, AllianceColor } from "./match";
 import { entryKey, getAllMatches, removeMatch, clearAllMatches, storeMatches } from "./local-storage";
 import { kImportStrategies } from './import';
+import { stats } from './stats';
 
 function getHtmlForEntry(entry: MatchEntry): string {
     const key = entryKey(entry);
@@ -33,15 +34,35 @@ function getHtmlForEntry(entry: MatchEntry): string {
 </div>`;
 }
 
+function getHtmlForSection(team: number, contents: MatchEntry[]): string {
+    return `<input type="checkbox" id="collapse-${team}" aria-hidden="true">
+    <label for="collapse-${team}" aria-hidden="true">${team} (${contents.length} entries)</label>
+    <div id="section-${team}">
+    ${contents.map(getHtmlForEntry).join('\n')}
+    </div>`;
+}
+
 const kEntryContainer = $('#entries');
 type EntryCompareFn = (a: MatchEntry, b: MatchEntry) => number;
+type TeamCompareFn = (a: [number, MatchEntry[]], b: [number, MatchEntry[]]) => number;
 
-function repopulate(sortFn: EntryCompareFn | null) {
+function repopulate(sortFn: TeamCompareFn | null) {
     getAllMatches().then(entries => {
-        if (sortFn != null) {
-            entries = entries.sort(sortFn);
+        const sections: {[team: number]: MatchEntry[]} = {};
+        
+        for (let entry of entries) {
+            if (!(entry.teamNumber in sections)) sections[entry.teamNumber] = [];
+            sections[entry.teamNumber].push(entry);
         }
-        kEntryContainer.html(entries.map(getHtmlForEntry).join('\n'));       
+
+        const sortedSections = Object.keys(sections);
+        if (sortFn !== null)
+            sortedSections.sort((t1, t2) =>
+                sortFn([parseInt(t1), sections[t1]], [parseInt(t2), sections[t2]]));
+
+        kEntryContainer.html(sortedSections
+            .map(team => getHtmlForSection(parseInt(team), sections[team])).join('\n'));
+
     }).catch(alert).then(() => $(attachClickHandlers));
 }
 
@@ -61,13 +82,14 @@ function attachClickHandlers() {
 }
 
 function applySelectedSortMethod() {
-    const kSortMethods: {[key: string]: EntryCompareFn | null} = {
+    const kSortMethods: {[key: string]: TeamCompareFn | null} = {
         'natural': null,
-        'score': (a, b) => {
-            return b.getTotalScore() - a.getTotalScore();
+        'score': ([_, e1], [__, e2]) => {
+            return stats.average(e2.map(entry => entry.getTotalScore())) -
+                stats.average(e1.map(entry => entry.getTotalScore()));
         },
-        'team': (a, b) => {
-            return a.teamNumber - b.teamNumber;
+        'team': ([t1, _], [t2, __]) => {
+            return t1 - t2;
         }
     };
     const sorter = kSortMethods[(document.getElementById('sort') as HTMLSelectElement).value];

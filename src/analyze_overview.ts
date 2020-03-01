@@ -4,6 +4,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import * as ag from 'ag-grid-community';
 import * as $ from 'jquery';
+import { getFavoriteTeams, addFavoriteTeam, removeFavoriteTeam } from "./favorites";
 
 export function getEntriesForTeam(teamNumber: number): Promise<MatchEntry[]> {
     return getAllMatches().then(matches => matches.filter(it => it.teamNumber === teamNumber));
@@ -126,12 +127,56 @@ function populateTeams(teams: number[]) {
     }
 }
 
-$(() => {
-    getAllMatches().then(entries => {
-        const teamInsights = collateMatchesByTeam(entries);
-        const teams = Object.keys(teamInsights).map(item => parseInt(item)).sort((a, b) => a - b);
+getAllMatches().then(entries => {
+    const teamInsights = collateMatchesByTeam(entries);
+    const teams = Object.keys(teamInsights).map(item => parseInt(item)).sort((a, b) => a - b);
 
+    setupFavorites(teams);
+    $(() => {
         populateTeams(teams);
         renderOverviewInsights(teams.map(team => teamInsights[team]).map(analyzeOverview));
     });
 });
+
+async function setupFavorites(allTeams: number[]) { 
+    const Vue = (await import('vue')).default;
+    const favorites = await getFavoriteTeams();
+    const availableTeams = allTeams.filter(it => favorites.indexOf(it) === -1);
+    new Vue({
+        el: '#favorites',
+        data: {
+            teams: favorites,
+            allTeams: availableTeams,
+            newFavorite: availableTeams[0]
+        },
+        methods: {
+            addFavorite(team: string) {
+                const teamNum = parseInt(team);
+                if (isNaN(teamNum)) {
+                    alert(`Invalid team number: ${team}`);
+                    return;
+                }
+                addFavoriteTeam(teamNum)
+                    .then(() => {
+                        this.teams.push(teamNum);
+                        this.allTeams.splice(this.allTeams.indexOf(teamNum), 1);
+                        this.newFavorite = this.allTeams[0];
+                    })
+                    .catch(alert);
+            },
+            removeFavorite(team: string) {
+                const teamNum = parseInt(team);
+                if (isNaN(teamNum)) {
+                    alert(`Invalid team number: ${team}`);
+                    return;
+                }
+                removeFavoriteTeam(teamNum)
+                    .then(() => {
+                        this.teams.splice(this.teams.indexOf(teamNum), 1);
+                        this.allTeams.push(teamNum);
+                        this.allTeams.sort((a, b) => a - b);
+                    });
+            }
+        }
+    });
+}

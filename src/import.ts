@@ -1,6 +1,5 @@
 import { parseEntry, storeMatches } from "./local-storage";
 import { MatchEntry, AllianceColor, StoneType, ScoringResult, DisconnectStatus } from "./match";
-import * as $ from 'jquery';
 import * as xlsx from 'xlsx';
 
 interface ImportStrategy<T> {
