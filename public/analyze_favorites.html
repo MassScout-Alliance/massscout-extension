@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyze Favorite Teams</title>
+    <!-- <link rel="stylesheet" href="css/mini-default.min.css"> -->
+</head>
+<body>
+    <h1>Favorite Teams</h1>
+    <table id="app">
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Task</th>
+                <th v-for="team in favoriteTeams" v-cloak>{{ team }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="4">Autonomous</td>
+                <td><img src="assets/deliver_blue_small.png" alt="Stone delivery"></td>
+                <td v-for="team in favoriteTeams" v-cloak>
+                    <canvas v-bind:id="'graph-auto-delivery-' + team" width="190" height="140"></canvas>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="assets/placed_blue_small.png" alt="Stone placement"></td>
+                <td v-for="team in favoriteTeams" v-cloak>
+                    <canvas v-bind:id="'graph-auto-placement-' + team" width="190" height="140"></canvas>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="assets/foundation_blue_small.png" alt="Foundation reposition"></td>
+                <td v-for="team in favoriteTeams" v-cloak>
+                    <scoring-summary period="auto" task="movedFoundation" v-bind:team="team"></scoring-summary>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="assets/parking_blue20.png" alt="Navigate"></td>
+                <td v-for="team in favoriteTeams" v-cloak>
+                    <scoring-summary period="auto" task="parked" v-bind:team="team"></scoring-summary>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">TeleOp</td>
+                <td><img src="assets/deliver_neutral.png" alt="Deliveries"></td>
+                <td v-for="team in favoriteTeams" v-cloak>
+                    <canvas v-bind:id="'graph-teleop-delivery-' + team" width="190" height="140"></canvas>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="assets/tower_blue_small.png" alt="Stack level"></td>
+                <td v-for="team in favoriteTeams" v-cloak>
+                    <canvas v-bind:id="'graph-teleop-level-' + team" width="190" height="140"></canvas>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">Endgame</td>
+                <td><img src="assets/foundation_blue_small.png" alt="Pull foundation out"></td>
+                <td v-for="team in favoriteTeams" v-cloak>
+                    <scoring-summary period="endgame" task="movedFoundation" v-bind:team="team"></scoring-summary>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="assets/capstone_blue_small.png" alt="Capstone"></td>
+                <td v-for="team in favoriteTeams" v-cloak>
+                    <div class="row scoring-results">
+                        <span v-for="result in teamMatches(team).map(it => it.endgame.capstoneLevel)" class="capstone-result">
+                            {{ result == undefined ? '×' : result }}
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="assets/parking_blue20.png" alt="Park in Build Site"></td>
+                <td v-for="team in favoriteTeams" v-cloak>
+                    <scoring-summary period="endgame" task="parked" v-bind:team="team"></scoring-summary>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <script src="js/vendor.js"></script>
+    <script src="js/analyze_favorites.js"></script>
+    <style>
+        img {
+            width: 60px;
+        }
+        .scoring-result {
+            width: 25px;
+            height: 25px;
+            font-size: 25px;
+        }
+        .scoring-result[value="dnt"]::before {
+            color: #777;
+            content: '∅';
+        }
+        .scoring-result[value="failed"]::before {
+            color: #a10;
+            content: '×';
+        }
+        .scoring-result[value="scored"]::before {
+            color: #081;
+            content: '✓';
+        }
+        .scoring-results {
+            text-align: center;
+        }
+        .capstone-result {
+            font-size: 24px;
+        }
+    </style>
+</body>
+</html>
