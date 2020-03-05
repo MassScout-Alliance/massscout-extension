@@ -36,7 +36,7 @@ function getHtmlForEntry(entry: MatchEntry): string {
 
 function getHtmlForSection(team: number, contents: MatchEntry[]): string {
     return `<input type="checkbox" id="collapse-${team}" aria-hidden="true">
-    <label for="collapse-${team}" aria-hidden="true">${team} (${contents.length} entries)</label>
+    <label for="collapse-${team}" aria-hidden="true">${team} (<span id="${team}-counter">${contents.length}</span> entries)</label>
     <div id="section-${team}" class="team-section">
     ${contents.map(getHtmlForEntry).join('\n')}
     </div>`;
@@ -70,7 +70,7 @@ function attachClickHandlers() {
     $('.icon-delete').on('click', function() {
         const key = this.getAttribute('match')!;
         removeMatch(key);
-        $('.team-section').remove();
+        $(`.entry[match="${key}"]`).remove();
     });
     $('.icon-info').on('click', function() {
         chrome.windows.create({
@@ -101,7 +101,7 @@ $(() => {
     repopulate(null);
     $('#remove-all').on('click', () => {
         clearAllMatches().then(() => {
-            $('.entry').remove();
+            $('#entries').html('');
             $('#modal-control').click();
         }).catch(alert);
     });
