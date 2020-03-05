@@ -5,6 +5,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import * as ag from 'ag-grid-community';
 import * as $ from 'jquery';
 import { getFavoriteTeams, addFavoriteTeam, removeFavoriteTeam } from "./favorites";
+import { collateMatchesByTeam } from "./utils";
 
 export function getEntriesForTeam(teamNumber: number): Promise<MatchEntry[]> {
     return getAllMatches().then(matches => matches.filter(it => it.teamNumber === teamNumber));
@@ -76,18 +77,6 @@ export function analyzeOverview(entries: MatchEntry[]): TeamOverviewInsights {
 
         averageContribution: average(entries.map(entry => entry.getTotalScore()))
     };
-}
-
-export function collateMatchesByTeam(entries: MatchEntry[]): {[team: number]: MatchEntry[]} {
-    const output = {};
-    for (let entry of entries) {
-        if (entry.teamNumber in output) {
-            output[entry.teamNumber].push(entry);
-        } else {
-            output[entry.teamNumber] = [entry];
-        }
-    }
-    return output;
 }
 
 function renderOverviewInsights(insights: TeamOverviewInsights[]) {

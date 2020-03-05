@@ -2,16 +2,23 @@ import { Chart } from 'chart.js';
 import { getAllMatches } from './local-storage';
 import { MatchEntry, StoneType, ScoringResult } from './match';
 import * as $ from 'jquery';
-import { collateMatchesByTeam } from './analyze_overview';
+import { collateMatchesByTeam } from './utils';
 import { stats } from './stats';
+import { isFavoriteTeam } from './favorites';
 
 async function getTeamMatches(team: number): Promise<MatchEntry[]> {
     return (await getAllMatches()).filter(it => it.teamNumber === team);
 }
 
 function populateTeam(team: number) {
-    $('#team-title').prepend(`Team ${team}`);
+    $('#team-title').text(`Team ${team}`);
     $('title').append(' ' + team);
+
+    isFavoriteTeam(team).then(favorite => {
+        if (favorite) {
+            $('#favorite-badge').html('<span class="tooltip bottom" aria-label="Favorite team">⭐</span>');
+        }
+    });
 }
 
 async function populateTopStats(matches: MatchEntry[]) {
@@ -33,7 +40,6 @@ async function populateTopStats(matches: MatchEntry[]) {
         stats.average(teams[team].map(entry => entry.getTotalScore())));
 
     const ranking = stats.rank(contributions, myContribution);
-    console.log(contributions, myContribution);
     $('stat[rank]').text(`${ranking[0]}/${ranking[1]}`);
 }
 
@@ -218,26 +224,6 @@ async function populateRelativeStats(team: number) {
 }
 
 function describeTeam(matches: MatchEntry[], team: number, relStats: RelativeStatistics): string {
-    function qualify(ratio: number): string {
-        const adjectives = [
-            [0, 0.1, 'nonexistent'],
-            [0.1, 0.25, 'very poor'],
-            [0.25, 0.4, 'poor'],
-            [0.4, 0.6, 'average'],
-            [0.6, 0.75, 'fair'],
-            [0.75, 0.85, 'good'],
-            [0.85, 0.95, 'excellent'],
-            [0.95, 0.99, 'outstanding'],
-            [0.99, 1.1, 'perfect']
-        ];
-        for (let option of adjectives) {
-            if (ratio >= option[0] && ratio < option[1]) {
-                return option[2] as string;
-            }
-        }
-        return 'impossible';
-    }
-
     function expressPercentage(ratio: number): string {
         return `<b>${Math.round(ratio * 100)}%</b>`;
     }
