@@ -23,7 +23,7 @@
     "moment": "~2.24.0",
     "vue": "^2.6.11",
     "vue-template-compiler": "^2.6.11",
-    "xlsx": "^0.15.5"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@types/chrome": "0.0.91",
