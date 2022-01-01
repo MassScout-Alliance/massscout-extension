@@ -3,6 +3,7 @@ import { StoneType, MatchEntry, AllianceColor, AutonomousPerformance, ScoringRes
 import { storeMatch, getMatch, getMatchByKey } from './local-storage';
 import { stats } from './stats';
 import { searchParams } from './utils';
+import { AgAbstractField } from 'ag-grid-community';
 
 let currentAutoPerformance: AutonomousPerformance = {
     deliveredStones: [],
@@ -31,61 +32,65 @@ function setIdEnabled(id: string, enabled: boolean) {
         elem.attr('disabled', 'true');
 }
 
-function updateAutoButtonEnabled() {    
-    setIdEnabled('auto-button-attempt', currentAutoPerformance.cyclesAttempted < 6);
-    const canDeliverMoreStones = currentAutoPerformance.deliveredStones.length < currentAutoPerformance.cyclesAttempted;
-    const canDeliverMoreSkystones = canDeliverMoreStones && stats.count(currentAutoPerformance.deliveredStones, StoneType.SKYSTONE) < 2;
-    setIdEnabled('auto-button-deliver-skystone', canDeliverMoreSkystones);
-    setIdEnabled('auto-button-deliver-stone', canDeliverMoreStones);
-    const canStackMoreStones = currentAutoPerformance.stonesOnFoundation < currentAutoPerformance.deliveredStones.length;
-    setIdEnabled('auto-button-placed', canStackMoreStones);
+/* BELOW FUNCTIONS ARE OUTDATED SKYSTONE THINGS
+(Freight Frenzy does not have any live scoring elements)
+*/
+
+// function updateAutoButtonEnabled() {    
+//     setIdEnabled('auto-button-attempt', currentAutoPerformance.cyclesAttempted < 6);
+//     const canDeliverMoreStones = currentAutoPerformance.deliveredStones.length < currentAutoPerformance.cyclesAttempted;
+//     const canDeliverMoreSkystones = canDeliverMoreStones && stats.count(currentAutoPerformance.deliveredStones, StoneType.SKYSTONE) < 2;
+//     setIdEnabled('auto-button-deliver-skystone', canDeliverMoreSkystones);
+//     setIdEnabled('auto-button-deliver-stone', canDeliverMoreStones);
+//     const canStackMoreStones = currentAutoPerformance.stonesOnFoundation < currentAutoPerformance.deliveredStones.length;
+//     setIdEnabled('auto-button-placed', canStackMoreStones);
     
-    if (!canDeliverMoreStones && !canStackMoreStones && currentAutoPerformance.cyclesAttempted < 6) {
-        $('#auto-button-attempt').addClass('primary');
-    } else {
-        $('#auto-button-attempt').removeClass('primary');
-    }
-}
+//     if (!canDeliverMoreStones && !canStackMoreStones && currentAutoPerformance.cyclesAttempted < 6) {
+//         $('#auto-button-attempt').addClass('primary');
+//     } else {
+//         $('#auto-button-attempt').removeClass('primary');
+//     }
+// }
 
-function updateAutoDisplays() {
-    function imageForStone(type: StoneType): JQuery<HTMLElement> {
-        const url = type === StoneType.SKYSTONE ? 'assets/brick_outline_target_new.png' : 'assets/brick_normal_small.png';
-        return $(`<div class="row"><img src="${url}"><span class="icon-delete auto-stone-return input"></span></div>`);
-    }
+// function updateAutoDisplays() {
+//     function imageForStone(type: StoneType): JQuery<HTMLElement> {
+//         const url = type === StoneType.SKYSTONE ? 'assets/brick_outline_target_new.png' : 'assets/brick_normal_small.png';
+//         return $(`<div class="row"><img src="${url}"><span class="icon-delete auto-stone-return input"></span></div>`);
+//     }
 
-    $('#auto-display-attempt').text(currentAutoPerformance.cyclesAttempted);
+//     $('#auto-display-attempt').text(currentAutoPerformance.cyclesAttempted);
 
-    const stonesParent = $('#auto-display-delivered');
-    stonesParent.html('');
-    for (let stone of currentAutoPerformance.deliveredStones) {
-        imageForStone(stone).appendTo(stonesParent);
-    }
+//     const stonesParent = $('#auto-display-delivered');
+//     stonesParent.html('');
+//     for (let stone of currentAutoPerformance.deliveredStones) {
+//         imageForStone(stone).appendTo(stonesParent);
+//     }
 
-    $('#auto-display-placed').text(currentAutoPerformance.stonesOnFoundation);
-    $('.auto-stone-return').on('click', function() {
-        if (this.getAttribute('disabled') !== null) return;
+//     $('#auto-display-placed').text(currentAutoPerformance.stonesOnFoundation);
+//     $('.auto-stone-return').on('click', function() {
+//         if (this.getAttribute('disabled') !== null) return;
         
-        // determine row
-        const row = this.parentElement!;
-        const collection = row.parentElement!;
-        const n = Array.from(collection.children).indexOf(row);
+//         // determine row
+//         const row = this.parentElement!;
+//         const collection = row.parentElement!;
+//         const n = Array.from(collection.children).indexOf(row);
 
-        currentAutoPerformance.deliveredStones.splice(n, 1);
-        currentAutoPerformance.stonesOnFoundation = Math.min(currentAutoPerformance.deliveredStones.length,
-            currentAutoPerformance.stonesOnFoundation);
-        updateAutoButtonEnabled();
-        updateAutoDisplays();
-        updateScoring();
-    });
-}
+//         currentAutoPerformance.deliveredStones.splice(n, 1);
+//         currentAutoPerformance.stonesOnFoundation = Math.min(currentAutoPerformance.deliveredStones.length,
+//             currentAutoPerformance.stonesOnFoundation);
+//         updateAutoButtonEnabled();
+//         updateAutoDisplays();
+//         updateScoring();
+//     });
+// }
 
-function updateTeleOpDisplays() {
-    $('#teleop-display-alliance-deliver').text(currentTeleOpPerformance.allianceStonesDelivered);
-    $('#teleop-display-neutral-deliver').text(currentTeleOpPerformance.neutralStonesDelivered);
+// function updateTeleOpDisplays() {
+//     $('#teleop-display-alliance-deliver').text(currentTeleOpPerformance.allianceStonesDelivered);
+//     $('#teleop-display-neutral-deliver').text(currentTeleOpPerformance.neutralStonesDelivered);
 
-    setIdEnabled('teleop-alliance-return', currentTeleOpPerformance.allianceStonesDelivered > 0);
-    setIdEnabled('teleop-neutral-return', currentTeleOpPerformance.neutralStonesDelivered > 0);
-}
+//     setIdEnabled('teleop-alliance-return', currentTeleOpPerformance.allianceStonesDelivered > 0);
+//     setIdEnabled('teleop-neutral-return', currentTeleOpPerformance.neutralStonesDelivered > 0);
+// }
 
 function updateScoring() {
     setTimeout(() => {
@@ -111,23 +116,23 @@ function wireScoringResult(name: string, writeResult: (result: ScoringResult) =>
     });
 }
 
-function updateStackedStones() {
-    let stones = new Array(12);
-    $('.teleop-level').each(function() {
-        const index = parseInt(this.getAttribute('level')!) - 1;
-        stones[index] = parseInt((this as HTMLInputElement).value);
-    });
+// function updateStackedStones() {
+//     let stones = new Array(12);
+//     $('.teleop-level').each(function() {
+//         const index = parseInt(this.getAttribute('level')!) - 1;
+//         stones[index] = parseInt((this as HTMLInputElement).value);
+//     });
 
-    let actualLength = 0;
-    for (let i = stones.length - 1; i >= 0; --i) {
-        if (stones[i] > 0) {
-            actualLength = i + 1;
-            break;
-        }
-    }
+//     let actualLength = 0;
+//     for (let i = stones.length - 1; i >= 0; --i) {
+//         if (stones[i] > 0) {
+//             actualLength = i + 1;
+//             break;
+//         }
+//     }
 
-    currentMatchEntry.teleOp.stonesPerLevel = stones.slice(0, actualLength);
-}
+//     currentMatchEntry.teleOp.stonesPerLevel = stones.slice(0, actualLength);
+// }
 
 const disconnectValues = {
     'none': DisconnectStatus.NO_DISCONNECT,
