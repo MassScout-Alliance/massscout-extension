@@ -18,7 +18,7 @@ export function storeMatches(entries: MatchEntry[]): Promise<null> {
         for (let entry of entries) {
             object[entryKey(entry)] = entry;
         }
-        chrome.storage.local.set(object, resolve);
+        chrome.storage.local.set(object, () => resolve(null));
     });
 }
 
@@ -123,7 +123,7 @@ export function setOptionsItem(key: string, value: object): Promise<null> {
         chrome.storage.local.get('options', result => {
             const existingOptions = 'options' in result ? result.options : {};
             existingOptions[key] = value;
-            chrome.storage.local.set({'options': existingOptions}, resolve);
+            chrome.storage.local.set({'options': existingOptions}, () => resolve(null));
         });
     });
 }
