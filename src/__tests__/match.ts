@@ -1,11 +1,22 @@
-import { MatchEntry, AllianceColor, StoneType, ScoringResult, AutonomousPerformance, TeleOpPerformance, EndgamePerformance, isValidMatchCode, DisconnectStatus } from "../match";
+import {
+    MatchEntry,
+    AllianceColor,
+    ScoringResult,
+    ParkArea,
+    AutonomousPerformance,
+    TeleOpPerformance,
+    EndgamePerformance,
+    isValidMatchCode,
+    DisconnectStatus
+} from "../match";
 
 export const kEmptyAuto: AutonomousPerformance = {
-    deliveredStones: [],
-    cyclesAttempted: 0,
-    stonesOnFoundation: 0,
-    parked: ScoringResult.FAILED,
-    movedFoundation: ScoringResult.FAILED 
+    hasCapstone: false,
+    deliveredPreLoaded: false,
+    ranCarousel: false,
+    cyclesAttempted: 5,
+    freightDelivered: 1,
+    parked: ParkArea.WAREHOUSE
 };
 
 export const kEmptyTeleOp: TeleOpPerformance = {
@@ -21,11 +32,12 @@ export const kEmptyEndgame: EndgamePerformance = {
 
 test('MatchEntry constructor', () => {
     const auto: AutonomousPerformance = {
-        deliveredStones: [StoneType.SKYSTONE, StoneType.STONE],
+        hasCapstone: true,
+        deliveredPreLoaded: true,
+        ranCarousel: true,
         cyclesAttempted: 3,
-        stonesOnFoundation: 1,
-        parked: ScoringResult.SCORED,
-        movedFoundation: ScoringResult.DID_NOT_TRY
+        freightDelivered: 2,
+        parked: ParkArea.STATION
     };
     const teleop: TeleOpPerformance = {
         allianceStonesDelivered: 2,
