@@ -1,3 +1,6 @@
+import { BarTooltipRendererParams } from "ag-grid-community";
+import { param } from "jquery";
+
 export enum AllianceColor {
     BLUE, RED
 }
@@ -13,6 +16,14 @@ export enum ScoringResult {
 // OK FTC state-of-the-art mobile phone control system
 export enum DisconnectStatus {
     NO_DISCONNECT, PARTIAL, TOTAL
+}
+
+export enum ParkArea {
+    CIN_STATION, CIN_WAREHOUSE, PIN_STATION, PIN_WAREHOUSE, NOT_PARKED
+}
+
+export enum HubState {
+    BALANCED, TIPPED, TIPPED_OPP
 }
 
 export class MatchEntry {
@@ -57,35 +68,41 @@ export class MatchEntry {
     }
 
     public validateAutonomous() {
-        if (this.auto.cyclesAttempted < this.auto.deliveredStones.length) {
-            throw new RangeError(`${this.teamNumber} ${this.matchCode}: autonomous cyclesAttempted < num of deliveredStones`);
-        }
-        if (this.auto.stonesOnFoundation > this.auto.deliveredStones.length) {
-            throw new RangeError(`${this.teamNumber} ${this.matchCode}: autonomous stonesOnFoundation > num of deliveredStones`);
+        if (this.auto.cyclesAttempted < this.auto.freightScoredPerLevel.length) {
+            throw new RangeError(`${this.teamNumber} ${this.matchCode}: autonomous cyclesAttempted < num of delivered freight`);
         }
     }
 
     getAutonomousScore(): number {
         let score = 0;
-        // 4.5.2.1
-        if (this.auto.movedFoundation === ScoringResult.SCORED) {
+        //4.5.2
+        if(this.auto.deliveredCarouselDuck == ScoringResult.SCORED) {
             score += 10;
         }
-        // 4.5.2.2
-        for (let i = 0; i < this.auto.deliveredStones.length; i++) {
-            const stone = this.auto.deliveredStones[i];
-            if (stone === StoneType.SKYSTONE && i < 2) {
+        if(this.auto.deliveredPreLoaded == ScoringResult.SCORED) {
+            if(this.auto.hasCapstone == ScoringResult.SCORED) {
+                score += 20;
+            }
+            else {
                 score += 10;
-            } else if (stone != undefined) {
-                score += 2;
             }
         }
-        // 4.5.2.3
-        if (this.auto.parked === ScoringResult.SCORED) {
+        score += this.auto.freightScoredInStorageUnit * 2;
+        score += totalOfArr(this.auto.freightScoredPerLevel) * 6;
+
+        if(this.auto.parked == ParkArea.PIN_STATION) {
+            score += 3;
+        }
+        else if(this.auto.parked == ParkArea.CIN_STATION) {
+            score += 6;
+        }
+        else if(this.auto.parked == ParkArea.PIN_WAREHOUSE) {
             score += 5;
         }
-        // 4.5.2.4
-        score += this.auto.stonesOnFoundation * 4;
+        else if(this.auto.parked == ParkArea.CIN_WAREHOUSE) {
+            score += 10;
+        }
+
         return score;
     }
 
@@ -122,24 +139,32 @@ export class MatchEntry {
     }
 }
 
+// penalties [warning, minor, major]
 export interface AutonomousPerformance {
-    deliveredStones: StoneType[];
+    hasCapstone: ScoringResult;
+    deliveredPreLoaded: ScoringResult;
+    deliveredCarouselDuck: ScoringResult;
     cyclesAttempted: number;
-    stonesOnFoundation: number;
-    parked: ScoringResult;
-    movedFoundation: ScoringResult;
+    freightScoredPerLevel: number[];
+    freightScoredInStorageUnit: number;
+    parked: ParkArea;
+    warningsPenalties: number[];
 }
 
 export interface TeleOpPerformance {
-    allianceStonesDelivered: number;
-    neutralStonesDelivered: number;
-    stonesPerLevel: number[];
+    freightScoredOnSharedHub: number;
+    freightInStorageUnit: number;
+    freightScoredPerLevel: number[];
+    warningsPenalties: number[];
 }
 
 export interface EndgamePerformance {
-    movedFoundation: ScoringResult;
-    capstoneLevel?: number;
-    parked: ScoringResult;
+    ducksDelivered: number;
+    allianceHubTipped: HubState;
+    sharedHubTipped: HubState;
+    parked: ParkArea;
+    capstoneScored: ScoringResult;
+    warningsPenalties: number[];
 }
 
 export type MatchEntrySet = MatchEntry[];
@@ -147,4 +172,12 @@ export type MatchEntrySet = MatchEntry[];
 export function isValidMatchCode(matchCode: string): boolean {
     const matchResult = matchCode.match(/^([QF][1-9][0-9]*)|(SF[12]-[1-9][0-9]*)$/);
     return matchResult !== null && matchResult[0] === matchCode;
+}
+
+export function totalOfArr(arr: number[]) {
+    let ret = 0;
+    for(let i = 0; i < arr.length; i++) {
+        ret += arr[i];
+    }
+    return ret;
 }

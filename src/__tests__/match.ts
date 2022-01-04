@@ -7,49 +7,64 @@ import {
     TeleOpPerformance,
     EndgamePerformance,
     isValidMatchCode,
-    DisconnectStatus
+    DisconnectStatus,
+    HubState
 } from "../match";
 
 export const kEmptyAuto: AutonomousPerformance = {
-    hasCapstone: false,
-    deliveredPreLoaded: false,
-    ranCarousel: false,
-    cyclesAttempted: 5,
-    freightDelivered: 1,
-    parked: ParkArea.WAREHOUSE
+    hasCapstone: ScoringResult.FAILED,
+    deliveredPreLoaded: ScoringResult.FAILED,
+    deliveredCarouselDuck: ScoringResult.FAILED,
+    cyclesAttempted: 0,
+    freightScoredPerLevel: [0, 0, 0],
+    freightScoredInStorageUnit: 0,
+    parked: ParkArea.NOT_PARKED,
+    warningsPenalties: [0, 0, 0]
 };
 
 export const kEmptyTeleOp: TeleOpPerformance = {
-    allianceStonesDelivered: 0,
-    neutralStonesDelivered: 0,
-    stonesPerLevel: []
+    freightScoredOnSharedHub: 0,
+    freightInStorageUnit: 0,
+    freightScoredPerLevel: [0, 0, 0],
+    warningsPenalties: [0, 0, 0]
 };
 
 export const kEmptyEndgame: EndgamePerformance = {
-    movedFoundation: ScoringResult.FAILED,
-    parked: ScoringResult.FAILED
+    ducksDelivered: 0,
+    allianceHubTipped: HubState.BALANCED,
+    sharedHubTipped: HubState.BALANCED,
+    parked: ParkArea.NOT_PARKED,
+    capstoneScored: ScoringResult.FAILED,
+    warningsPenalties: [0, 0, 0]
 };
 
 test('MatchEntry constructor', () => {
     const auto: AutonomousPerformance = {
-        hasCapstone: true,
-        deliveredPreLoaded: true,
-        ranCarousel: true,
-        cyclesAttempted: 3,
-        freightDelivered: 2,
-        parked: ParkArea.STATION
+        hasCapstone: ScoringResult.DID_NOT_TRY,
+        deliveredPreLoaded: ScoringResult.SCORED,
+        deliveredCarouselDuck: ScoringResult.SCORED,
+        cyclesAttempted: 4,
+        freightScoredPerLevel: [0, 0, 4],
+        freightScoredInStorageUnit: 2,
+        parked: ParkArea.PIN_WAREHOUSE,
+        warningsPenalties: [2, 1, 1]
     };
     const teleop: TeleOpPerformance = {
-        allianceStonesDelivered: 2,
-        neutralStonesDelivered: 1,
-        stonesPerLevel: [2, 2, 1, 1]
+        freightScoredOnSharedHub: 9,
+        freightInStorageUnit: 1,
+        freightScoredPerLevel: [0, 3, 14], //TODO: add the auto scored freight to this
+        warningsPenalties: [1, 0, 0]
     };
     const endgame: EndgamePerformance = {
-        movedFoundation: ScoringResult.SCORED,
-        parked: ScoringResult.FAILED,
+        ducksDelivered: 9,
+        allianceHubTipped: HubState.TIPPED,
+        sharedHubTipped: HubState.TIPPED_OPP,
+        parked: ParkArea.NOT_PARKED,
+        capstoneScored: ScoringResult.FAILED,
+        warningsPenalties: [0, 0, 0]
     }
     const entry = new MatchEntry('Q3', 5273, AllianceColor.RED,
-        auto, teleop, endgame, DisconnectStatus.NO_DISCONNECT, "some remarks");
+        auto, teleop, endgame, DisconnectStatus.NO_DISCONNECT, "a remark that this team is the 6th best in the team, very sus if I do say so myself");
 
     expect(entry.matchCode).toBe('Q3');
     expect(entry.teamNumber).toBe(5273);
@@ -58,7 +73,7 @@ test('MatchEntry constructor', () => {
     expect(entry.teleOp).toBe(teleop);
     expect(entry.endgame).toBe(endgame);
     expect(entry.disconnect).toBe(DisconnectStatus.NO_DISCONNECT);
-    expect(entry.remarks).toBe("some remarks");
+    expect(entry.remarks).toBe("a remark that this team is the 6th best in the team, very sus if I do say so myself");
 });
 
 
