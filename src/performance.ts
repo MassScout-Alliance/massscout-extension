@@ -1,26 +1,48 @@
 import * as $ from 'jquery';
-import { StoneType, MatchEntry, AllianceColor, AutonomousPerformance, ScoringResult, TeleOpPerformance, DisconnectStatus } from './match';
+import {
+    StoneType,
+    MatchEntry,
+    AllianceColor,
+    AutonomousPerformance,
+    ScoringResult,
+    TeleOpPerformance,
+    DisconnectStatus, ParkArea, EndgamePerformance, HubState
+} from './match';
 import { storeMatch, getMatch, getMatchByKey } from './local-storage';
 import { stats } from './stats';
 import { searchParams } from './utils';
 import { AgAbstractField } from 'ag-grid-community';
 
 let currentAutoPerformance: AutonomousPerformance = {
-    deliveredStones: [],
+    hasCapstone: ScoringResult.DID_NOT_TRY,
+    deliveredPreLoaded: ScoringResult.DID_NOT_TRY,
+    deliveredCarouselDuck: ScoringResult.DID_NOT_TRY,
     cyclesAttempted: 0,
-    stonesOnFoundation: 0,
-    parked: ScoringResult.DID_NOT_TRY,
-    movedFoundation: ScoringResult.DID_NOT_TRY
+    freightScoredPerLevel: [],
+    freightScoredInStorageUnit: 0,
+    parked: ParkArea.NOT_PARKED,
+    warningsPenalties: []
 };
 let currentTeleOpPerformance: TeleOpPerformance = {
-    allianceStonesDelivered: 0,
-    neutralStonesDelivered: 0,
-    stonesPerLevel: []
+    freightScoredOnSharedHub: 0,
+    freightInStorageUnit: 0,
+    freightScoredPerLevel: [],
+    warningsPenalties: []
 };
-let currentMatchEntry = new MatchEntry('Q1', 1, AllianceColor.BLUE, currentAutoPerformance, currentTeleOpPerformance, {
-    movedFoundation: ScoringResult.DID_NOT_TRY,
-    parked: ScoringResult.DID_NOT_TRY
-}, DisconnectStatus.NO_DISCONNECT);
+let currentEndgamePerformance: EndgamePerformance = {
+    ducksDelivered: 0,
+    allianceHubTipped: HubState.BALANCED,
+    sharedHubTipped: HubState.BALANCED,
+    parked: ParkArea.NOT_PARKED,
+    capstoneScored: ScoringResult.DID_NOT_TRY,
+    warningsPenalties: []
+}
+
+let currentMatchEntry = new MatchEntry('Q1', 1, AllianceColor.BLUE,
+    currentAutoPerformance,
+    currentTeleOpPerformance,
+    currentEndgamePerformance,
+    DisconnectStatus.NO_DISCONNECT);
 
 // valid condition: cyclesAttempted >= deliveredStones.length >= stonesOnFoundation
 
