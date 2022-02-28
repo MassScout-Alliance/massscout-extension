@@ -76,11 +76,11 @@ export class MatchEntry {
     getAutonomousScore(): number {
         let score = 0;
         //4.5.2
-        if(this.auto.deliveredCarouselDuck == ScoringResult.SCORED) {
+        if(this.auto.deliveredCarouselDuck === ScoringResult.SCORED) {
             score += 10;
         }
-        if(this.auto.deliveredPreLoaded == ScoringResult.SCORED) {
-            if(this.auto.hasCapstone == ScoringResult.SCORED) {
+        if(this.auto.deliveredPreLoaded === ScoringResult.SCORED) {
+            if(this.auto.hasCapstone === ScoringResult.SCORED) {
                 score += 20;
             }
             else {
@@ -90,48 +90,58 @@ export class MatchEntry {
         score += this.auto.freightScoredInStorageUnit * 2;
         score += totalOfArr(this.auto.freightScoredPerLevel) * 6;
 
-        if(this.auto.parked == ParkArea.PIN_STATION) {
+        if(this.auto.parked === ParkArea.PIN_STATION) {
             score += 3;
         }
-        else if(this.auto.parked == ParkArea.CIN_STATION) {
+        else if(this.auto.parked === ParkArea.CIN_STATION) {
             score += 6;
         }
-        else if(this.auto.parked == ParkArea.PIN_WAREHOUSE) {
+        else if(this.auto.parked === ParkArea.PIN_WAREHOUSE) {
             score += 5;
         }
-        else if(this.auto.parked == ParkArea.CIN_WAREHOUSE) {
+        else if(this.auto.parked === ParkArea.CIN_WAREHOUSE) {
             score += 10;
         }
+
+        score -= this.auto.warningsPenalties[1] * 10;
+        score -= this.auto.warningsPenalties[2] * 20;
 
         return score;
     }
 
     getTeleOpScore(): number {
         let score = 0;
-        // 4.5.3.1
-        score += this.teleOp.allianceStonesDelivered;
-        // 4.5.3.2
-        score += this.teleOp.stonesPerLevel.reduce((a, b) => a + b, 0);
-        // 4.5.3.3
-        score += this.teleOp.stonesPerLevel.length * 2;
+
+        score += this.teleOp.freightScoredPerLevel[0] * 2;
+        score += this.teleOp.freightScoredPerLevel[1] * 4;
+        score += this.teleOp.freightScoredPerLevel[2] * 6;
+
+        score += this.teleOp.freightInStorageUnit * 2;
+
+        score -= this.teleOp.warningsPenalties[1] * 10;
+        score -= this.teleOp.warningsPenalties[2] * 20;
+
         return score;
+
     }
 
     getEndgameScore(): number {
         let score = 0;
-        // 4.5.4.1
-        if (this.endgame.capstoneLevel !== undefined) {
-            score += 5 + this.endgame.capstoneLevel;
+
+        score += this.endgame.ducksDelivered * 6;
+        if (this.endgame.allianceHubTipped === HubState.BALANCED) score += 10;
+        if (this.endgame.sharedHubTipped === HubState.TIPPED) score += 20;
+
+        if (this.endgame.parked === ParkArea.PIN_WAREHOUSE) {
+            score += 3;
+        } else if (this.endgame.parked === ParkArea.CIN_WAREHOUSE) {
+            score += 6;
         }
-        // 4.5.4.2
-        if (this.endgame.movedFoundation === ScoringResult.SCORED) {
-            score += 15;
-        }
-        // 4.5.4.3
-        if (this.endgame.parked === ScoringResult.SCORED) {
-            score += 5;
-        }
+
+        if (this.endgame.capstoneScored === ScoringResult.SCORED) score += 15;
+
         return score;
+
     }
 
     getTotalScore(): number {
