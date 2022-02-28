@@ -20,8 +20,28 @@ export const stats = {
         return set.filter(it => it < target).length / set.length;
     },
     rank: function(set: number[], target: number): [number, number] {
-        let unique = [...new Set(set)];
+        // There's an O(n) solution to this that uses quicksort's partition method
+        const unique = [...new Set(set)];
+        if (unique.length === 1) return [1, 1];
         
-        return [unique.sort((a, b) => b - a).indexOf(target) + 1, unique.length];
+        let start = 0, end = unique.length - 1;
+        // first take the target out
+        const ind = unique.indexOf(target);
+        if (ind !== -1) {
+            [unique[ind], unique[end]] = [unique[end], unique[ind]];
+            --end;
+        }
+        while (true) {
+            while (start < end && unique[start] > target) ++start;
+            while (start < end && unique[end] < target) --end;
+            if (start < end) {
+                // suppose we swapped
+                [unique[start], unique[end]] = [unique[end], unique[start]];
+                ++start;
+                --end;
+            } else break;
+        }
+        // return [unique.sort((a, b) => b - a).indexOf(target) + 1, unique.length];
+        return [end + (unique[end] > target ? 2 : 1), unique.length];
     }
 };

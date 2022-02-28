@@ -1,6 +1,6 @@
 import { Chart } from 'chart.js';
 import { getAllMatches } from './local-storage';
-import { MatchEntry, StoneType, ScoringResult } from './match';
+import { MatchEntry, ParkArea, ParkingResult, ScoringResult } from './match';
 import * as $ from 'jquery';
 import { collateMatchesByTeam } from './utils';
 import { stats } from './stats';
@@ -49,70 +49,67 @@ function populateAverageStat(id: string, set: number[]) {
 }
 
 function populateAutonomous(matches: MatchEntry[]) {
-    const extractSkystone = it => stats.count(it.auto.deliveredStones, StoneType.SKYSTONE);
-    const extractStone = it => it.auto.deliveredStones.length;
-    const matchCodes = matches.map(it => it.matchCode);
-    const extractFoundation = it => it.auto.movedFoundation === ScoringResult.SCORED ? 1 : 0;
-    const extractPark = it => it.auto.parked === ScoringResult.SCORED ? 1 : 0;
+    // const extractSkystone = it => stats.count(it.auto.deliveredStones, StoneType.SKYSTONE);
+    // const extractStone = it => it.auto.deliveredStones.length;
+    // const matchCodes = matches.map(it => it.matchCode);
+    // const extractFoundation = it => it.auto.movedFoundation === ScoringResult.SCORED ? 1 : 0;
+    // const extractPark = it => it.auto.parked === ScoringResult.SCORED ? 1 : 0;
 
-    const skystones = matches.map(extractSkystone);
-    const stones = matches.map(extractStone);
-    const foundations = matches.map(extractFoundation);
-    const parks = matches.map(extractPark);
+    // const skystones = matches.map(extractSkystone);
+    // const stones = matches.map(extractStone);
+    // const foundations = matches.map(extractFoundation);
+    // const parks = matches.map(extractPark);
 
-    // TODO move .map to above
+    // populateAverageStat('auto-skystone-row', skystones);
+    // renderBarGraph('auto-skystone', '# Skystones delivered', matchCodes, skystones);
 
-    populateAverageStat('auto-skystone-row', skystones);
-    renderBarGraph('auto-skystone', '# Skystones delivered', matchCodes, skystones);
-
-    populateAverageStat('auto-stone-row', stones);
-    renderBarGraph('auto-stone', '# stones delivered', matchCodes, stones);
+    // populateAverageStat('auto-stone-row', stones);
+    // renderBarGraph('auto-stone', '# stones delivered', matchCodes, stones);
     
-    populateAverageStat('auto-foundation-row', foundations);
-    renderBarGraph('auto-foundation', 'Foundation moved?', matchCodes, foundations);
+    // populateAverageStat('auto-foundation-row', foundations);
+    // renderBarGraph('auto-foundation', 'Foundation moved?', matchCodes, foundations);
 
-    populateAverageStat('auto-navigate-row', parks);
-    renderBarGraph('auto-navigate', 'Navigated?', matchCodes, parks);
+    // populateAverageStat('auto-navigate-row', parks);
+    // renderBarGraph('auto-navigate', 'Navigated?', matchCodes, parks);
 }
 
 function populateTeleOp(matches: MatchEntry[]) {
-    const asDeliveryData = matches.map(it => it.teleOp.allianceStonesDelivered);
-    const anDeliveryData = matches.map(it => it.teleOp.neutralStonesDelivered);
-    const levelData = matches.map(it => it.teleOp.stonesPerLevel.length);
+    const storageUnitCounts = matches.map(it => it.teleOp.freightInStorageUnit);
+    const sharedHubCounts = matches.map(it => it.teleOp.freightScoredOnSharedHub);
+    const [lowCounts, midCounts, highCounts] = [0, 1, 2].map(index => matches.map(it => it.teleOp.freightScoredPerLevel[index]));
     const matchCodes = matches.map(it => it.matchCode);
-    const placementData = matches.map(it => stats.sum(it.teleOp.stonesPerLevel));
 
-    populateAverageStat('teleop-as-deliver-row', asDeliveryData);
-    renderBarGraph('teleop-as-deliver', '# alliance delivered', matchCodes, asDeliveryData);
+    populateAverageStat('teleop-su-row', storageUnitCounts);
+    renderBarGraph('teleop-su', '# placed in Storage Unit', matchCodes, storageUnitCounts);
     
-    populateAverageStat('teleop-an-deliver-row', anDeliveryData);
-    renderBarGraph('teleop-an-deliver', '# neutral delivered', matchCodes, anDeliveryData);
+    populateAverageStat('teleop-sh-row', sharedHubCounts);
+    renderBarGraph('teleop-sh', '# placed on Shared Hub', matchCodes, sharedHubCounts);
     
-    populateAverageStat('teleop-level-row', levelData);
-    renderBarGraph('teleop-level', 'Skyscraper level', matchCodes, levelData);
+    populateAverageStat('teleop-ash-low-row', lowCounts);
+    renderBarGraph('teleop-ash-low', '# placed on ASH level 1', matchCodes, lowCounts);
 
-    populateAverageStat('teleop-place-row', placementData);
-    renderBarGraph('teleop-place', '# stones placed', matchCodes, placementData);
+    populateAverageStat('teleop-ash-mid-row', midCounts);
+    renderBarGraph('teleop-ash-mid', '# placed on ASH level 2', matchCodes, midCounts);
+
+    populateAverageStat('teleop-ash-high-row', highCounts);
+    renderBarGraph('teleop-ash-high', '# placed on ASH level 3', matchCodes, highCounts);
 }
 
 function populateEndgame(matches: MatchEntry[]) {
-    const foundationData = matches.map(it => it.endgame.movedFoundation === ScoringResult.SCORED ? 1 : 0);
-    const capstoneUseData = matches.map(it => it.endgame.capstoneLevel !== undefined ? 1 : 0);
-    const capstoneMax = Math.max(...matches.map(it => it.endgame.capstoneLevel)
-        .filter(it => it !== undefined) as number[]);
-    const parkData = matches.map(it => it.endgame.parked === ScoringResult.SCORED ? 1 : 0);
+    const duckCounts = matches.map(it => it.endgame.ducksDelivered);
+    const tseCounts = matches.map(it => it.endgame.tseScored !== undefined ? 1 : 0);
+    const warehouseParkData = matches.map(it => it.endgame.parked === ParkingResult.COMPLETELY_IN ? 1 :
+        (it.endgame.parked === ParkingResult.PARTIALLY_IN ? 0.5 : 0));
     const matchCodes = matches.map(it => it.matchCode);
 
-    populateAverageStat('endgame-foundation-row', foundationData);
-    renderBarGraph('endgame-foundation', 'Foundation moved out?', matchCodes, foundationData);
+    populateAverageStat('endgame-duck-row', duckCounts);
+    renderBarGraph('endgame-duck', '# ducks delivered', matchCodes, duckCounts);
 
-    populateAverageStat('endgame-capstone-row', capstoneUseData);
-    renderBarGraph('endgame-capstone', 'Capped?', matchCodes, capstoneUseData);
+    populateAverageStat('endgame-tse-row', tseCounts);
+    renderBarGraph('endgame-tse', 'TSE capped?', matchCodes, tseCounts);
 
-    $('#endgame-capstone-row .col-sm-4').append(`<br>MAX LVL ${capstoneMax == -Infinity ? 'N/A' : capstoneMax}`);
-
-    populateAverageStat('endgame-park-row', parkData);
-    renderBarGraph('endgame-park', 'Parked in Build Site?', matchCodes, parkData);
+    populateAverageStat('endgame-park-row', warehouseParkData);
+    renderBarGraph('endgame-park', 'Parked in Warehouse?', matchCodes, warehouseParkData);
 }
 
 function getSelectedTeam(): number|undefined {
@@ -154,15 +151,16 @@ function renderBarGraph(id: string, field: string, labels: string[], data: numbe
 }
 
 interface RelativeStatistics {
-    skystoneOver: number;
-    stoneOver: number;
+    preLoadedOver: number;
+    autoDuckOver: number;
+    freightOver: number;
     autoOver: number;
 
-    deliveryOver: number;
-    placementOver: number;
-    maxHeightRank: number;
+    ashScoreOver: number;
+    sharedScoreOver: number;
     teleOpOver: number;
 
+    endgameDuckOver: number;
     endgameOver: number;
 }
 

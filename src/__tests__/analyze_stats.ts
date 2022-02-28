@@ -28,5 +28,16 @@ test('Stats over', () => {
 test('Stats rank', () => {
     expect(stats.rank([12, 4, 8, 1, 1, 3, 7, 5, 2, 4, 2, 6, 3], 3)).toEqual([7, 9]);
     expect(stats.rank([1, 2, 3, 6], 3)).toEqual([2, 4]);
-    expect(stats.rank([2, 9, 4, 1], 5)).toEqual([0, 4]);
-})
+    expect(stats.rank([2, 9, 4, 1], 5)).toEqual([2, 4]);
+});
+
+test('Randomized Stats rank', () => {
+    const rand = () => Math.floor(Math.random() * 500 + 1);
+    for (let len = 1; len < 100; ++len) {
+        const series = new Array(len).fill(0).map(rand);
+        const item = series[Math.floor(Math.random() * len)];
+        const uniqSorted = [...new Set(series)].sort((a, b) => b - a);
+        const expectedRank = uniqSorted.indexOf(item) + 1;
+        expect(stats.rank(series, item)).toEqual([expectedRank, uniqSorted.length]);
+    }
+});

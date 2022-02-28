@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Chart } from 'chart.js';
 import { getAllMatches } from './local-storage';
-import { ScoringResult, MatchEntry, StoneType } from './match';
+import { ScoringResult, MatchEntry } from './match';
 import { getFavoriteTeams } from './favorites';
 import { stats } from './stats';
 
