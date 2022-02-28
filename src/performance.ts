@@ -1,12 +1,11 @@
 import * as $ from 'jquery';
 import {
-    StoneType,
     MatchEntry,
     AllianceColor,
     AutonomousPerformance,
     ScoringResult,
     TeleOpPerformance,
-    DisconnectStatus, ParkArea, EndgamePerformance, HubState
+    DisconnectStatus, ParkArea, EndgamePerformance, HubState, ParkingResult
 } from './match';
 import { storeMatch, getMatch, getMatchByKey } from './local-storage';
 import { stats } from './stats';
@@ -14,28 +13,28 @@ import { searchParams } from './utils';
 import { AgAbstractField } from 'ag-grid-community';
 
 let currentAutoPerformance: AutonomousPerformance = {
-    hasCapstone: ScoringResult.DID_NOT_TRY,
+    usedTse: ScoringResult.DID_NOT_TRY,
     deliveredPreLoaded: ScoringResult.DID_NOT_TRY,
     deliveredCarouselDuck: ScoringResult.DID_NOT_TRY,
     cyclesAttempted: 0,
-    freightScoredPerLevel: [],
+    freightScoredPerLevel: [0, 0, 0],
     freightScoredInStorageUnit: 0,
     parked: ParkArea.NOT_PARKED,
-    warningsPenalties: []
+    warningsPenalties: [0, 0, 0]
 };
 let currentTeleOpPerformance: TeleOpPerformance = {
     freightScoredOnSharedHub: 0,
     freightInStorageUnit: 0,
-    freightScoredPerLevel: [],
-    warningsPenalties: []
+    freightScoredPerLevel: [0, 0, 0],
+    warningsPenalties: [0, 0, 0]
 };
 let currentEndgamePerformance: EndgamePerformance = {
     ducksDelivered: 0,
     allianceHubTipped: HubState.BALANCED,
     sharedHubTipped: HubState.BALANCED,
-    parked: ParkArea.NOT_PARKED,
-    capstoneScored: ScoringResult.DID_NOT_TRY,
-    warningsPenalties: []
+    parked: ParkingResult.DID_NOT_TRY,
+    tseScored: ScoringResult.DID_NOT_TRY,
+    warningsPenalties: [0, 0, 0]
 }
 
 let currentMatchEntry = new MatchEntry('Q1', 1, AllianceColor.BLUE,

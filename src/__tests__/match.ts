@@ -12,7 +12,7 @@ import {
 } from "../match";
 
 export const kEmptyAuto: AutonomousPerformance = {
-    hasCapstone: ScoringResult.FAILED,
+    usedTse: ScoringResult.FAILED,
     deliveredPreLoaded: ScoringResult.FAILED,
     deliveredCarouselDuck: ScoringResult.FAILED,
     cyclesAttempted: 0,
@@ -34,13 +34,13 @@ export const kEmptyEndgame: EndgamePerformance = {
     allianceHubTipped: HubState.BALANCED,
     sharedHubTipped: HubState.BALANCED,
     parked: ParkArea.NOT_PARKED,
-    capstoneScored: ScoringResult.FAILED,
+    tseScored: ScoringResult.FAILED,
     warningsPenalties: [0, 0, 0]
 };
 
 test('MatchEntry constructor', () => {
     const auto: AutonomousPerformance = {
-        hasCapstone: ScoringResult.DID_NOT_TRY,
+        usedTse: ScoringResult.DID_NOT_TRY,
         deliveredPreLoaded: ScoringResult.SCORED,
         deliveredCarouselDuck: ScoringResult.SCORED,
         cyclesAttempted: 4,
@@ -60,7 +60,7 @@ test('MatchEntry constructor', () => {
         allianceHubTipped: HubState.TIPPED,
         sharedHubTipped: HubState.TIPPED_OPP,
         parked: ParkArea.NOT_PARKED,
-        capstoneScored: ScoringResult.FAILED,
+        tseScored: ScoringResult.FAILED,
         warningsPenalties: [0, 0, 0]
     }
     const entry = new MatchEntry('Q3', 5273, AllianceColor.RED,
@@ -128,9 +128,10 @@ test('MatchEntry metadata validation team number', () => {
 
 test('MatchEntry points scored when fully disconnected', () => {
     expect(() => new MatchEntry('Q14', 10331, AllianceColor.BLUE, kEmptyAuto, {
-        allianceStonesDelivered: 2,
-        neutralStonesDelivered: 0,
-        stonesPerLevel: []
+        freightScoredOnSharedHub: 2,
+        freightInStorageUnit: 0,
+        freightScoredPerLevel: [0, 0, 0],
+        warningsPenalties: [0, 0, 0]
     }, kEmptyEndgame, DisconnectStatus.TOTAL))
         .toThrowError('A totally disconnected team cannot score points');
 })
