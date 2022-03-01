@@ -2,28 +2,28 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Performance</title>
-    <script src="js/vendor.js"></script>
-    <link rel="stylesheet" href="css/mini-default.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Performance</title>
+  <script src="js/vendor.js"></script>
+  <link rel="stylesheet" href="css/mini-default.min.css">
 </head>
 
 <body>
-    <header>
-        <div class="row" style="height: 100%;">
-            <img src="assets/massscout.png" alt="MassScout Logo" style="height: 100%;">
-            <h1 id="title">MassScout Data</h1>
-        </div>
-    </header>
-    <div class="container">
-        <div class="row responsive-label">
-            <div class="col-sm-12 col-md-6 col-lg-12">
-                <h2>Metadata</h2>
-                <div class="container responsive-label" id="metadata">
-                    <div class="row">
-                        <!-- <div class="col-sm-4 col-lg-2">
+  <header>
+    <div class="row" style="height: 100%;">
+      <img src="assets/massscout.png" alt="MassScout Logo" style="height: 100%;">
+      <h1 id="title">MassScout Data</h1>
+    </div>
+  </header>
+  <div class="container">
+    <div class="row responsive-label">
+      <div class="col-sm-12 col-md-6 col-lg-12">
+        <h2>Metadata</h2>
+        <div class="container responsive-label" id="metadata">
+          <div class="row">
+            <!-- <div class="col-sm-4 col-lg-2">
                                 <label for="event">Event</label>
 
                             </div>
@@ -41,343 +41,344 @@
                                 <option value="MAWWQU">Wild West Qualifier</option>
                             </select>
                             </div> -->
-                        <div class="col-sm-4 col-lg-1">
-                            <label for="match">Match Code</label>
-                        </div>
-                        <div class="col-sm-8 col-lg-3">
-                            <input id="match" type="text" placeholder="Q2, Q10, SF2-1">
-                        </div>
-                        <div class="col-sm-4 col-lg-1">
-                            <label for="team">Team #</label>
-                        </div>
-                        <div class="col-sm-8 col-lg-3">
-                            <input type="number" id="team" placeholder="12345">
-                        </div>
-                        <div class="col-sm-4 col-lg-1">
-                            <label>Alliance</label>
-                        </div>
-                        <div class="col-sm-8 col-lg-3 inline-labels">
-                            <label for="alliance-blue" style="color: #0066b3">Blue</label>
-                            <input type="radio" name="alliance" id="alliance-blue" value="blue" checked>
-                            <label for="alliance-red" style="color: #ed1c24">Red</label>
-                            <input type="radio" name="alliance" id="alliance-red" value="red">
-                        </div>
-                        <div class="col-sm-4 col-lg-1">
-                            <label>Disconnect</label>
-                        </div>
-                        <div class="col-sm-8 col-lg-3 inline-labels">
-                            <label for="disconnect-none">None</label>
-                            <input type="radio" name="disconnect" id="disconnect-none" value="none" checked>
-                            <label for="disconnect-partial">Partial</label>
-                            <input type="radio" name="disconnect" id="disconnect-partial" value="partial">
-                            <label for="disconnect-total">Total</label>
-                            <input type="radio" name="disconnect" id="disconnect-total" value="total">
-                        </div>
-                        <div class="col-sm-4 col-lg-1">
-                            <label>Remarks</label>
-                        </div>
-                        <div class="col-sm-8 col-lg-3">
-                            <textarea class="input" name="remarks" id="remarks" rows="1" placeholder="Additional comments..." style="min-width: 100%; max-width: 100%;"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-
+            <div class="col-sm-4 col-lg-1">
+              <label for="match">Match Code</label>
             </div>
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <h2>Autonomous</h2>
-                <div class="container" id="auto-pane">
-                    <h4>Parking</h4>
-                    <div class="row">
-                        <div class="col-sm-4" vertical-stack>
-                            <b>Parked? Storage Unit Edition</b>
-                        </div>
-                        <div class="col-sm-8">
-                            Completely
-                            <input type="radio" name="auto-parked-storage" value="Completely">
-                            Partially
-                            <input type="radio" name="auto-parked-storage" value="Partially">
-                            Failed
-                            <input type="radio" name="auto-parked-storage" value="Failed">
-                            <abbr title="Did Not Try">DNT</abbr>
-                            <input type="radio" name="auto-parked-storage" value="DNT" checked>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4" vertical-stack>
-                            <b>Parked? Warehouse Edition</b>
-                        </div>
-                        <div class="col-sm-8">
-                            Completely
-                            <input type="radio" name="auto-parked-warehouse" value="Completely">
-                            Partially
-                            <input type="radio" name="auto-parked-warehouse" value="Partially">
-                            Failed
-                            <input type="radio" name="auto-parked-warehouse" value="Failed">
-                            <abbr title="Did Not Try">DNT</abbr>
-                            <input type="radio" name="auto-parked-warehouse" value="DNT" checked>
-                        </div>
-                    </div>
-                    <h4>Duckies🦆</h4>
-                    <div class="row">
-                        <div class="col-sm-4" vertical-stack>
-                            <b>Preplaced Carousel Duck Delivered?</b>
-                        </div>
-                        <!-- Note: The maximum number of ducks + team shipping elements delivered needs to be added to the input-->
-                        <div class="col-sm-8">
-                            Yes
-                            <input type="radio" name="auto-ducks" value="Delivered">
-                            No
-                            <input type="radio" name="auto-ducks" value="Failed">
-                            <abbr title="Did Not Try">DNT</abbr>
-                            <input type="radio" name="auto-ducks" value="DNT" checked>
-                        </div>
-                    </div>
-                    <h4>Freight</h4>
-                    <div class="row">
-                        <div class="col-sm-4" vertical-stack>
-                            <b>Element on Barcode</b>
-                        </div>
-                        <div class="col-sm-8">
-                            Duck
-                            <input type="radio" name="barcode-element" value="Duck" checked>
-                            Team Shipping Element
-                            <input type="radio" name="barcode-element" value="Team-Element">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4" vertical-stack>
-                            <b>Pre-loaded box on correct level?</b>
-                        </div>
-                        <div class="col-sm-8">
-                            Correct Level
-                            <input type="radio" name="pre-loaded-bonus" value="bonus">
-                            Incorrect Level or Failed Delivery
-                            <input type="radio" name="pre-loaded-bonus" value="no-bonus">
-                            <abbr title="Did Not Try">DNT</abbr>
-                            <input type="radio" name="pre-loaded-bonus" value="DNT" checked>
-                        </div>
-                    </div>
-                    <b>Total Freight Delivered (including pre-loaded box)</b>
-                    <div class="row">
-                        <label>Alliance Storage Unit</label>
-                        <input type="number" class="auto-freight-in-storage" level="1" min="0" max="10" value="0"> 
-                        <label>Alliance Shipping Hub</label>
-                        <input type="number" class="auto-freight-on-shipping-hub" level="1" min="0" max="100" value="0"> 
-                    </div>
-                </div>
+            <div class="col-sm-8 col-lg-3">
+              <input id="match" type="text" placeholder="Q2, Q10, SF2-1">
             </div>
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <h2>TeleOp</h2>
-                <div class="container" id="teleop-pane">
-                    
-                    <div class="container" id="teleop-shipping-hub">
-                        <label>Freight Delivered to Storage Unit:</label>
-                        <input type="number" class="teleop-storage-unit" min="0" max="30" value="0">
-                    </div>
-                    <h4>Freight Delivered to Alliance Shipping Hub:</h4>
-                    <div class="container" id="teleop-shipping-hub">
-                        <div class="row cols-sm-2">
-                            <div vertical-stack>
-                                <label>Level 1</label>
-                                <input type="number" class="teleop-level" level="1" min="0" max="30" value="0">
-                            </div>
-                            <div vertical-stack>
-                                <label>Level 2</label>
-                                <input type="number" class="teleop-level" level="2" min="0" max="30" value="0">
-                            </div>
-                            <div vertical-stack>
-                                <label>Level 3</label>
-                                <input type="number" class="teleop-level" level="3" min="0" max="30" value="0">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-sm-4 col-lg-1">
+              <label for="team">Team #</label>
             </div>
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <h2>Endgame</h2>
-                <h4>Duckies🦆</h4>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <b>Ducks/Team Shipping Elements Delivered</b>
-                    </div>
-                    <div class="col-sm-8">
-                        <input type="number" class="endgame-ducks-delievered" min="0" max="11" value="0">
-                    </div>
-                </div>
-                <h4>Shipping Hub Status</h4>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <b>Alliance Shipping Hub Balanced?</b>
-                    </div>
-                    <div class="col-sm-8">
-                        Balanced
-                        <input type="radio" name="endgame-alliance-hub-balance" value="Balanced">
-                        Unbalanced
-                        <input type="radio" name="endgame-alliance-hub-balance" value="Unbalanced">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <b>Shared Shipping Hub Balanced?</b>
-                    </div>
-                    <div class="col-sm-8">
-                        Towards Friendly Alliance
-                        <input type="radio" name="endgame-shared-hub-balance" value="Friendly-Alliance">
-                        Balanced
-                        <input type="radio" name="endgame-shared-hub-balance" value="Neutral">
-                        Towards Opposing Alliance
-                        <input type="radio" name="endgame-shared-hub-balance" value="Opposing-Alliance">
-                    </div>
-                </div>
-                <h4>Parking</h4>
-                <div class="row">
-                    <div class="col-sm-5">
-                        <b>Parked in Warehouse?</b>
-                    </div>
-                    <div class="col-sm-7">
-                        Completely
-                        <input type="radio" name="endgame-parked" value="Completely">
-                        Partially
-                        <input type="radio" name="endgame-parked" value="Partially">
-                        Failed
-                        <input type="radio" name="endgame-parked" value="Failed">
-                        <abbr title="Did Not Try">DNT</abbr>
-                        <input type="radio" name="endgame-parked" value="DNT" checked>
-                    </div>
-                </div>
-                <h4>Team Shipping Element</h4>
-                <div class="row">
-                    <div class="col-sm-5">
-                        <b>Shipping Element Capped?</b>
-                    </div>
-                    <div class="col-sm-7">
-                        Succeeded
-                        <input type="radio" name="endgame-cap" value="Succeeded">
-                        Failed
-                        <input type="radio" name="endgae-cap" value="Failed">
-                        <abbr title="Did Not Try">DNT</abbr>
-                        <input type="radio" name="endgame-cap" value="DNT" checked>
-                    </div>
-                </div>
+            <div class="col-sm-8 col-lg-3">
+              <input type="number" id="team" placeholder="12345">
             </div>
-            <div class="col-sm-12 col-md-6">
-                <h2>Scoring</h2>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-8">Autonomous</div>
-                        <div class="col-sm-4 subscore" id="auto-score">0</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-8">TeleOp</div>
-                        <div class="col-sm-4 subscore" id="teleop-score">0</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-8">Endgame</div>
-                        <div class="col-sm-4 subscore" id="endgame-score">0</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-8"><b>TOTAL</b></div>
-                        <div class="col-sm-4 score" id="total-score">0</div>
-                    </div>
-                </div>
+            <div class="col-sm-4 col-lg-1">
+              <label>Alliance</label>
             </div>
+            <div class="col-sm-8 col-lg-3 inline-labels">
+              <label for="alliance-blue" style="color: #0066b3">Blue</label>
+              <input type="radio" name="alliance" id="alliance-blue" value="blue" checked>
+              <label for="alliance-red" style="color: #ed1c24">Red</label>
+              <input type="radio" name="alliance" id="alliance-red" value="red">
+            </div>
+            <div class="col-sm-4 col-lg-1">
+              <label>Disconnect</label>
+            </div>
+            <div class="col-sm-8 col-lg-3 inline-labels">
+              <label for="disconnect-none">None</label>
+              <input type="radio" name="disconnect" id="disconnect-none" value="none" checked>
+              <label for="disconnect-partial">Partial</label>
+              <input type="radio" name="disconnect" id="disconnect-partial" value="partial">
+              <label for="disconnect-total">Total</label>
+              <input type="radio" name="disconnect" id="disconnect-total" value="total">
+            </div>
+            <div class="col-sm-4 col-lg-1">
+              <label>Remarks</label>
+            </div>
+            <div class="col-sm-8 col-lg-3">
+              <textarea class="input" name="remarks" id="remarks" rows="1" placeholder="Additional comments..."
+                style="min-width: 100%; max-width: 100%;"></textarea>
+            </div>
+          </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-sm" id="message"></div>
-        <div class="col-sm-3 col-md-2" vertical-stack>
-            <button class="primary big" id="submit">Submit</button>
+
+
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <h2>Autonomous</h2>
+        <div class="container" id="auto-pane">
+          <h4>Parking</h4>
+          <div class="row">
+            <div class="col-sm-4" vertical-stack>
+              <b>Parked Storage Unit?</b>
+            </div>
+            <div class="col-sm-8">
+              Completely
+              <input type="radio" name="auto-parked-storage" value="Completely">
+              Partially
+              <input type="radio" name="auto-parked-storage" value="Partially">
+              Failed
+              <input type="radio" name="auto-parked-storage" value="Failed">
+              <abbr title="Did Not Try">DNT</abbr>
+              <input type="radio" name="auto-parked-storage" value="DNT" checked>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4" vertical-stack>
+              <b>Parked Warehouse?</b>
+            </div>
+            <div class="col-sm-8">
+              Completely
+              <input type="radio" name="auto-parked-warehouse" value="Completely">
+              Partially
+              <input type="radio" name="auto-parked-warehouse" value="Partially">
+              Failed
+              <input type="radio" name="auto-parked-warehouse" value="Failed">
+              <abbr title="Did Not Try">DNT</abbr>
+              <input type="radio" name="auto-parked-warehouse" value="DNT" checked>
+            </div>
+          </div>
+          <h4>Ducks 🦆</h4>
+          <div class="row">
+            <div class="col-sm-4" vertical-stack>
+              <b>Carousel Duck Delivered?</b>
+            </div>
+            <!-- Note: The maximum number of ducks + team shipping elements delivered needs to be added to the input-->
+            <div class="col-sm-8">
+              Yes
+              <input type="radio" name="auto-ducks" value="Delivered">
+              No
+              <input type="radio" name="auto-ducks" value="Failed">
+              <abbr title="Did Not Try">DNT</abbr>
+              <input type="radio" name="auto-ducks" value="DNT" checked>
+            </div>
+          </div>
+          <h4>Freight</h4>
+          <div class="row">
+            <div class="col-sm-4" vertical-stack>
+              <b>Element on Barcode</b>
+            </div>
+            <div class="col-sm-8">
+              Duck
+              <input type="radio" name="barcode-element" value="Duck" checked>
+              Team Shipping Element
+              <input type="radio" name="barcode-element" value="Team-Element">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4" vertical-stack>
+              <b>Pre-loaded box on correct level?</b>
+            </div>
+            <div class="col-sm-8">
+              Correct Level
+              <input type="radio" name="pre-loaded-bonus" value="bonus">
+              Incorrect Level or Failed Delivery
+              <input type="radio" name="pre-loaded-bonus" value="no-bonus">
+              <abbr title="Did Not Try">DNT</abbr>
+              <input type="radio" name="pre-loaded-bonus" value="DNT" checked>
+            </div>
+          </div>
+          <b>Total Freight Delivered (including pre-loaded box)</b>
+          <div class="row">
+            <label>Storage Unit</label>
+            <input type="number" class="auto-freight-in-storage" level="1" min="0" max="10" value="0">
+            <label>Alliance Shipping Hub</label>
+            <input type="number" class="auto-freight-on-shipping-hub" level="1" min="0" max="100" value="0">
+          </div>
         </div>
-        <div class="col-sm-1"></div>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <h2>TeleOp</h2>
+        <div class="container" id="teleop-pane">
+
+          <div class="container" id="teleop-shipping-hub">
+            <label>Freight Delivered to Storage Unit:</label>
+            <input type="number" class="teleop-storage-unit" min="0" max="30" value="0">
+          </div>
+          <h4>Freight Delivered to Alliance Shipping Hub:</h4>
+          <div class="container" id="teleop-shipping-hub">
+            <div class="row cols-sm-2">
+              <div vertical-stack>
+                <label>Level 1</label>
+                <input type="number" class="teleop-level" level="1" min="0" max="30" value="0">
+              </div>
+              <div vertical-stack>
+                <label>Level 2</label>
+                <input type="number" class="teleop-level" level="2" min="0" max="30" value="0">
+              </div>
+              <div vertical-stack>
+                <label>Level 3</label>
+                <input type="number" class="teleop-level" level="3" min="0" max="30" value="0">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <h2>Endgame</h2>
+        <h4>Ducks 🦆</h4>
+        <div class="row">
+          <div class="col-sm-4">
+            <b>Ducks/Team Shipping Elements Delivered</b>
+          </div>
+          <div class="col-sm-8">
+            <input type="number" class="endgame-ducks-delievered" min="0" max="11" value="0">
+          </div>
+        </div>
+        <h4>Shipping Hub Status</h4>
+        <div class="row">
+          <div class="col-sm-4">
+            <b>Alliance Hub Balanced?</b>
+          </div>
+          <div class="col-sm-8">
+            Balanced
+            <input type="radio" name="endgame-alliance-hub-balance" value="Balanced">
+            Unbalanced
+            <input type="radio" name="endgame-alliance-hub-balance" value="Unbalanced">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <b>Shared Hub Balanced?</b>
+          </div>
+          <div class="col-sm-8">
+            Toward self
+            <input type="radio" name="endgame-shared-hub-balance" value="Friendly-Alliance">
+            Balanced
+            <input type="radio" name="endgame-shared-hub-balance" value="Neutral">
+            Towards opponent
+            <input type="radio" name="endgame-shared-hub-balance" value="Opposing-Alliance">
+          </div>
+        </div>
+        <h4>Parking</h4>
+        <div class="row">
+          <div class="col-sm-5">
+            <b>Parked in Warehouse?</b>
+          </div>
+          <div class="col-sm-7">
+            Completely
+            <input type="radio" name="endgame-parked" value="Completely">
+            Partially
+            <input type="radio" name="endgame-parked" value="Partially">
+            Failed
+            <input type="radio" name="endgame-parked" value="Failed">
+            <abbr title="Did Not Try">DNT</abbr>
+            <input type="radio" name="endgame-parked" value="DNT" checked>
+          </div>
+        </div>
+        <h4>Team Shipping Element</h4>
+        <div class="row">
+          <div class="col-sm-5">
+            <b>Shipping Element Capped?</b>
+          </div>
+          <div class="col-sm-7">
+            Succeeded
+            <input type="radio" name="endgame-cap" value="Succeeded">
+            Failed
+            <input type="radio" name="endgae-cap" value="Failed">
+            <abbr title="Did Not Try">DNT</abbr>
+            <input type="radio" name="endgame-cap" value="DNT" checked>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <h2>Scoring</h2>
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-8">Autonomous</div>
+            <div class="col-sm-4 subscore" id="auto-score">0</div>
+          </div>
+          <div class="row">
+            <div class="col-sm-8">TeleOp</div>
+            <div class="col-sm-4 subscore" id="teleop-score">0</div>
+          </div>
+          <div class="row">
+            <div class="col-sm-8">Endgame</div>
+            <div class="col-sm-4 subscore" id="endgame-score">0</div>
+          </div>
+          <div class="row">
+            <div class="col-sm-8"><b>TOTAL</b></div>
+            <div class="col-sm-4 score" id="total-score">0</div>
+          </div>
+        </div>
+      </div>
     </div>
-    <br>
-    <code id="output"></code>
-    <style>
-        .row h2 {
-            text-transform: uppercase;
-            font-weight: bold;
-            display: block;
-        }
+  </div>
+  <div class="row">
+    <div class="col-sm" id="message"></div>
+    <div class="col-sm-3 col-md-2" vertical-stack>
+      <button class="primary big" id="submit">Submit</button>
+    </div>
+    <div class="col-sm-1"></div>
+  </div>
+  <br>
+  <code id="output"></code>
+  <style>
+    .row h2 {
+      text-transform: uppercase;
+      font-weight: bold;
+      display: block;
+    }
 
-        *[vertical-stack] {
-            display: flex;
-            flex-direction: column;
-        }
+    *[vertical-stack] {
+      display: flex;
+      flex-direction: column;
+    }
 
-        .subscore {
-            font-family: monospace;
-            font-size: 1.3rem;
-        }
+    .subscore {
+      font-family: monospace;
+      font-size: 1.3rem;
+    }
 
-        .score {
-            font-family: monospace;
-            font-size: 1.6rem;
-            font-weight: bold;
-        }
+    .score {
+      font-family: monospace;
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
 
-        #metadata label {
-            display: flex;
-            flex-direction: row-reverse;
-            font-weight: bold;
-        }
+    #metadata label {
+      display: flex;
+      flex-direction: row-reverse;
+      font-weight: bold;
+    }
 
-        label {
-            padding: 0 0;
-        }
+    label {
+      padding: 0 0;
+    }
 
-        #auto-display-attempt::before {
-            content: "Attempts: ";
-        }
+    #auto-display-attempt::before {
+      content: "Attempts: ";
+    }
 
-        #auto-display-placed::before {
-            content: "Placed: ";
-        }
+    #auto-display-placed::before {
+      content: "Placed: ";
+    }
 
-        #auto-display-delivered .row {
-            align-items: center;
-        }
+    #auto-display-delivered .row {
+      align-items: center;
+    }
 
-        #teleop-display-alliance-deliver::before {
-            content: "Alliance delivered: ";
-        }
+    #teleop-display-alliance-deliver::before {
+      content: "Alliance delivered: ";
+    }
 
-        #teleop-display-neutral-deliver::before {
-            content: "Neutral delivered: ";
-        }
+    #teleop-display-neutral-deliver::before {
+      content: "Neutral delivered: ";
+    }
 
-        #teleop-stacked-stones input {
-            padding: 4px 4px;
-        }
+    #teleop-stacked-stones input {
+      padding: 4px 4px;
+    }
 
-        .icon-delete::before {
-            content: "×";
-        }
+    .icon-delete::before {
+      content: "×";
+    }
 
-        .icon-delete {
-            color: red;
-            width: 50px;
-            height: 50px;
-            font-size: 25px;
-            text-align: center;
-            display: flex;
-            line-height: 20px;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
+    .icon-delete {
+      color: red;
+      width: 50px;
+      height: 50px;
+      font-size: 25px;
+      text-align: center;
+      display: flex;
+      line-height: 20px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
 
-        .input[disabled] {
-            cursor: not-allowed;
-            color: gray;
-        }
+    .input[disabled] {
+      cursor: not-allowed;
+      color: gray;
+    }
 
-        .inline-labels label {
-            display: inline !important;
-            font-weight: normal !important;
-        }
-    </style>
-    <script src="js/performance.js"></script>
+    .inline-labels label {
+      display: inline !important;
+      font-weight: normal !important;
+    }
+  </style>
+  <script src="js/performance.js"></script>
 </body>
 
 </html>

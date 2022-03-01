@@ -1,4 +1,5 @@
 const esbuild = require("esbuild");
+const copy = require("esbuild-copy-static-files");
 
 const tsFiles = [
     'popup.ts', 'performance.ts', 'manage.ts',
@@ -10,10 +11,15 @@ esbuild
   .build({
     entryPoints: tsFiles.map(name => './src/' + name),
     bundle: true,
-    minify: true,
+    minify: process.env.NODE_ENV === "production",
     sourcemap: process.env.NODE_ENV !== "production",
     target: ["chrome70", "firefox60"],
     outdir: "./dist/js",
+    plugins: [copy({
+      src: 'public/',
+      dest: 'dist/',
+      recursive: true
+    })],
     define: {
       "process.env.NODE_ENV": `"${process.env.NODE_ENV}"`
     }
