@@ -113,10 +113,7 @@ export class MatchEntry {
   getTeleOpScore(): number {
     let score = 0;
 
-    score += this.teleOp.freightScoredPerLevel[0] * 2;
-    score += this.teleOp.freightScoredPerLevel[1] * 4;
-    score += this.teleOp.freightScoredPerLevel[2] * 6;
-
+    score += this.getAshTotalScore();
     score += this.teleOp.freightInStorageUnit * 2;
 
     score -= this.teleOp.warningsPenalties[1] * 10;
@@ -124,6 +121,13 @@ export class MatchEntry {
 
     return score;
 
+  }
+
+  // ASH: alliance-specific hub
+  getAshTotalScore(): number {
+    return this.teleOp.freightScoredPerLevel[0] * 2 +
+      this.teleOp.freightScoredPerLevel[1] * 4 +
+      this.teleOp.freightScoredPerLevel[2] * 6;
   }
 
   getEndgameScore(): number {
