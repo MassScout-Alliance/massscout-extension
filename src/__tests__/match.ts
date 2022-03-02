@@ -8,13 +8,14 @@ import {
     EndgamePerformance,
     isValidMatchCode,
     DisconnectStatus,
-    HubState
+    HubState,
+    ParkingResult
 } from "../match";
 
 export const kEmptyAuto: AutonomousPerformance = {
-    usedTse: ScoringResult.FAILED,
-    deliveredPreLoaded: ScoringResult.FAILED,
-    deliveredCarouselDuck: ScoringResult.FAILED,
+    usedTse: ScoringResult.DID_NOT_TRY,
+    deliveredPreLoaded: ScoringResult.DID_NOT_TRY,
+    deliveredCarouselDuck: ScoringResult.DID_NOT_TRY,
     cyclesAttempted: 0,
     freightScoredPerLevel: [0, 0, 0],
     freightScoredInStorageUnit: 0,
@@ -33,8 +34,8 @@ export const kEmptyEndgame: EndgamePerformance = {
     ducksDelivered: 0,
     allianceHubTipped: HubState.BALANCED,
     sharedHubTipped: HubState.BALANCED,
-    parked: ParkArea.NOT_PARKED,
-    tseScored: ScoringResult.FAILED,
+    parked: ParkingResult.DID_NOT_TRY,
+    tseScored: ScoringResult.DID_NOT_TRY,
     warningsPenalties: [0, 0, 0]
 };
 
@@ -59,8 +60,8 @@ test('MatchEntry constructor', () => {
         ducksDelivered: 9,
         allianceHubTipped: HubState.TIPPED,
         sharedHubTipped: HubState.TIPPED_OPP,
-        parked: ParkArea.NOT_PARKED,
-        tseScored: ScoringResult.FAILED,
+        parked: ParkingResult.DID_NOT_TRY,
+        tseScored: ScoringResult.DID_NOT_TRY,
         warningsPenalties: [0, 0, 0]
     }
     const entry = new MatchEntry('Q3', 5273, AllianceColor.RED,

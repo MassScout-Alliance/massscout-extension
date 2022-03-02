@@ -1,4 +1,3 @@
-import { BarTooltipRendererParams } from "ag-grid-community";
 import { param } from "jquery";
 import { stats } from "./stats";
 
