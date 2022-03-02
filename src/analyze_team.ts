@@ -1,7 +1,7 @@
 import { Chart } from 'chart.js';
 import { getAllMatches } from './local-storage';
 import { MatchEntry, ParkArea, ParkingResult, ScoringResult } from './match';
-import * as $ from 'jquery';
+import $ from 'jquery';
 import { collateMatchesByTeam } from './utils';
 import { stats } from './stats';
 import { isFavoriteTeam } from './favorites';

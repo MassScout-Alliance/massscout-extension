@@ -73,6 +73,10 @@ export class MatchEntry {
     }
   }
 
+  static pointsPenalizedDuring(period: PeriodPerformance): number {
+    return period.warningsPenalties[1] * 10 + period.warningsPenalties[2] * 20;
+  }
+
   getAutonomousScore(): number {
     let score = 0;
     //4.5.2
@@ -103,8 +107,7 @@ export class MatchEntry {
       score += 10;
     }
 
-    score -= this.auto.warningsPenalties[1] * 10;
-    score -= this.auto.warningsPenalties[2] * 20;
+    score -= MatchEntry.pointsPenalizedDuring(this.auto);
 
     return score;
   }
@@ -114,9 +117,7 @@ export class MatchEntry {
 
     score += this.getAshTotalScore();
     score += this.teleOp.freightInStorageUnit * 2;
-
-    score -= this.teleOp.warningsPenalties[1] * 10;
-    score -= this.teleOp.warningsPenalties[2] * 20;
+    score -= MatchEntry.pointsPenalizedDuring(this.teleOp);
 
     return score;
 
@@ -143,7 +144,7 @@ export class MatchEntry {
     }
 
     if (this.endgame.tseScored === ScoringResult.SCORED) score += 15;
-
+    score -= MatchEntry.pointsPenalizedDuring(this.endgame);
     return score;
 
   }
@@ -153,8 +154,12 @@ export class MatchEntry {
   }
 }
 
+export interface PeriodPerformance {
+  warningsPenalties: [number, number, number];
+}
+
 // penalties [warning, minor, major]
-export interface AutonomousPerformance {
+export interface AutonomousPerformance extends PeriodPerformance {
   usedTse: ScoringResult;
   deliveredPreLoaded: ScoringResult;
   deliveredCarouselDuck: ScoringResult;
@@ -162,23 +167,20 @@ export interface AutonomousPerformance {
   freightScoredPerLevel: [number, number, number];
   freightScoredInStorageUnit: number;
   parked: ParkArea;
-  warningsPenalties: [number, number, number];
 }
 
-export interface TeleOpPerformance {
+export interface TeleOpPerformance extends PeriodPerformance {
   freightScoredOnSharedHub: number;
   freightInStorageUnit: number;
   freightScoredPerLevel: [number, number, number];
-  warningsPenalties: [number, number, number];
 }
 
-export interface EndgamePerformance {
+export interface EndgamePerformance extends PeriodPerformance {
   ducksDelivered: number;
   allianceHubTipped: HubState;
   sharedHubTipped: HubState;
   parked: ParkingResult;
   tseScored: ScoringResult;
-  warningsPenalties: [number, number, number];
 }
 
 export type MatchEntrySet = MatchEntry[];
