@@ -17,14 +17,15 @@
   },
   "dependencies": {
     "@types/chart.js": "^2.9.12",
+    "@vue/compiler-sfc": "^3.2.31",
     "ag-grid-community": "^27.0.1",
     "chart.js": "^3.7.1",
     "esbuild": "^0.14.23",
     "esbuild-copy-static-files": "^0.1.0",
     "jquery": "^3.6.0",
-    "moment": "~2.24.0",
+    "mini.css": "^3.0.1",
+    "moment": "~2.29.1",
     "vue": "^3.2.31",
-    "vue-template-compiler": "^2.6.11",
     "xlsx": "^0.15.5"
   },
   "devDependencies": {

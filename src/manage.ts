@@ -1,4 +1,4 @@
-import * as $ from 'jquery';
+import $ from 'jquery';
 import { MatchEntry, AllianceColor } from "./match";
 import { entryKey, getAllMatches, removeMatch, clearAllMatches, storeMatches } from "./local-storage";
 import { kImportStrategies } from './import';

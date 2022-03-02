@@ -1,4 +1,5 @@
-import * as $ from 'jquery';
+import $ from 'jquery';
+import 'mini.css';
 import {
     MatchEntry,
     AllianceColor,
@@ -11,6 +12,7 @@ import { storeMatch, getMatch, getMatchByKey } from './local-storage';
 import { stats } from './stats';
 import { searchParams } from './utils';
 import { AgAbstractField } from 'ag-grid-community';
+
 
 let currentAutoPerformance: AutonomousPerformance = {
     usedTse: ScoringResult.DID_NOT_TRY,

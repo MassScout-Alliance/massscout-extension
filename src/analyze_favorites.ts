@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { createApp, Component } from 'vue';
 import { Chart } from 'chart.js';
 import { getAllMatches } from './local-storage';
 import { ScoringResult, MatchEntry } from './match';
@@ -20,12 +20,10 @@ function renderBarGraph(id: string, field: string, labels: string[], data: numbe
         },
         options: {
             scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true,
-                        max: maxY
-                    }
-                }]
+                y: {
+                    max: maxY,
+                    beginAtZero: true
+                }
             }
         }
     });
@@ -35,93 +33,87 @@ function renderTeamGraphs(team: number, entries: MatchEntry[], maxStats: MaxStat
     const matches = entries.filter(it => it.teamNumber === team);
     const labels = matches.map(it => it.matchCode);
     return [
-        new Chart(`graph-auto-delivery-${team}`, {
+        new Chart(`graph-auto-${team}`, {
             type: 'bar',
             data: {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Skystones delivered',
-                        data: matches.map(it => stats.count(it.auto.deliveredStones, StoneType.SKYSTONE)),
+                        label: '🦆 Ducks delivered',
+                        data: matches.map(it => it.auto.deliveredCarouselDuck === ScoringResult.SCORED ? 1 : 0),
                         backgroundColor: '#333'
                     },
                     {
-                        label: 'Stones delivered',
-                        data: matches.map(it => stats.count(it.auto.deliveredStones, StoneType.STONE)),
+                        label: 'Preloaded box delivered',
+                        data: matches.map(it => it.auto.deliveredPreLoaded === ScoringResult.SCORED ? 1 : 0),
                         backgroundColor: '#ebd50e'
                     }
                 ]
             },
             options: {
                 scales: {
-                    yAxes: [{
+                    y: {
                         stacked: true,
-                        ticks: {
-                            beginAtZero: true,
-                            max: maxStats.maxAutoStonesDelivered
-                        }
-                    }],
-                    xAxes: [{
+                        beginAtZero: true,
+                        max: 1
+                    },
+                    x: {
                         stacked: true
-                    }]
+                    }
                 }
             }
         }),
-        renderBarGraph(`graph-auto-placement-${team}`, 'Stones placed', labels,
-            matches.map(it => it.auto.stonesOnFoundation), maxStats.maxAutoStonesPlaced),
+        renderBarGraph(`graph-auto-ash-${team}`, 'Freight scored', labels,
+            matches.map(it => stats.sum(it.auto.freightScoredPerLevel)), maxStats.maxAutoFreightScored),
         
-        new Chart(`graph-teleop-delivery-${team}`, {
+        new Chart(`graph-teleop-freight-${team}`, {
             type: 'bar',
             data: {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'A-N deliveries',
-                        data: matches.map(it => it.teleOp.neutralStonesDelivered),
+                        label: 'Alliance hub',
+                        data: matches.map(it => stats.sum(it.teleOp.freightScoredPerLevel)),
                         backgroundColor: '#ebd50e'
                     },
                     {
-                        label: 'A-S deliveries',
-                        data: matches.map(it => it.teleOp.allianceStonesDelivered),
+                        label: 'Shared hub',
+                        data: matches.map(it => it.teleOp.freightScoredOnSharedHub),
                         backgroundColor: 'rgba(27, 60, 133, 0.7)'
                     }
                 ]
             },
             options: {
                 scales: {
-                    yAxes: [{
+                    y: {
                         stacked: true,
-                        ticks: {
-                            beginAtZero: true,
-                            max: maxStats.maxDelivery
-                        }
-                    }],
-                    xAxes: [{
+                        beginAtZero: true,
+                        max: maxStats.maxTeleOpHub
+                    },
+                    x: {
                         stacked: true
-                    }]
+                    }
                 }
             }
         }),
 
-        renderBarGraph(`graph-teleop-level-${team}`, 'Stack level', labels,
-            matches.map(it => it.teleOp.stonesPerLevel.length), maxStats.maxStackLevel)];
+        renderBarGraph(`graph-teleop-su-${team}`, 'Storage hub', labels,
+            matches.map(it => it.teleOp.freightInStorageUnit), maxStats.maxTeleOpStorageUnit)];
 
 }
 
 type MaxStatistics = {
-    maxAutoStonesDelivered: number;
-    maxAutoStonesPlaced: number;
-    maxDelivery: number;
-    maxStackLevel: number;
+    maxAutoFreightScored: number;
+    maxTeleOpHub: number;
+    maxTeleOpStorageUnit: number;
 };
 
 function getMaxStats(matches: MatchEntry[]): MaxStatistics {
     // FIXME repetitive?
     return {
-        maxAutoStonesDelivered: Math.max(...matches.map(it => it.auto.deliveredStones.length)),
-        maxAutoStonesPlaced: Math.max(...matches.map(it => it.auto.stonesOnFoundation)),
-        maxDelivery: Math.max(...matches.map(it => it.teleOp.neutralStonesDelivered + it.teleOp.allianceStonesDelivered)),
-        maxStackLevel: Math.max(...matches.map(it => it.teleOp.stonesPerLevel.length))
+        maxAutoFreightScored: Math.max(...matches.map(it => stats.sum(it.auto.freightScoredPerLevel))),
+        maxTeleOpHub: Math.max(...matches.map(it => Math.max(it.teleOp.freightScoredOnSharedHub, stats.sum(it.teleOp.freightScoredPerLevel)))),
+        maxTeleOpStorageUnit: Math.max(...matches.map(it => it.teleOp.freightInStorageUnit))
     };
 }
 
@@ -130,7 +122,56 @@ async function setup() {
     const favorites = await getFavoriteTeams();
     const maxStats = getMaxStats(entries.filter(it => favorites.indexOf(it.teamNumber) !== -1));
 
-    Vue.component('scoring-summary', {
+    let graphs: Chart[] = [];
+    function renderAllTeamGraphs() {
+        for (let graph of graphs) {
+            graph.destroy();
+        }
+        graphs = [];
+        for (let number of favorites) {
+            graphs = graphs.concat(renderTeamGraphs(number, entries, maxStats));
+        }
+    }
+
+    const app = createApp({
+        data: () => ({
+            favoriteTeams: favorites.slice(),
+            sortingMethod: 'natural'
+        }),
+        mounted: renderAllTeamGraphs,
+        methods: {
+            teamMatches: function(team: number) {
+                return entries.filter(it => it.teamNumber === team);
+            },
+            resort: function(method: string) {
+                const averageOf: (team: number, extractor: (m: MatchEntry) => number) => number = (team, extractor) => {
+                    return stats.average(this.teamMatches(team).map(extractor));
+                } 
+                const compareAverage: (a: number, b: number, ext: (m: MatchEntry) => number) => number = (a, b, ext) =>
+                    averageOf(a, ext) - averageOf(b, ext);
+
+                const comparators: {[method: string]: (a: number, b: number) => number} = {
+                    number: (a, b) => a - b,
+                    auto: (a, b) => compareAverage(a, b, it => it.getAutonomousScore()),
+                    sharedHub: (a, b) => compareAverage(a, b, it => it.teleOp.freightScoredOnSharedHub),
+                    allianceHub: (a, b) => compareAverage(a, b, it => stats.sum(it.teleOp.freightScoredPerLevel)),
+                    teleop: (a, b) => compareAverage(a, b, it => it.getTeleOpScore()),
+                    endgame: (a, b) => compareAverage(a, b, it => it.getEndgameScore()),
+                    total: (a, b) => compareAverage(a, b, it => it.getTotalScore())
+                };
+                
+                if (method === 'natural') {
+                    this.favoriteTeams = favorites;
+                } else {
+                    this.favoriteTeams.sort(comparators[method]);
+                }
+                this.$nextTick(renderAllTeamGraphs);
+            }
+        }
+    });
+    
+    app.mount('#app');
+    app.component('scoring-summary', {
         data: function() { return {}; },
         props: {
             period: String,
@@ -151,55 +192,6 @@ async function setup() {
                     case ScoringResult.FAILED: return 'failed';
                     case ScoringResult.SCORED: return 'scored';
                 }
-            }
-        }
-    });
-
-    let graphs: Chart[] = [];
-    function renderAllTeamGraphs() {
-        for (let graph of graphs) {
-            graph.destroy();
-        }
-        graphs = [];
-        for (let number of favorites) {
-            graphs = graphs.concat(renderTeamGraphs(number, entries, maxStats));
-        }
-    }
-
-    const vm = new Vue({
-        el: '#app',
-        data: {
-            favoriteTeams: favorites.slice(),
-            sortingMethod: 'natural'
-        },
-        mounted: renderAllTeamGraphs,
-        methods: {
-            teamMatches: function(team: number) {
-                return entries.filter(it => it.teamNumber === team);
-            },
-            resort: function(method: string) {
-                const averageOf: (team: number, extractor: (m: MatchEntry) => number) => number = (team, extractor) => {
-                    return stats.average(this.teamMatches(team).map(extractor));
-                } 
-                const compareAverage: (a: number, b: number, ext: (m: MatchEntry) => number) => number = (a, b, ext) =>
-                    averageOf(a, ext) - averageOf(b, ext);
-
-                const comparators: {[method: string]: (a: number, b: number) => number} = {
-                    number: (a, b) => a - b,
-                    auto: (a, b) => compareAverage(a, b, it => it.getAutonomousScore()),
-                    delivery: (a, b) => compareAverage(a, b, it => it.teleOp.allianceStonesDelivered + it.teleOp.neutralStonesDelivered),
-                    stack: (a, b) => compareAverage(a, b, it => it.teleOp.stonesPerLevel.length),
-                    teleop: (a, b) => compareAverage(a, b, it => it.getTeleOpScore()),
-                    endgame: (a, b) => compareAverage(a, b, it => it.getEndgameScore()),
-                    total: (a, b) => compareAverage(a, b, it => it.getTotalScore())
-                };
-                
-                if (method === 'natural') {
-                    this.favoriteTeams = favorites;
-                } else {
-                    this.favoriteTeams.sort(comparators[method]);
-                }
-                this.$nextTick(renderAllTeamGraphs);
             }
         }
     });

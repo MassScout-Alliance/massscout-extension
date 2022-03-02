@@ -1,11 +1,13 @@
 import { getAllMatches } from "./local-storage";
-import { MatchEntry, ScoringResult } from "./match";
+import { MatchEntry, ParkArea, ParkingResult, ScoringResult } from "./match";
+import { createApp } from 'vue';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import * as ag from 'ag-grid-community';
-import * as $ from 'jquery';
+import $ from 'jquery';
 import { getFavoriteTeams, addFavoriteTeam, removeFavoriteTeam } from "./favorites";
 import { collateMatchesByTeam } from "./utils";
+import { stats } from "./stats";
 
 export function getEntriesForTeam(teamNumber: number): Promise<MatchEntry[]> {
     return getAllMatches().then(matches => matches.filter(it => it.teamNumber === teamNumber));
@@ -15,92 +17,101 @@ interface TeamOverviewInsights {
     teamNumber: number;
 
     // autonomous
-    skystoneDeliveryAverage: number;
-    stoneDeliveryAverage: number;
-    repositionAverage: number;
-    navigateAverage: number;
-    averageAutoTotal: number;
+    autoDuckDeliveryAvg: number;
+    preLoadedAvg: number;
+    autoAshDeliveryAvg: number;
+    autoParkAvg: number;
+    autoTotalAvg: number;
+    autoPenaltiesAvg: number;
 
     // teleop
-    allianceSpecificDeliveryAverage: number;
-    neutralDeliveryAverage: number;
-    placementAverage: number;
-    stackAverage: number;
-    stackMax: number;
-    averageTeleOpTotal: number;
+    teleOpAshDeliveryAvg: number;
+    sharedDeliveryAvg: number;
+    storageUnitAvg: number;
+    teleOpTotalAvg: number;
+    teleOpPenaltiesAvg: number;
 
     // endgame
-    endRepositionAverage: number;
-    capstoneAverage: number;
-    capstoneMaxLevel: number;
-    parkAverage: number;
-    averageEndgameTotal: number;
+    endDuckDeliveryAvg: number;
+    endTseCapAvg: number;
+    endAshBalanceAvg: number;
+    endParkAvg: number;
+    endTotalAvg: number;
+    endPenaltiesAvg: number;
 
     averageContribution: number;
+    // a penalty-free Freight Frenzy match is rare in Massachusetts :')
+    penaltiesAvg: number;
 }
 
 export function analyzeOverview(entries: MatchEntry[]): TeamOverviewInsights {
     function reliability(results: ScoringResult[]): number {
-        return count(results, ScoringResult.SCORED) / results.length;
+        return 1 - stats.count(results, ScoringResult.FAILED) / results.length;
     }
-    function average(results: number[]): number {
-        if (results.length === 0) return -1;
-        return results.reduce((a, b) => a + b) / results.length;
-    }
-    function count<T>(set: T[], desired: T): number {
-        return set.filter(it => it === desired).length;
-    }
-    function max(set: number[]): number {
-        return set.reduce((a, b) => Math.max(a, b), 0);
+    function autoParkToNumber(entry: MatchEntry): number {
+        switch (entry.auto.parked) {
+            case ParkArea.CIN_STORAGE_UNIT, ParkArea.CIN_WAREHOUSE:
+                return 1;
+            case ParkArea.PIN_STORAGE_UNIT, ParkArea.PIN_WAREHOUSE:
+                return 0.5;
+            default:
+                return 0;
+        }
     }
 
     return {
         teamNumber: entries[0].teamNumber,
-        skystoneDeliveryAverage: average(entries.map(entry => count(entry.auto.deliveredStones, StoneType.SKYSTONE))),
-        stoneDeliveryAverage: average(entries.map(entry => count(entry.auto.deliveredStones, StoneType.STONE))),
-        repositionAverage: reliability(entries.map(entry => entry.auto.movedFoundation)),
-        navigateAverage: reliability(entries.map(entry => entry.auto.parked)),
-        averageAutoTotal: average(entries.map(entry => entry.getAutonomousScore())),
+        autoDuckDeliveryAvg: reliability(entries.map(e => e.auto.deliveredCarouselDuck)),
+        preLoadedAvg: reliability(entries.map(e => e.auto.deliveredPreLoaded)),
+        autoAshDeliveryAvg: stats.average(entries.map(e => stats.sum(e.auto.freightScoredPerLevel))),
+        autoParkAvg: stats.average(entries.map(autoParkToNumber)),
+        autoTotalAvg: stats.average(entries.map(entry => entry.getAutonomousScore())),
+        autoPenaltiesAvg: stats.average(entries.map(e => MatchEntry.pointsPenalizedDuring(e.auto))),
 
-        allianceSpecificDeliveryAverage: average(entries.map(entry => entry.teleOp.allianceStonesDelivered)),
-        neutralDeliveryAverage: average(entries.map(entry => entry.teleOp.neutralStonesDelivered)),
-        placementAverage: average(entries.map(entry => entry.teleOp.stonesPerLevel.reduce((a, b) => a + b, 0))),
-        stackAverage: average(entries.map(entry => entry.teleOp.stonesPerLevel.length)),
-        stackMax: max(entries.map(entry => entry.teleOp.stonesPerLevel.length)),
-        averageTeleOpTotal: average(entries.map(entry => entry.getTeleOpScore())),
+        teleOpAshDeliveryAvg: stats.average(entries.map(e => stats.sum(e.teleOp.freightScoredPerLevel))),
+        sharedDeliveryAvg: stats.average(entries.map(e => e.teleOp.freightScoredOnSharedHub)),
+        storageUnitAvg: stats.average(entries.map(e => e.teleOp.freightInStorageUnit)),
+        teleOpTotalAvg: stats.average(entries.map(entry => entry.getTeleOpScore())),
+        teleOpPenaltiesAvg: stats.average(entries.map(e => MatchEntry.pointsPenalizedDuring(e.teleOp))),
 
-        endRepositionAverage: reliability(entries.map(entry => entry.endgame.movedFoundation)),
-        capstoneAverage: average(entries.map(entry => entry.endgame.capstoneLevel === undefined ? 0 : 1)),
-        capstoneMaxLevel: max(entries.map(entry => entry.endgame.capstoneLevel || 0)),
-        parkAverage: reliability(entries.map(entry => entry.endgame.parked)),
-        averageEndgameTotal: average(entries.map(entry => entry.getEndgameScore())),
+        endDuckDeliveryAvg: stats.average(entries.map(e => e.endgame.ducksDelivered)),
+        endAshBalanceAvg: stats.average(entries.map(e => e.endgame.allianceHubTipped ? 0 : 1)),
+        // DID_NOT_TRY is considered failed here because time budgeting is a skill being assessed/ranked
+        endTseCapAvg: stats.average(entries.map(e => e.endgame.tseScored === ScoringResult.SCORED ? 1 : 0)),
+        endParkAvg: stats.average(entries.map(e => e.endgame.parked === ParkingResult.COMPLETELY_IN ? 1 : (e.endgame.parked === ParkingResult.PARTIALLY_IN ? 0.5 : 0))),
+        endTotalAvg: stats.average(entries.map(entry => entry.getEndgameScore())),
+        endPenaltiesAvg: stats.average(entries.map(e => MatchEntry.pointsPenalizedDuring(e.endgame))),
 
-        averageContribution: average(entries.map(entry => entry.getTotalScore()))
+        averageContribution: stats.average(entries.map(entry => entry.getTotalScore())),
+        penaltiesAvg: stats.average(entries.map(e =>
+            MatchEntry.pointsPenalizedDuring(e.auto) + MatchEntry.pointsPenalizedDuring(e.teleOp) + MatchEntry.pointsPenalizedDuring(e.endgame)))
     };
 }
 
 function renderOverviewInsights(insights: TeamOverviewInsights[]) {
-    const columns = [
-        {headerName: 'Team', field: 'teamNumber', sortable: true, cellStyle: {fontWeight: 'bold'}, minWidth: 80},
-        {headerName: 'Skystone Avg', field: 'skystoneDeliveryAverage', sortable: true},
-        {headerName: 'Stone Avg', field: 'stoneDeliveryAverage', sortable: true},
-        {headerName: 'Auto Foundation', field: 'repositionAverage', sortable: true},
-        {headerName: 'Navigate', field: 'navigateAverage', sortable: true},
-        {headerName: 'Auto Average', field: 'averageAutoTotal', sortable: true, cellStyle: {fontWeight: 'bold'}},
-        {headerName: 'A-S Delivery', field: 'allianceSpecificDeliveryAverage', sortable: true},
-        {headerName: 'A-N Delivery', field: 'neutralDeliveryAverage', sortable: true},
-        {headerName: 'Placement', field: 'placementAverage', sortable: true},
-        {headerName: 'Stack Avg', field: 'stackAverage', sortable: true},
-        {headerName: 'Stack Max', field: 'stackMax', sortable: true},
-        {headerName: 'TeleOp Average', field: 'averageTeleOpTotal', sortable: true, cellStyle: {fontWeight: 'bold'}},
-        {headerName: 'End Foundation', field: 'endRepositionAverage', sortable: true},
-        {headerName: 'Capstone Avg', field: 'capstoneAverage', sortable: true},
-        {headerName: 'Capstone Max Lvl', field: 'capstoneMaxLevel', sortable: true},
-        {headerName: 'End Park', field: 'parkAverage', sortable: true},
-        {headerName: 'End Average', field: 'averageEndgameTotal', sortable: true, cellStyle: {fontWeight: 'bold'}},
-        {headerName: 'Avg Cont.', field: 'averageContribution', sortable: true, cellStyle: {fontWeight: 'bold'}}
+    const columns: {headerName: string, field: keyof TeamOverviewInsights, sortable: boolean, cellStyle?: any, minWidth?: number}[] = [
+        { headerName: 'Team', field: 'teamNumber', sortable: true, cellStyle: { fontWeight: 'bold' }, minWidth: 80 },
+        { headerName: 'Auto Duck', field: 'autoDuckDeliveryAvg', sortable: true },
+        { headerName: 'Auto Preload', field: 'preLoadedAvg', sortable: true },
+        { headerName: 'Auto Hub Avg', field: 'autoAshDeliveryAvg', sortable: true },
+        { headerName: 'Auto Park', field: 'autoParkAvg', sortable: true },
+        { headerName: 'Auto Avg', field: 'autoTotalAvg', sortable: true, cellStyle: { fontWeight: 'bold' } },
+        { headerName: 'Auto Penalties Avg', field: 'autoPenaltiesAvg', sortable: true, cellStyle: { fontWeight: 'bold', color: 'red' } },
+        { headerName: 'ASH Avg', field: 'teleOpAshDeliveryAvg', sortable: true },
+        { headerName: 'Shared Hub Avg', field: 'sharedDeliveryAvg', sortable: true },
+        { headerName: 'Storage Unit Avg', field: 'storageUnitAvg', sortable: true },
+        { headerName: 'TeleOp Avg', field: 'teleOpTotalAvg', sortable: true, cellStyle: { fontWeight: 'bold' } },
+        { headerName: 'TeleOp Penalties Avg', field: 'teleOpPenaltiesAvg', sortable: true, cellStyle: { fontWeight: 'bold', color: 'red' } },
+        { headerName: 'End Duck', field: 'endDuckDeliveryAvg', sortable: true },
+        { headerName: 'End TSE', field: 'endTseCapAvg', sortable: true },
+        // ASH balance omitted
+        { headerName: 'End Park', field: 'endParkAvg', sortable: true },
+        { headerName: 'Endgame Avg', field: 'endTotalAvg', sortable: true, cellStyle: { fontWeight: 'bold' } },
+        { headerName: 'Endgame Penalties Avg', field: 'endPenaltiesAvg', sortable: true, cellStyle: { fontWeight: 'bold', color: 'red' } },
+        { headerName: 'OPR', field: 'averageContribution', sortable: true, cellStyle: { fontWeight: 'bold' } },
+        { headerName: 'Penalized Avg', field: 'penaltiesAvg', sortable: true, cellStyle: { fontWeight: 'bold', color: 'red' } }
     ];
-    
+
     new ag.Grid(document.getElementById('table')!, {
         columnDefs: columns,
         rowData: insights,
@@ -127,17 +138,15 @@ getAllMatches().then(entries => {
     });
 });
 
-async function setupFavorites(allTeams: number[]) { 
-    const Vue = (await import('vue')).default;
+async function setupFavorites(allTeams: number[]) {
     const favorites = await getFavoriteTeams();
     const availableTeams = allTeams.filter(it => favorites.indexOf(it) === -1);
-    new Vue({
-        el: '#favorites',
-        data: {
+    createApp({
+        data: () => ({
             teams: favorites,
             allTeams: availableTeams,
             newFavorite: availableTeams[0]
-        },
+        }),
         methods: {
             addFavorite(team: string) {
                 const teamNum = parseInt(team);
@@ -167,5 +176,5 @@ async function setupFavorites(allTeams: number[]) {
                     });
             }
         }
-    });
+    }).mount('#favorites');
 }

@@ -1,6 +1,6 @@
 import { getAllMatches } from "./local-storage"
 import { MatchEntry } from "./match"
-import * as $ from 'jquery';
+import $ from 'jquery';
 
 interface ExportStrategy {
     displayName: string,
