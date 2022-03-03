@@ -1,15 +1,15 @@
 import { createApp, Component } from 'vue';
-import { Chart } from 'chart.js';
+import Chart from 'chart.js/auto';
 import { getAllMatches } from './local-storage';
 import { ScoringResult, MatchEntry } from './match';
 import { getFavoriteTeams } from './favorites';
 import { stats } from './stats';
 
-function renderBarGraph(id: string, field: string, labels: string[], data: number[], maxY?: number): Chart {
+function renderBarGraph(id: string, field: string, labels: string[], data: number[], maxY?: number) {
     return new Chart(id, {
         type: 'bar',
         data: {
-            labels: labels,
+            labels,
             datasets: [
                 {
                     label: field,
@@ -28,6 +28,7 @@ function renderBarGraph(id: string, field: string, labels: string[], data: numbe
         }
     });
 }
+
 
 function renderTeamGraphs(team: number, entries: MatchEntry[], maxStats: MaxStatistics): Chart[] {
     const matches = entries.filter(it => it.teamNumber === team);
