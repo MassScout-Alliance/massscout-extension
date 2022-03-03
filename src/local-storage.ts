@@ -1,4 +1,5 @@
 import { MatchEntry, DisconnectStatus } from "./match";
+import clone from 'just-clone';
 
 export function formatEntryKey(matchCode: string, teamNumber: number) {
     return `${matchCode}:${teamNumber}`;
@@ -14,8 +15,8 @@ export function storeMatch(entry: MatchEntry): Promise<null> {
 
 export function storeMatches(entries: MatchEntry[]): Promise<null> {
     return new Promise((resolve, _) => {
-        let object = {};
-        for (let entry of entries) {
+        const object = {};
+        for (const entry of entries) {
             object[entryKey(entry)] = entry;
         }
         chrome.storage.local.set(object, () => resolve(null));

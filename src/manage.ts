@@ -27,6 +27,9 @@ function getHtmlForEntry(entry: MatchEntry): string {
     <div class="col-sm-3 col-md-1">
         <score total>${entry.getTotalScore()}</score>
     </div>
+    <div class="col-sm-2 col-md-1">
+        <score penalty>${entry.getTotalPenalty()}</score>
+    </div>
     <div class="col-sm col-md-1 actions">
         <span class="icon-info" match="${key}"></span>
         <span class="icon-delete" match="${key}"></span>
@@ -63,7 +66,10 @@ function repopulate(sortFn: TeamCompareFn | null) {
         kEntryContainer.html(sortedSections
             .map(team => getHtmlForSection(parseInt(team), sections[team])).join('\n'));
 
-    }).catch(alert).then(() => $(attachClickHandlers));
+    }).catch(e => {
+        console.error(e);
+        throw e;
+    }).then(() => $(attachClickHandlers));
 }
 
 function attachClickHandlers() {
@@ -71,6 +77,13 @@ function attachClickHandlers() {
         const key = this.getAttribute('match')!;
         removeMatch(key);
         $(`.entry[match="${key}"]`).remove();
+        // jank
+        const team = key.split(':')[1];
+        if ($('#section-' + team).children().length === 0) {
+            // remove the section
+            $('#section-' + team).remove();
+            $('label[for="collapse-' + team + '"]').remove();
+        }
     });
     $('.icon-info').on('click', function() {
         chrome.windows.create({
@@ -102,7 +115,7 @@ $(() => {
     $('#remove-all').on('click', () => {
         clearAllMatches().then(() => {
             $('#entries').html('');
-            $('#modal-control').click();
+            $('#modal-control').trigger('click');
         }).catch(alert);
     });
 

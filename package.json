@@ -1,19 +1,18 @@
 {
-  "name": "chrome-extension-typescript-starter",
-  "version": "1.0.0",
-  "description": "chrome-extension-typescript-starter",
+  "name": "massscout-extension",
+  "version": "2.0.0-pre",
+  "description": "Browser extension for the MassScout Alliance, a group of FIRST Tech Challenge teams in Massachusetts that shares performance scouting data and insights in competitions",
   "main": "index.js",
   "scripts": {
-    "watch": "webpack --config webpack/webpack.dev.js --watch",
-    "build": "webpack --config webpack/webpack.prod.js",
+    "build": "node esbuild.js",
     "clean": "rimraf dist",
     "test": "npx jest"
   },
-  "author": "",
+  "author": "MassScout Alliance",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/chibat/chrome-extension-typescript-starter.git"
+    "url": "https://github.com/MassScout-Alliance/massscout-extension"
   },
   "dependencies": {
     "@types/chart.js": "^2.9.12",
@@ -23,6 +22,7 @@
     "esbuild": "^0.14.23",
     "esbuild-copy-static-files": "^0.1.0",
     "jquery": "^3.6.0",
+    "just-clone": "^5.0.1",
     "mini.css": "^3.0.1",
     "moment": "~2.29.1",
     "spectre.css": "^0.5.9",

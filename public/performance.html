@@ -22,13 +22,13 @@
           <label for="match" class="form-label field-label">Match Code</label>
         </div>
         <div class="col-8 col-xs-12 column">
-          <input class="form-input" id="match" type="text" placeholder="Q2, Q10" v-model="entry.matchCode">
+          <input class="form-input" id="match" type="text" placeholder="Q2, Q10" v-model="entry.matchCode" :disabled="submitted">
         </div>
         <div class="col-4 col-xs-12 column">
           <label for="team" class="form-label field-label">Team #</label>
         </div>
         <div class="col-8 col-xs-12 column">
-          <input class="form-input" type="number" id="team" placeholder="11115" v-model.number="entry.teamNumber">
+          <input class="form-input" type="number" min="0" max="25000" id="team" placeholder="11115" v-model.number="entry.teamNumber" :disabled="submitted">
         </div>
 
         <!-- </div> -->
@@ -39,11 +39,11 @@
         </div>
         <div class="col-8 col-xs-12 column">
           <label class="form-radio form-inline">
-            <input type="radio" name="alliance" id="alliance-blue" v-model="entry.alliance" :value="AllianceColor.BLUE"><i class="form-icon"></i>
+            <input type="radio" name="alliance" id="alliance-blue" v-model="entry.alliance" :value="AllianceColor.BLUE" :disabled="submitted"><i class="form-icon"></i>
             <span style="color: #0066b3">Blue</span>
           </label>
           <label class="form-radio form-inline">
-            <input type="radio" name="alliance" id="alliance-red" v-model="entry.alliance" :value="AllianceColor.RED"><i class="form-icon"></i>
+            <input type="radio" name="alliance" id="alliance-red" v-model="entry.alliance" :value="AllianceColor.RED" :disabled="submitted"><i class="form-icon"></i>
             <span style="color: #ed1c24">Red</span>
           </label>
         </div>
@@ -52,15 +52,15 @@
         </div>
         <div class="col-8 col-xs-12 column">
           <label class="form-radio form-inline">
-            <input type="radio" name="disconnect" id="disconnect-none" v-model="entry.disconnect" :value="DisconnectStatus.NO_DISCONNECT" checked><i class="form-icon"></i>
+            <input type="radio" name="disconnect" id="disconnect-none" v-model="entry.disconnect" :value="DisconnectStatus.NO_DISCONNECT" checked :disabled="submitted"><i class="form-icon"></i>
             None
           </label>
           <label class="form-radio form-inline">
-            <input type="radio" name="disconnect" id="disconnect-partial" v-model="entry.disconnect" :value="DisconnectStatus.PARTIAL"><i class="form-icon"></i>
+            <input type="radio" name="disconnect" id="disconnect-partial" v-model="entry.disconnect" :value="DisconnectStatus.PARTIAL" :disabled="submitted"><i class="form-icon"></i>
             Partial
           </label>
           <label class="form-radio form-inline">
-            <input type="radio" name="disconnect" id="disconnect-total" v-model="entry.disconnect" :value="DisconnectStatus.TOTAL"><i class="form-icon"></i>
+            <input type="radio" name="disconnect" id="disconnect-total" v-model="entry.disconnect" :value="DisconnectStatus.TOTAL" @input="() => clearEntry()" :disabled="submitted"><i class="form-icon"></i>
             Total
           </label>
         </div>
@@ -74,11 +74,11 @@
           <div class="col-4 column">
             <label class="field-label form-label">Barcode</label>
             <label class="form-radio">
-              <input type="radio" name="barcode-element" id="barcode-duck" :value="ScoringResult.DID_NOT_TRY" v-model="auto.usedTse"><i class="form-icon"></i>
+              <input type="radio" name="barcode-element" id="barcode-duck" :value="ScoringResult.DID_NOT_TRY" v-model="entry.auto.usedTse" :disabled="submitted"><i class="form-icon"></i>
               Duck
             </label>
             <label class="form-radio">
-              <input type="radio" name="barcode-element" id="barcode-tse" :value="ScoringResult.SCORED" v-model="auto.usedTse"><i class="form-icon"></i>
+              <input type="radio" name="barcode-element" id="barcode-tse" :value="ScoringResult.SCORED" v-model="entry.auto.usedTse" :disabled="submitted"><i class="form-icon"></i>
               <abbr title="Team Shipping Element">TSE</abbr>
             </label>
           </div>
@@ -88,38 +88,38 @@
               Duck
             </div>
             <label class="form-radio">
-              <input type="radio" name="auto-duck" :value="ScoringResult.DID_NOT_TRY" v-model="auto.deliveredCarouselDuck" id="auto-duck-dnt">
+              <input type="radio" name="auto-duck" :value="ScoringResult.DID_NOT_TRY" v-model="entry.auto.deliveredCarouselDuck" id="auto-duck-dnt" :disabled="submitted">
               <i class="form-icon"></i> <abbr title="Did Not Try">DNT</abbr>
             </label>
             <label class="form-radio">
-              <input type="radio" name="auto-duck" :value="ScoringResult.FAILED" v-model="auto.deliveredCarouselDuck" id="auto-duck-failed">
+              <input type="radio" name="auto-duck" :value="ScoringResult.FAILED" v-model="entry.auto.deliveredCarouselDuck" id="auto-duck-failed" :disabled="submitted">
               <i class="form-icon"></i> <img src="assets/2022-duck-outline.png" alt="Duck outline" class="field-label-icon"> Failed
             </label>
             <label class="form-radio">
-              <input type="radio" name="auto-duck" :value="ScoringResult.SCORED" v-model="auto.deliveredCarouselDuck" id="auto-duck-scored">
+              <input type="radio" name="auto-duck" :value="ScoringResult.SCORED" v-model="entry.auto.deliveredCarouselDuck" id="auto-duck-scored" :disabled="submitted">
               <i class="form-icon"></i> <img src="assets/2022-duck.png" alt="Duck logo" class="field-label-icon"> Scored
             </label>
           </div>
           <div class="col-4 column block-group">
             <label for="auto-preload" class="form-label field-label">Preloaded</label>
             <label class="form-radio">
-              <input type="radio" name="auto-preload" :value="ScoringResult.DID_NOT_TRY" v-model="auto.deliveredPreLoaded" id="auto-preload-dnt">
+              <input type="radio" name="auto-preload" :value="ScoringResult.DID_NOT_TRY" v-model="entry.auto.deliveredPreLoaded" id="auto-preload-dnt" :disabled="submitted">
               <i class="form-icon"></i> <abbr title="Did Not Try">DNT</abbr>
             </label>
             <label class="form-radio">
-              <input type="radio" name="auto-preload" :value="ScoringResult.FAILED" v-model="auto.deliveredPreLoaded" id="auto-preload-failed">
+              <input type="radio" name="auto-preload" :value="ScoringResult.FAILED" v-model="entry.auto.deliveredPreLoaded" id="auto-preload-failed" :disabled="submitted">
               <i class="form-icon"></i> <img src="assets/2022-block-black.png" alt="Black block" class="field-label-icon"> Failed
             </label>
             <label class="form-radio">
-              <input type="radio" name="auto-preload" :value="ScoringResult.SCORED" v-model="auto.deliveredPreLoaded" id="auto-preload-scored">
+              <input type="radio" name="auto-preload" :value="ScoringResult.SCORED" v-model="entry.auto.deliveredPreLoaded" id="auto-preload-scored" :disabled="submitted">
               <i class="form-icon"></i> <img src="assets/2022-preload-scored.png" alt="Preload scored logo" class="field-label-icon"> Scored
             </label>
           </div>
-          <AllianceShippingHub period="auto" v-model="auto.freightScoredPerLevel"></AllianceShippingHub>
+          <AllianceShippingHub period="auto" v-model="entry.auto.freightScoredPerLevel" :disabled="submitted"></AllianceShippingHub>
           <div class="col-12 column">
             <label for="auto-su" class="form-label field-label"><img src="assets/2022-su-blue.png"
                 class="field-label-icon" alt="Storage Unit logo"> Storage Unit</label>
-            <input type="number" class="form-input" id="auto-su" min="0" max="30" placeholder="# elements" v-model.number="auto.freightScoredInStorageUnit">
+            <input type="number" class="form-input" id="auto-su" min="0" max="30" placeholder="# elements" v-model.number="entry.auto.freightScoredInStorageUnit" :disabled="submitted">
           </div>
           <div class="col-12 column form-group block-group mt-1">
             <label class="field-label">
@@ -129,60 +129,60 @@
             <div class="columns">
               <div class="col-12 column">
                 <label class="form-radio">
-                  <input type="radio" name="auto-park" id="auto-park-failed" :value="ParkArea.NOT_PARKED" v-model="auto.parked">
+                  <input type="radio" name="auto-park" id="auto-park-failed" :value="ParkArea.NOT_PARKED" v-model="entry.auto.parked" :disabled="submitted">
                   <i class="form-icon"></i> <abbr title="Did Not Try">DNT</abbr>
                 </label>
                 <label class="form-radio">
-                  <input type="radio" name="auto-park" id="auto-park-su-failed" :value="ParkArea.ATTEMPTED_STORAGE_UNIT" v-model="auto.parked">
+                  <input type="radio" name="auto-park" id="auto-park-su-failed" :value="ParkArea.ATTEMPTED_STORAGE_UNIT" v-model="entry.auto.parked" :disabled="submitted">
                   <i class="form-icon"></i> <img class="field-label-icon" alt="Parking failed logo"
                     src="assets/2022-park-failed.png"> Storage Unit: Failed
                 </label>
                 <label class="form-radio">
-                  <input type="radio" name="auto-park" id="auto-park-su-partial" :value="ParkArea.PIN_STORAGE_UNIT" v-model="auto.parked">
+                  <input type="radio" name="auto-park" id="auto-park-su-partial" :value="ParkArea.PIN_STORAGE_UNIT" v-model="entry.auto.parked" :disabled="submitted">
                   <i class="form-icon"></i> <img class="field-label-icon" alt="Storage Unit partially parked logo"
                     src="assets/2022-su-partial.png"> Storage Unit: Partially
                 </label>
                 <label class="form-radio">
-                  <input type="radio" name="auto-park" id="auto-park-su-complete" :value="ParkArea.CIN_STORAGE_UNIT" v-model="auto.parked">
+                  <input type="radio" name="auto-park" id="auto-park-su-complete" :value="ParkArea.CIN_STORAGE_UNIT" v-model="entry.auto.parked" :disabled="submitted">
                   <i class="form-icon"></i> <img class="field-label-icon" alt="Storage Unit completely parked logo"
                     src="assets/2022-su-complete.png"> Storage Unit: Completely
                 </label>
                 <label class="form-radio">
-                  <input type="radio" name="auto-park" id="auto-park-warehouse-failed" :value="ParkArea.ATTEMPTED_WAREHOUSE" v-model="auto.parked">
+                  <input type="radio" name="auto-park" id="auto-park-warehouse-failed" :value="ParkArea.ATTEMPTED_WAREHOUSE" v-model="entry.auto.parked" :disabled="submitted">
                   <i class="form-icon"></i> <img class="field-label-icon" alt="Parking failed logo"
                   src="assets/2022-park-failed.png"> Warehouse: Failed
                 </label>
                 <label class="form-radio">
-                  <input type="radio" name="auto-park" id="auto-park-warehouse-partial" :value="ParkArea.PIN_WAREHOUSE" v-model="auto.parked">
+                  <input type="radio" name="auto-park" id="auto-park-warehouse-partial" :value="ParkArea.PIN_WAREHOUSE" v-model="entry.auto.parked" :disabled="submitted">
                   <i class="form-icon"></i> <img class="field-label-icon" alt="Warehouse partially parked logo"
                     src="assets/2022-warehouse-partial.png"> Warehouse: Partially
                 </label>
                 <label class="form-radio">
-                  <input type="radio" name="auto-park" id="auto-park-warehouse-complete" :value="ParkArea.CIN_WAREHOUSE" v-model="auto.parked">
+                  <input type="radio" name="auto-park" id="auto-park-warehouse-complete" :value="ParkArea.CIN_WAREHOUSE" v-model="entry.auto.parked" :disabled="submitted">
                   <i class="form-icon"></i> <img class="field-label-icon" alt="Warehouse completely parked logo"
                     src="assets/2022-warehouse-complete.png"> Warehouse: Completely
                 </label>
               </div>
             </div>
           </div>
-          <Penalties period="auto" periodname="Autonomous" v-model="auto.warningsPenalties"></Penalties>
+          <Penalties period="auto" periodname="Autonomous" v-model="entry.auto.warningsPenalties" :disabled="submitted"></Penalties>
         </fieldset>
       </div>
       <div class="column col-sm-12 col-md-6 col-4">
         <fieldset class="container columns">
           <legend class="m-1">🎮 TeleOp</legend>
-          <allianceshippinghub period="teleop" v-model="teleOp.freightScoredPerLevel"></allianceshippinghub>
+          <allianceshippinghub period="teleop" v-model="entry.teleOp.freightScoredPerLevel" :disabled="submitted"></allianceshippinghub>
           <div class="col-6 column mt-2">
             <label for="teleop-su" class="form-label field-label"><img src="assets/2022-su-blue.png"
                 class="field-label-icon" alt="Storage Unit logo"> Storage Unit</label>
-            <input type="number" class="form-input" id="teleop-su" min="0" max="30" placeholder="# elements" v-model="teleOp.freightInStorageUnit">
+            <input type="number" class="form-input" id="teleop-su" min="0" max="30" placeholder="# elements" v-model="entry.teleOp.freightInStorageUnit" :disabled="submitted">
           </div>
           <div class="col-6 column mt-2 mb-2">
             <label for="teleop-shared" class="form-label field-label"><img src="assets/2022-shared-hub.png"
                 class="field-label-icon" alt="Shared Hub logo"> Shared Hub</label>
-            <input type="number" class="form-input" id="teleop-shared" min="0" max="30" placeholder="# elements" v-model="teleOp.freightScoredOnSharedHub">
+            <input type="number" class="form-input" id="teleop-shared" min="0" max="30" placeholder="# elements" v-model="entry.teleOp.freightScoredOnSharedHub" :disabled="submitted">
           </div>
-          <penalties period="teleop" periodname="TeleOp" v-model="teleOp.warningsPenalties"></penalties>
+          <penalties period="teleop" periodname="TeleOp" v-model="entry.teleOp.warningsPenalties" :disabled="submitted"></penalties>
         </fieldset>
         <fieldset class="container columns">
           <legend class="m-1">⌚ Endgame</legend>
@@ -190,14 +190,14 @@
             <label for="end-ducks" class="form-label field-label"><img src="assets/2022-duck.png"
                 class="field-label-icon" alt="Duck logo"> Ducks</label>
             <label class="form-radio">
-              <input type="radio" name="end-duck" id="end-duck-dnt" v-model="endgame.duckDeliveryAttempted" :value="false" @input="() => endgame.ducksDelivered = 0">
+              <input type="radio" name="end-duck" id="end-duck-dnt" v-model="entry.endgame.duckDeliveryAttempted" :value="false" @input="() => entry.endgame.ducksDelivered = 0" :disabled="submitted">
               <i class="form-icon"></i> <abbr title="Did Not Try">DNT</abbr>
             </label>
             <label class="form-radio">
-              <input type="radio" name="end-duck" id="end-duck-attempted" v-model="endgame.duckDeliveryAttempted" :value="true">
+              <input type="radio" name="end-duck" id="end-duck-attempted" v-model="entry.endgame.duckDeliveryAttempted" :value="true" :disabled="submitted">
               <i class="form-icon"></i> Scored
             </label>
-            <input type="number" class="form-input" id="end-ducks" min="0" max="30" placeholder="# ducks" :disabled="!endgame.duckDeliveryAttempted" v-model.number="endgame.ducksDelivered">
+            <input type="number" class="form-input" id="end-ducks" min="0" max="30" placeholder="# ducks" :disabled="!entry.endgame.duckDeliveryAttempted" v-model.number="entry.endgame.ducksDelivered" :disabled="submitted">
           </div>
           <div class="col-lg-6 col-6 column">
             <label for="end-tse" class="form-label field-label">
@@ -205,15 +205,15 @@
               <abbr title="Team Shipping Element">TSE</abbr>
             </label>
             <label class="form-radio">
-              <input type="radio" name="end-tse" id="end-tse-dnt" v-model="endgame.tseScored" :value="ScoringResult.DID_NOT_TRY">
+              <input type="radio" name="end-tse" id="end-tse-dnt" v-model="entry.endgame.tseScored" :value="ScoringResult.DID_NOT_TRY" :disabled="submitted">
               <i class="form-icon"></i> No TSE
             </label>
             <label class="form-radio">
-              <input type="radio" name="end-tse" id="end-tse-failed" v-model="endgame.tseScored" :value="ScoringResult.FAILED">
+              <input type="radio" name="end-tse" id="end-tse-failed" v-model="entry.endgame.tseScored" :value="ScoringResult.FAILED" :disabled="submitted">
               <i class="form-icon"></i> <img src="assets/capstone_black_small.png" alt="Failed TSE cap logo" class="field-label-icon"> Failed
             </label>
             <label class="form-radio">
-              <input type="radio" name="end-tse" id="end-tse-scored" v-model="endgame.tseScored" :value="ScoringResult.SCORED">
+              <input type="radio" name="end-tse" id="end-tse-scored" v-model="entry.endgame.tseScored" :value="ScoringResult.SCORED" :disabled="submitted">
               <i class="form-icon"></i> <img src="assets/capstone_blue_one.png" alt="TSE logo" class="field-label-icon"> Scored
             </label>
           </div>
@@ -223,15 +223,15 @@
               Parking
             </label>
             <label class="form-radio">
-              <input type="radio" name="end-park" checked id="end-park-failed" v-model="endgame.parked" :value="ParkingResult.FAILED">
+              <input type="radio" name="end-park" checked id="end-park-failed" v-model="entry.endgame.parked" :value="ParkingResult.FAILED" :disabled="submitted">
               <i class="form-icon"></i> <img src="assets/2022-park-failed.png" alt="Parking failed logo" class="field-label-icon"> Failed
             </label>
             <label class="form-radio">
-              <input type="radio" name="end-park" id="end-park-partial" v-model="endgame.parked" :value="ParkingResult.PARTIALLY_IN">
+              <input type="radio" name="end-park" id="end-park-partial" v-model="entry.endgame.parked" :value="ParkingResult.PARTIALLY_IN" :disabled="submitted">
               <i class="form-icon"></i> <img src="assets/2022-park-partial.png" alt="Partially parked logo" class="field-label-icon"> Partially
             </label>
             <label class="form-radio">
-              <input type="radio" name="end-park" id="end-park-complete" v-model="endgame.parked" :value="ParkingResult.COMPLETELY_IN">
+              <input type="radio" name="end-park" id="end-park-complete" v-model="entry.endgame.parked" :value="ParkingResult.COMPLETELY_IN" :disabled="submitted">
               <i class="form-icon"></i> <img src="assets/2022-park-complete.png" alt="Completely parked logo" class="field-label-icon"> Completely
             </label>
           </div>
@@ -241,17 +241,17 @@
               Shared Hub Lean
             </label>
             <label class="form-radio">
-              <input type="radio" name="end-sh" id="end-sh-same" v-model="endgame.sharedHubTipped" :value="HubState.TIPPED">
+              <input type="radio" name="end-sh" id="end-sh-same" v-model="entry.endgame.sharedHubTipped" :value="HubState.TIPPED" :disabled="submitted">
               <i class="form-icon"></i> 👍 Toward
               <span v-if="entry.alliance === AllianceColor.BLUE" style="color: #0066b3">Blue</span>
               <span v-else style="color: #ed1c24">Red</span>
             </label>
             <label class="form-radio">
-              <input type="radio" name="end-sh" id="end-sh-neutral" v-model="endgame.sharedHubTipped" :value="HubState.BALANCED">
+              <input type="radio" name="end-sh" id="end-sh-neutral" v-model="entry.endgame.sharedHubTipped" :value="HubState.BALANCED" :disabled="submitted">
               <i class="form-icon"></i> Neutral
             </label>
             <label class="form-radio">
-              <input type="radio" name="end-sh" id="end-sh-opp" v-model="endgame.sharedHubTipped" :value="HubState.TIPPED_OPP">
+              <input type="radio" name="end-sh" id="end-sh-opp" v-model="entry.endgame.sharedHubTipped" :value="HubState.TIPPED_OPP" :disabled="submitted">
               <i class="form-icon"></i> 👎 Toward <span v-if="entry.alliance === AllianceColor.RED" style="color: #0066b3">Blue</span>
               <span v-else style="color: #ed1c24">Red</span>
             </label>
@@ -261,19 +261,25 @@
               <img src="assets/2022-ash-blue.png" alt="Alliance shipping hub logo" class="field-label-icon">
               Alliance Shipping Hub balance
             </label>
-            <label class="form-radio">
-              <input type="radio" name="end-ash" id="end-ash-balanced" v-model="endgame.allianceHubTipped" :value="HubState.BALANCED">
-              <i class="form-icon"></i> <img src="assets/2022-ash-balanced.png" alt="Alliance shipping hub balanced logo" class="field-label-icon"> Balanced
-            </label>
-            <label class="form-radio">
-              <input type="radio" name="end-ash" id="end-ash-tipped" v-model="endgame.allianceHubTipped" :value="HubState.TIPPED">
-              <i class="form-icon"></i> <img src="assets/2022-ash-tipped.png" alt="Alliance shipping hub tipped logo" class="field-label-icon"> Tipped
-            </label>
+            <div class="columns">
+              <div class="col-6 column">
+                <label class="form-radio">
+                  <input type="radio" name="end-ash" id="end-ash-balanced" v-model="entry.endgame.allianceHubTipped" :value="HubState.BALANCED" :disabled="submitted">
+                  <i class="form-icon"></i> <img src="assets/2022-ash-balanced.png" alt="Alliance shipping hub balanced logo" class="field-label-icon"> Balanced
+                </label>
+              </div>
+              <div class="col-6 column">
+                <label class="form-radio">
+                  <input type="radio" name="end-ash" id="end-ash-tipped" v-model="entry.endgame.allianceHubTipped" :value="HubState.TIPPED" :disabled="submitted">
+                  <i class="form-icon"></i> <img src="assets/2022-ash-tipped.png" alt="Alliance shipping hub tipped logo" class="field-label-icon"> Tipped
+                </label>
+              </div>
+            </div>
           </div>
-          <penalties period="end" periodname="Endgame" v-model="endgame.warningsPenalties"></penalties>
+          <penalties period="end" periodname="Endgame" v-model="entry.endgame.warningsPenalties" :disabled="submitted"></penalties>
         </fieldset>
       </div>
-      <div class="column col-sm-12 col-4">
+      <div class="column col-md-12 col-4">
         <fieldset class="container columns">
           <legend class="m-1">💯 Score</legend>
           <div class="col-6 column align-right form-label">Autonomous</div>
@@ -282,31 +288,32 @@
           <div class="col-6 column score">{{ entry.getTeleOpScore() }}</div>
           <div class="col-6 column align-right form-label">Endgame</div>
           <div class="col-6 column score">{{ entry.getEndgameScore() }}</div>
-          <div class="col-6 column align-right form-label text-error">Penalties</div>
-          <div class="col-6 column score text-error">{{ [auto, teleOp, endgame].map(MatchEntry.pointsPenalizedDuring).reduce((a, b) => a + b, 0) }}</div>
           <div class="col-6 column field-label align-right form-label">Total</div>
           <div class="col-6 column score"><b>{{ entry.getTotalScore() }}</b></div>
+          <div class="col-6 column align-right form-label text-error">Penalties</div>
+          <div class="col-6 column score text-error">{{ [entry.auto, entry.teleOp, entry.endgame].map(MatchEntry.pointsPenalizedDuring).reduce((a, b) => a - b, 0) }}</div>
         </fieldset>
         <div class="form-group">
           <label class="form-label field-label" for="remarks">Remarks</label>
-          <textarea class="form-input" id="remarks" placeholder="Additional comments..." rows="3"></textarea>
+          <textarea class="form-input" id="remarks" placeholder="Additional comments..." rows="3" v-model="entry.remarks" :disabled="submitted"></textarea>
         </div>
-        <div class="col-sm-3 col-md-2 column" vertical-stack>
-          <button class="btn btn-primary" id="submit">Submit</button>
+        <div class="col-12 column final-actions text-center" v-if="canInteract" vertical-stack>
+          <button v-if="submitted" class="btn" id="start-new" @click.prevent="startNewEntry">Start new</button>
+          <button v-else-if="validate() === undefined" class="btn btn-primary" id="submit" @click.prevent="trySubmit">Submit</button>
+          <button v-else disabled class="btn btn-primary tooltip tooltip-bottom" id="submit-no" :data-tooltip="validate()">Submit</button>
         </div>
-        <div class="col-12 column">
+        <div v-if="false" class="col-12 column">
           <div style="font-family: 'VL Gothic', monospace;">
-            {{ '' }}
+            {{ JSON.stringify(entry, null, 2) }}
           </div>
         </div>
       </div>
     </div>
+    <div class="toast toast-success p-fixed message-toast" v-if="message[0] === 'success'">
+      <button class="btn btn-clear float-right" @click.prevent="() => message = [null, '']"></button>
+      {{ message[1] }}
+    </div>
   </form>
-  <div class="row">
-
-  </div>
-  <br>
-  <code id="output"></code>
   <style>
     .row h2 {
       text-transform: uppercase;
@@ -355,6 +362,12 @@
       text-align: right;
     }
 
+    .message-toast {
+      bottom: 1rem;
+      right: 1rem;
+      width: calc(min(90vw, 350px));
+    }
+
     .icon-delete {
       color: red;
       width: 50px;
@@ -378,7 +391,7 @@
       font-weight: normal !important;
     }
 
-    #submit {
+    .final-actions button {
       width: 5.3rem;
       margin-left: auto;
     }
@@ -390,11 +403,11 @@
       </div>
       <div class="col-6 column">
         <label :for="`${period}-pen-minor`">Minor</label>
-        <input type="number" class="form-input" min="0" max="10" :id="`${period}-pen-minor`" v-model.number="modelValue[1]" @input="$emit('update:modelValue', modelValue)">
+        <input type="number" class="form-input" min="0" max="10" :id="`${period}-pen-minor`" v-model.number="modelValue[1]" @input="$emit('update:modelValue', modelValue)" :disabled="disabled">
       </div>
       <div class="col-6 column">
         <label :for="`${period}-pen-major`">Major</label>
-        <input type="number" class="form-input" min="0" max="10" id="`${period}-pen-major`" v-model.number="modelValue[2]" @input="$emit('update:modelValue', modelValue)">
+        <input type="number" class="form-input" min="0" max="10" id="`${period}-pen-major`" v-model.number="modelValue[2]" @input="$emit('update:modelValue', modelValue)" :disabled="disabled">
       </div>
     </div>
   </template>
@@ -407,15 +420,15 @@
       </div>
       <div class="col-4 column">
         <label :for="`${period}-ash-1`">Level 1</label>
-        <input type="number" class="form-input" min="0" max="30" placeholder="Low" :id="`${period}-ash-1`" v-model.number="modelValue[0]" @input="$emit('update:modelValue', modelValue)">
+        <input type="number" class="form-input" min="0" max="30" placeholder="Low" :id="`${period}-ash-1`" v-model.number="modelValue[0]" @input="$emit('update:modelValue', modelValue)" :disabled="disabled">
       </div>
       <div class="col-4 column">
         <label :for="`${period}-ash-2`">Level 2</label>
-        <input type="number" class="form-input" min="0" max="30" placeholder="Mid" :id="`${period}-ash-2`" v-model.number="modelValue[1]" @input="$emit('update:modelValue', modelValue)">
+        <input type="number" class="form-input" min="0" max="30" placeholder="Mid" :id="`${period}-ash-2`" v-model.number="modelValue[1]" @input="$emit('update:modelValue', modelValue)" :disabled="disabled">
       </div>
       <div class="col-4 column">
         <label :for="`${period}-ash-3`">Level 3</label>
-        <input type="number" class="form-input" min="0" max="30" placeholder="High" :id="`${period}-ash-3`" v-model.number="modelValue[2]" @input="$emit('update:modelValue', modelValue)">
+        <input type="number" class="form-input" min="0" max="30" placeholder="High" :id="`${period}-ash-3`" v-model.number="modelValue[2]" @input="$emit('update:modelValue', modelValue)" :disabled="disabled">
       </div>
     </div>
   </template>
