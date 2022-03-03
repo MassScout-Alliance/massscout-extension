@@ -63,19 +63,19 @@ export class MatchEntry {
     if (this.teamNumber < 1 || Math.floor(this.teamNumber) !== this.teamNumber) {
       throw new Error(`Team number ${this.teamNumber} is invalid`);
     }
-    if (this.disconnect === DisconnectStatus.TOTAL && this.getTotalScore() > 0) {
-      throw new Error('A totally disconnected team cannot score points');
-    }
   }
 
   public validateAutonomous() {
-    if (this.auto.cyclesAttempted < stats.sum(this.auto.freightScoredPerLevel)) {
-      throw new RangeError(`${this.teamNumber} ${this.matchCode}: autonomous cyclesAttempted < num of delivered freight`);
-    }
+    // TODO??
   }
 
   static pointsPenalizedDuring(period: PeriodPerformance): number {
     return period.warningsPenalties[1] * 10 + period.warningsPenalties[2] * 20;
+  }
+
+  // TODO test
+  getTotalPenalty(): number {
+    return stats.sum([this.auto, this.teleOp, this.endgame].map(MatchEntry.pointsPenalizedDuring));
   }
 
   getAutonomousScore(): number {
@@ -166,7 +166,6 @@ export interface AutonomousPerformance extends PeriodPerformance {
   usedTse: ScoringResult;
   deliveredPreLoaded: ScoringResult;
   deliveredCarouselDuck: ScoringResult;
-  cyclesAttempted: number;
   freightScoredPerLevel: [number, number, number];
   freightScoredInStorageUnit: number;
   parked: ParkArea;

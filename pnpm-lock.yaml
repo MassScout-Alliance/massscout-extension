@@ -14,6 +14,7 @@ specifiers:
   favicons: ^7.0.0-beta.3
   jest: ^27.5.1
   jquery: ^3.6.0
+  just-clone: ^5.0.1
   mini.css: ^3.0.1
   moment: ~2.29.1
   rimraf: ^3.0.0
@@ -32,6 +33,7 @@ dependencies:
   esbuild: 0.14.23
   esbuild-copy-static-files: 0.1.0
   jquery: 3.6.0
+  just-clone: 5.0.1
   mini.css: 3.0.1
   moment: 2.29.1
   spectre.css: 0.5.9
@@ -2602,6 +2604,10 @@ packages:
     dependencies:
       minimist: 1.2.5
     dev: true
+
+  /just-clone/5.0.1:
+    resolution: {integrity: sha512-y6hFQ8X4fhJTZzdNvrE9mnCQX33uN4xV0hZ+5WNgs6yCcrRzs9ieFXuYRKznWqQ/gOSZpJu0yQ6hRHLCU6ezyw==}
+    dev: false
 
   /kleur/3.0.3:
     resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}

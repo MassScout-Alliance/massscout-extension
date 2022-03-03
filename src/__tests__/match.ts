@@ -16,7 +16,6 @@ export const kEmptyAuto: AutonomousPerformance = {
     usedTse: ScoringResult.DID_NOT_TRY,
     deliveredPreLoaded: ScoringResult.DID_NOT_TRY,
     deliveredCarouselDuck: ScoringResult.DID_NOT_TRY,
-    cyclesAttempted: 0,
     freightScoredPerLevel: [0, 0, 0],
     freightScoredInStorageUnit: 0,
     parked: ParkArea.NOT_PARKED,
@@ -45,7 +44,6 @@ test('MatchEntry constructor', () => {
         usedTse: ScoringResult.DID_NOT_TRY,
         deliveredPreLoaded: ScoringResult.SCORED,
         deliveredCarouselDuck: ScoringResult.SCORED,
-        cyclesAttempted: 4,
         freightScoredPerLevel: [0, 0, 4],
         freightScoredInStorageUnit: 2,
         parked: ParkArea.PIN_WAREHOUSE,
@@ -85,7 +83,6 @@ test('MatchEntry 8644 Robostorm F1', () => {
         usedTse: ScoringResult.SCORED,
         deliveredPreLoaded: ScoringResult.SCORED,
         deliveredCarouselDuck: ScoringResult.DID_NOT_TRY,
-        cyclesAttempted: 7,
         freightScoredPerLevel: [0, 2, 4],
         freightScoredInStorageUnit: 0,
         parked: ParkArea.CIN_WAREHOUSE,
@@ -165,13 +162,3 @@ test('MatchEntry metadata validation team number', () => {
     expect(() => new MatchEntry('Q13', 1.5, AllianceColor.RED, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT))
         .toThrowError('Team number 1.5 is invalid');
 });
-
-test('MatchEntry points scored when fully disconnected', () => {
-    expect(() => new MatchEntry('Q14', 10331, AllianceColor.BLUE, kEmptyAuto, {
-        freightScoredOnSharedHub: 2,
-        freightInStorageUnit: 0,
-        freightScoredPerLevel: [0, 0, 0],
-        warningsPenalties: [0, 0, 0]
-    }, kEmptyEndgame, DisconnectStatus.TOTAL))
-        .toThrowError('A totally disconnected team cannot score points');
-})
