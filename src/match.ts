@@ -6,24 +6,25 @@ export enum AllianceColor {
 }
 
 export enum ScoringResult {
-  SCORED, FAILED, DID_NOT_TRY
+  FAILED = -1, DID_NOT_TRY = 0, SCORED = 1
 }
 
 export enum ParkingResult {
-  COMPLETELY_IN, PARTIALLY_IN, FAILED, DID_NOT_TRY
+  COMPLETELY_IN = 2, PARTIALLY_IN = 1, FAILED = -1, DID_NOT_TRY = 0
 }
 
 export enum DisconnectStatus {
-  NO_DISCONNECT, PARTIAL, TOTAL
+  NO_DISCONNECT = 0, PARTIAL = -1, TOTAL = -2
 }
 
 export enum ParkArea {
-  CIN_STORAGE_UNIT, CIN_WAREHOUSE, PIN_STORAGE_UNIT,
-  PIN_WAREHOUSE, NOT_PARKED, ATTEMPTED_STORAGE_UNIT, ATTEMPTED_WAREHOUSE
+  NOT_PARKED,
+  ATTEMPTED_STORAGE_UNIT, PIN_STORAGE_UNIT, CIN_STORAGE_UNIT,
+  ATTEMPTED_WAREHOUSE,    PIN_WAREHOUSE,    CIN_WAREHOUSE
 }
 
 export enum HubState {
-  BALANCED, TIPPED, TIPPED_OPP
+  BALANCED = 0, TIPPED = 1, TIPPED_OPP = -1
 }
 
 export class MatchEntry {
@@ -116,6 +117,7 @@ export class MatchEntry {
     let score = 0;
 
     score += this.getAshTotalScore();
+    score += this.teleOp.freightScoredOnSharedHub * 4;
     score += this.teleOp.freightInStorageUnit * 2;
     score -= MatchEntry.pointsPenalizedDuring(this.teleOp);
 
@@ -176,6 +178,7 @@ export interface TeleOpPerformance extends PeriodPerformance {
 }
 
 export interface EndgamePerformance extends PeriodPerformance {
+  duckDeliveryAttempted: boolean;
   ducksDelivered: number;
   allianceHubTipped: HubState;
   sharedHubTipped: HubState;
