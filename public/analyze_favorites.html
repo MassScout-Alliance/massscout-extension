@@ -36,27 +36,26 @@
             <tbody>
                 <tr>
                     <td rowspan="4">Autonomous</td>
-                    <td><img src="assets/deliver_blue_small.png" alt="Stone delivery"></td>
                     <td v-for="team in favoriteTeams" v-cloak>
-                        <canvas v-bind:id="'graph-auto-delivery-' + team" width="190" height="140"></canvas>
+                        <canvas v-bind:id="'graph-auto-' + team" width="190" height="140"></canvas>
                     </td>
                 </tr>
                 <tr>
-                    <td><img src="assets/placed_blue_small.png" alt="Stone placement"></td>
+                    <td><img src="assets/2022-ash-blue.png" alt="Auto ASH placement"></td>
                     <td v-for="team in favoriteTeams" v-cloak>
-                        <canvas v-bind:id="'graph-auto-placement-' + team" width="190" height="140"></canvas>
+                        <canvas v-bind:id="'graph-auto-ash-' + team" width="190" height="140"></canvas>
                     </td>
                 </tr>
                 <tr>
-                    <td><img src="assets/foundation_blue_small.png" alt="Foundation reposition"></td>
+                    <td><img src="assets/2022-preload-scored.png" alt=""></td>
                     <td v-for="team in favoriteTeams" v-cloak>
-                        <scoring-summary period="auto" task="movedFoundation" v-bind:team="team"></scoring-summary>
+                        <scoring-summary period="auto" task="deliveredPreLoaded" v-bind:team="team"></scoring-summary>
                     </td>
                 </tr>
                 <tr>
-                    <td><img src="assets/parking_blue20.png" alt="Navigate"></td>
+                    <td><img src="assets/2022-duck.png"></td>
                     <td v-for="team in favoriteTeams" v-cloak>
-                        <scoring-summary period="auto" task="parked" v-bind:team="team"></scoring-summary>
+                        <scoring-summary period="auto" task="deliveredCarouselDuck" v-bind:team="team"></scoring-summary>
                     </td>
                 </tr>
                 <tr>
@@ -67,26 +66,22 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><img src="assets/tower_blue_small.png" alt="Stack level"></td>
+                    <td><img src="assets/2022-ash-blue.png" alt="ASH TeleOp"></td>
                     <td v-for="team in favoriteTeams" v-cloak>
-                        <canvas v-bind:id="'graph-teleop-level-' + team" width="190" height="140"></canvas>
+                        <canvas v-bind:id="'graph-teleop-freight-' + team" width="190" height="140"></canvas>
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="assets/2022-su-blue.png" alt="Shared hub TeleOp"></td>
+                    <td v-for="team in favoriteTeams" v-cloak>
+                        <canvas v-bind:id="'graph-teleop-su-' + team" width="190" height="140"></canvas>
                     </td>
                 </tr>
                 <tr>
                     <td rowspan="3">Endgame</td>
-                    <td><img src="assets/foundation_blue_small.png" alt="Pull foundation out"></td>
+                    <td><img src="assets/capstone_blue_one.png" alt="TSE capping"></td>
                     <td v-for="team in favoriteTeams" v-cloak>
-                        <scoring-summary period="endgame" task="movedFoundation" v-bind:team="team"></scoring-summary>
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="assets/capstone_blue_small.png" alt="Capstone"></td>
-                    <td v-for="team in favoriteTeams" v-cloak>
-                        <div class="row scoring-results">
-                            <span v-for="result in teamMatches(team).map(it => it.endgame.capstoneLevel)" class="capstone-result">
-                                {{ result == undefined ? '×' : result }}
-                            </span>
-                        </div>
+                        <scoring-summary period="endgame" task="tseScored" v-bind:team="team"></scoring-summary>
                     </td>
                 </tr>
                 <tr>

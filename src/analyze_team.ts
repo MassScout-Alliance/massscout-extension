@@ -1,4 +1,4 @@
-import { Chart } from 'chart.js';
+import Chart from 'chart.js/auto';
 import { getAllMatches } from './local-storage';
 import { MatchEntry, ParkArea, ParkingResult, ScoringResult } from './match';
 import $ from 'jquery';
@@ -136,7 +136,7 @@ function renderBarGraph(id: string, field: string, labels: string[], data: numbe
     return new Chart(id, {
         type: 'bar',
         data: {
-            labels: labels,
+            labels,
             datasets: [
                 {
                     label: field,
@@ -147,11 +147,9 @@ function renderBarGraph(id: string, field: string, labels: string[], data: numbe
         },
         options: {
             scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
+                y: {
+                    beginAtZero: true
+                }
             }
         }
     });
@@ -226,10 +224,10 @@ async function populateRelativeStats(team: number) {
             ]
         },
         options: {
-            scale: {
-                ticks: {
+            scales: {
+                r: {
                     beginAtZero: true,
-                    max: 1.0
+                    max: 1
                 }
             }
         }
