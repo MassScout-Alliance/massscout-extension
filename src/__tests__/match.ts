@@ -114,7 +114,7 @@ test('MatchEntry 8644 Robostorm F1', () => {
     expect(entry.alliance).toBe(AllianceColor.RED);
     expect(entry.disconnect).toBe(DisconnectStatus.NO_DISCONNECT);
     expect(entry.getAutonomousScore()).toEqual(20 + 6*6 + 10 - 30);
-    expect(entry.getTeleOpScore()).toEqual(4 * 11 + 6);
+    expect(entry.getTeleOpScore()).toEqual(4 * 11 + 6 + 2*4 + 4*6);
     expect(entry.getEndgameScore()).toEqual(20 + 6 + 15);
 });
 
