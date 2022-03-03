@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import 'mini.css';
+import 'spectre.css';
 import {
     MatchEntry,
     AllianceColor,
@@ -8,6 +8,7 @@ import {
     TeleOpPerformance,
     DisconnectStatus, ParkArea, EndgamePerformance, HubState, ParkingResult
 } from './match';
+import { createApp } from 'vue';
 import { storeMatch, getMatch, getMatchByKey } from './local-storage';
 import { stats } from './stats';
 import { searchParams } from './utils';
@@ -55,3 +56,15 @@ function setIdEnabled(id: string, enabled: boolean) {
         elem.attr('disabled', 'true');
 }
 
+const app = createApp({
+    components: {
+        penalties: {
+            props: {period: String},
+            template: '#penalties-template'
+        },
+        allianceshippinghub: {
+            props: {period: String},
+            template: '#ash-template'
+        }
+    }
+}).mount('#performance-form');
