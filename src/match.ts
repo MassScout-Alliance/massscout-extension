@@ -93,7 +93,7 @@ export class MatchEntry {
       }
     }
     score += this.auto.freightScoredInStorageUnit * 2;
-    score += totalOfArr(this.auto.freightScoredPerLevel) * 6;
+    score += stats.sum(this.auto.freightScoredPerLevel) * 6;
 
     if (this.auto.parked === ParkArea.PIN_STORAGE_UNIT) {
       score += 3;
@@ -127,9 +127,10 @@ export class MatchEntry {
 
   // ASH: alliance-specific hub
   getAshTotalScore(): number {
-    return this.teleOp.freightScoredPerLevel[0] * 2 +
-      this.teleOp.freightScoredPerLevel[1] * 4 +
-      this.teleOp.freightScoredPerLevel[2] * 6;
+    return (
+      (this.auto.freightScoredPerLevel[0] + this.teleOp.freightScoredPerLevel[0]) * 2 +
+      (this.auto.freightScoredPerLevel[1] + this.teleOp.freightScoredPerLevel[1]) * 4 +
+      (this.auto.freightScoredPerLevel[2] + this.teleOp.freightScoredPerLevel[2]) * 6);
   }
 
   getEndgameScore(): number {
@@ -191,12 +192,4 @@ export type MatchEntrySet = MatchEntry[];
 export function isValidMatchCode(matchCode: string): boolean {
   const matchResult = matchCode.match(/^([QF][1-9][0-9]*)|(SF[12]-[1-9][0-9]*)$/);
   return matchResult !== null && matchResult[0] === matchCode;
-}
-
-export function totalOfArr(arr: number[]) {
-  let ret = 0;
-  for (let i = 0; i < arr.length; i++) {
-    ret += arr[i];
-  }
-  return ret;
 }
