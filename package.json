@@ -25,6 +25,7 @@
     "jquery": "^3.6.0",
     "mini.css": "^3.0.1",
     "moment": "~2.29.1",
+    "spectre.css": "^0.5.9",
     "vue": "^3.2.31",
     "xlsx": "^0.15.5"
   },
@@ -32,6 +33,8 @@
     "@types/chrome": "0.0.179",
     "@types/jest": "^27.4.1",
     "@types/jquery": "^3.5.14",
+    "esbuild-plugin-alias": "^0.2.1",
+    "favicons": "^7.0.0-beta.3",
     "jest": "^27.5.1",
     "rimraf": "^3.0.0",
     "ts-jest": "^27.1.3",

@@ -6,291 +6,278 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Performance</title>
-  <script src="js/vendor.js"></script>
-  <link rel="stylesheet" href="css/mini-default.min.css">
+  <link rel="stylesheet" href="js/performance.css">
 </head>
 
 <body>
-  <header>
-    <div class="row" style="height: 100%;">
-      <img src="assets/massscout.png" alt="MassScout Logo" style="height: 100%;">
-      <h1 id="title">MassScout Data</h1>
-    </div>
-  </header>
-  <div class="container">
-    <div class="row responsive-label">
-      <div class="col-sm-12 col-md-6 col-lg-12">
-        <h2>Metadata</h2>
-        <div class="container responsive-label" id="metadata">
-          <div class="row">
-            <!-- <div class="col-sm-4 col-lg-2">
-                                <label for="event">Event</label>
+  <form id="performance-form">
+    <div class="form-group columns p-2" style="background-color:#eeeeee;">
+      <div class="col-12 column">
+        <div class="h5">MassScout Performance Form</div>
+      </div>
+      <div class="col-xs-12 col-sm-6 column columns">
+        <!-- <div class="columns"> -->
 
-                            </div>
-                            <div class="col-sm-8 col-lg-2">
-                            <select id="event" class="small">
-                                <option value="MAREVQ">Revere High School</option>
-                                <option value="MLEX70Q">Battle of Lexington 7.0</option>
-                                <option value="MALEX7QU">Battle of Lexington 7.1</option>
-                                <option value="MAROB51">Robostorm 5.1</option>
-                                <option value="MAROB52">Robostorm 5.2</option>
-                                <option value="MAROC21">Rocket Rumble 2.1</option>
-                                <option value="MAROC22">Rocket Rumble 2.2</option>
-                                <option value="MABOTQ">Who Let The Bots Out</option>
-                                <option value="MAREDRQ">Redhawk Rumble</option>
-                                <option value="MAWWQU">Wild West Qualifier</option>
-                            </select>
-                            </div> -->
-            <div class="col-sm-4 col-lg-1">
-              <label for="match">Match Code</label>
-            </div>
-            <div class="col-sm-8 col-lg-3">
-              <input id="match" type="text" placeholder="Q2, Q10, SF2-1">
-            </div>
-            <div class="col-sm-4 col-lg-1">
-              <label for="team">Team #</label>
-            </div>
-            <div class="col-sm-8 col-lg-3">
-              <input type="number" id="team" placeholder="12345">
-            </div>
-            <div class="col-sm-4 col-lg-1">
-              <label>Alliance</label>
-            </div>
-            <div class="col-sm-8 col-lg-3 inline-labels">
-              <label for="alliance-blue" style="color: #0066b3">Blue</label>
-              <input type="radio" name="alliance" id="alliance-blue" value="blue" checked>
-              <label for="alliance-red" style="color: #ed1c24">Red</label>
-              <input type="radio" name="alliance" id="alliance-red" value="red">
-            </div>
-            <div class="col-sm-4 col-lg-1">
-              <label>Disconnect</label>
-            </div>
-            <div class="col-sm-8 col-lg-3 inline-labels">
-              <label for="disconnect-none">None</label>
-              <input type="radio" name="disconnect" id="disconnect-none" value="none" checked>
-              <label for="disconnect-partial">Partial</label>
-              <input type="radio" name="disconnect" id="disconnect-partial" value="partial">
-              <label for="disconnect-total">Total</label>
-              <input type="radio" name="disconnect" id="disconnect-total" value="total">
-            </div>
-            <div class="col-sm-4 col-lg-1">
-              <label>Remarks</label>
-            </div>
-            <div class="col-sm-8 col-lg-3">
-              <textarea class="input" name="remarks" id="remarks" rows="1" placeholder="Additional comments..."
-                style="min-width: 100%; max-width: 100%;"></textarea>
-            </div>
-          </div>
+        <div class="col-4 col-xs-12 column">
+          <label for="match" class="form-label field-label">Match Code</label>
+        </div>
+        <div class="col-8 col-xs-12 column">
+          <input class="form-input" id="match" type="text" placeholder="Q2, Q10">
+        </div>
+        <div class="col-4 col-xs-12 column">
+          <label for="team" class="form-label field-label">Team #</label>
+        </div>
+        <div class="col-8 col-xs-12 column">
+          <input class="form-input" type="number" id="team" placeholder="11115">
         </div>
 
-
+        <!-- </div> -->
       </div>
-      <div class="col-sm-12 col-md-6 col-lg-4">
-        <h2>Autonomous</h2>
-        <div class="container" id="auto-pane">
-          <h4>Parking</h4>
-          <div class="row">
-            <div class="col-sm-4" vertical-stack>
-              <b>Parked Storage Unit?</b>
-            </div>
-            <div class="col-sm-8">
-              Completely
-              <input type="radio" name="auto-parked-storage" value="Completely">
-              Partially
-              <input type="radio" name="auto-parked-storage" value="Partially">
-              Failed
-              <input type="radio" name="auto-parked-storage" value="Failed">
-              <abbr title="Did Not Try">DNT</abbr>
-              <input type="radio" name="auto-parked-storage" value="DNT" checked>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-4" vertical-stack>
-              <b>Parked Warehouse?</b>
-            </div>
-            <div class="col-sm-8">
-              Completely
-              <input type="radio" name="auto-parked-warehouse" value="Completely">
-              Partially
-              <input type="radio" name="auto-parked-warehouse" value="Partially">
-              Failed
-              <input type="radio" name="auto-parked-warehouse" value="Failed">
-              <abbr title="Did Not Try">DNT</abbr>
-              <input type="radio" name="auto-parked-warehouse" value="DNT" checked>
-            </div>
-          </div>
-          <h4>Ducks 🦆</h4>
-          <div class="row">
-            <div class="col-sm-4" vertical-stack>
-              <b>Carousel Duck Delivered?</b>
-            </div>
-            <!-- Note: The maximum number of ducks + team shipping elements delivered needs to be added to the input-->
-            <div class="col-sm-8">
-              Yes
-              <input type="radio" name="auto-ducks" value="Delivered">
-              No
-              <input type="radio" name="auto-ducks" value="Failed">
-              <abbr title="Did Not Try">DNT</abbr>
-              <input type="radio" name="auto-ducks" value="DNT" checked>
-            </div>
-          </div>
-          <h4>Freight</h4>
-          <div class="row">
-            <div class="col-sm-4" vertical-stack>
-              <b>Element on Barcode</b>
-            </div>
-            <div class="col-sm-8">
+      <div class="col-xs-12 col-sm-6 column columns">
+        <div class="col-4 col-xs-12 column">
+          <label class="field-label form-label">Alliance</label>
+        </div>
+        <div class="col-8 col-xs-12 column">
+          <label class="form-radio form-inline">
+            <input type="radio" name="alliance" id="alliance-blue" value="blue" checked><i class="form-icon"></i>
+            <span style="color: #0066b3">Blue</span>
+          </label>
+          <label class="form-radio form-inline">
+            <input type="radio" name="alliance" id="alliance-red" value="red"><i class="form-icon"></i>
+            <span style="color: #ed1c24">Red</span>
+          </label>
+        </div>
+        <div class="col-4 col-xs-12 column">
+          <label class="field-label form-label">📶 Disconnect</label>
+        </div>
+        <div class="col-8 col-xs-12 column">
+          <label class="form-radio form-inline">
+            <input type="radio" name="disconnect" id="disconnect-none" value="none" checked><i class="form-icon"></i>
+            None
+          </label>
+          <label class="form-radio form-inline">
+            <input type="radio" name="disconnect" id="disconnect-partial" value="partial"><i class="form-icon"></i>
+            Partial
+          </label>
+          <label class="form-radio form-inline">
+            <input type="radio" name="disconnect" id="disconnect-total" value="total"><i class="form-icon"></i>
+            Total
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns m-2">
+      <div class="column col-sm-12 col-md-6 col-4">
+        <fieldset class="container columns">
+          <legend class="m-1">🤖 Autonomous</legend>
+          <div class="col-4 column">
+            <label class="field-label form-label">Barcode</label>
+            <label class="form-radio">
+              <input type="radio" name="barcode-element" id="barcode-duck" checked><i class="form-icon"></i>
               Duck
-              <input type="radio" name="barcode-element" value="Duck" checked>
-              Team Shipping Element
-              <input type="radio" name="barcode-element" value="Team-Element">
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="barcode-element" id="barcode-tse" checked><i class="form-icon"></i>
+              <abbr title="Team Shipping Element">TSE</abbr>
+            </label>
+          </div>
+          <div class="col-4 column block-group">
+            <div class="form-label field-label">
+              <img src="assets/2022-duck.png" class="field-label-icon" alt="Duck Logo">
+              Ducks
             </div>
+            <label class="form-radio">
+              <input type="radio" name="auto-duck" checked id="auto-duck-dnt">
+              <i class="form-icon"></i> <abbr title="Did Not Try">DNT</abbr>
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="auto-duck" id="auto-duck-failed">
+              <i class="form-icon"></i> Failed
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="auto-duck" id="auto-duck-scored">
+              <i class="form-icon"></i> Scored
+            </label>
           </div>
-          <div class="row">
-            <div class="col-sm-4" vertical-stack>
-              <b>Pre-loaded box on correct level?</b>
-            </div>
-            <div class="col-sm-8">
-              Correct Level
-              <input type="radio" name="pre-loaded-bonus" value="bonus">
-              Incorrect Level or Failed Delivery
-              <input type="radio" name="pre-loaded-bonus" value="no-bonus">
-              <abbr title="Did Not Try">DNT</abbr>
-              <input type="radio" name="pre-loaded-bonus" value="DNT" checked>
-            </div>
+          <div class="col-4 column block-group">
+            <label for="auto-preload" class="form-label field-label">Preloaded</label>
+            <label class="form-radio">
+              <input type="radio" name="auto-preload" checked id="auto-preload-dnt">
+              <i class="form-icon"></i> <abbr title="Did Not Try">DNT</abbr>
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="auto-preload" id="auto-preload-failed">
+              <i class="form-icon"></i> Failed
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="auto-preload" id="auto-preload-scored">
+              <i class="form-icon"></i> Scored
+            </label>
           </div>
-          <b>Total Freight Delivered (including pre-loaded box)</b>
-          <div class="row">
-            <label>Storage Unit</label>
-            <input type="number" class="auto-freight-in-storage" level="1" min="0" max="10" value="0">
-            <label>Alliance Shipping Hub</label>
-            <input type="number" class="auto-freight-on-shipping-hub" level="1" min="0" max="100" value="0">
+          <AllianceShippingHub period="auto"></AllianceShippingHub>
+          <div class="col-12 column">
+            <label for="auto-su" class="form-label field-label"><img src="assets/2022-su-blue.png"
+                class="field-label-icon" alt="Storage Unit logo"> Storage Unit</label>
+            <input type="number" class="form-input" id="auto-su" min="0" max="30" placeholder="# elements">
           </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6 col-lg-4">
-        <h2>TeleOp</h2>
-        <div class="container" id="teleop-pane">
-
-          <div class="container" id="teleop-shipping-hub">
-            <label>Freight Delivered to Storage Unit:</label>
-            <input type="number" class="teleop-storage-unit" min="0" max="30" value="0">
-          </div>
-          <h4>Freight Delivered to Alliance Shipping Hub:</h4>
-          <div class="container" id="teleop-shipping-hub">
-            <div class="row cols-sm-2">
-              <div vertical-stack>
-                <label>Level 1</label>
-                <input type="number" class="teleop-level" level="1" min="0" max="30" value="0">
+          <div class="col-12 column form-group block-group mt-1">
+            <label class="field-label">
+              <img src="assets/parking_blue20.png" alt="Parking Logo" class="field-label-icon">
+              Parking
+            </label>
+            <div class="columns">
+              <div class="col-12 column">
+                <label class="form-radio">
+                  <input type="radio" name="auto-park" id="auto-park-failed">
+                  <i class="form-icon"></i> Failed
+                </label>
               </div>
-              <div vertical-stack>
-                <label>Level 2</label>
-                <input type="number" class="teleop-level" level="2" min="0" max="30" value="0">
+              <div class="col-12 column">
+                <label class="form-radio">
+                  <input type="radio" name="auto-park" id="auto-park-su-partial">
+                  <i class="form-icon"></i> <img class="field-label-icon" alt="Storage Unit Logo"
+                    src="assets/2022-su-blue.png"> Storage Unit: Partially
+                </label>
+                <label class="form-radio">
+                  <input type="radio" name="auto-park" id="auto-park-su-complete">
+                  <i class="form-icon"></i> <img class="field-label-icon" alt="Storage Unit Logo"
+                    src="assets/2022-su-blue.png"> Storage Unit: Completely
+                </label>
               </div>
-              <div vertical-stack>
-                <label>Level 3</label>
-                <input type="number" class="teleop-level" level="3" min="0" max="30" value="0">
+              <div class="col-12 column">
+                <label class="form-radio">
+                  <input type="radio" name="auto-park" id="auto-park-warehouse-partial">
+                  <i class="form-icon"></i> <img class="field-label-icon" alt="Black block"
+                    src="assets/2022-block-black.png"> Warehouse: Partially
+                </label>
+                <label class="form-radio">
+                  <input type="radio" name="auto-park" id="auto-park-warehouse-complete">
+                  <i class="form-icon"></i> <img class="field-label-icon" alt="Black block"
+                    src="assets/2022-block-black.png"> Warehouse: Completely
+                </label>
               </div>
             </div>
           </div>
-        </div>
+          <Penalties period="auto"></Penalties>
+        </fieldset>
       </div>
-      <div class="col-sm-12 col-md-6 col-lg-4">
-        <h2>Endgame</h2>
-        <h4>Ducks 🦆</h4>
-        <div class="row">
-          <div class="col-sm-4">
-            <b>Ducks/Team Shipping Elements Delivered</b>
+      <div class="column col-sm-12 col-md-6 col-4">
+        <fieldset class="container columns">
+          <legend class="m-1">🎮 TeleOp</legend>
+          <allianceshippinghub period="teleop"></allianceshippinghub>
+          <div class="col-6 column mt-2">
+            <label for="teleop-su" class="form-label field-label"><img src="assets/2022-su-blue.png"
+                class="field-label-icon" alt="Storage Unit logo"> Storage Unit</label>
+            <input type="number" class="form-input" id="teleop-su" min="0" max="30" placeholder="# elements">
           </div>
-          <div class="col-sm-8">
-            <input type="number" class="endgame-ducks-delievered" min="0" max="11" value="0">
+          <div class="col-6 column mt-2">
+            <label for="teleop-shared" class="form-label field-label"><img src="assets/2022-shared-hub.png"
+                class="field-label-icon" alt="Shared Hub logo"> Shared Hub</label>
+            <input type="number" class="form-input" id="teleop-shared" min="0" max="30" placeholder="# elements">
           </div>
-        </div>
-        <h4>Shipping Hub Status</h4>
-        <div class="row">
-          <div class="col-sm-4">
-            <b>Alliance Hub Balanced?</b>
+          <penalties period="teleop"></penalties>
+        </fieldset>
+        <fieldset class="container columns">
+          <legend class="m-1">⌚ Endgame</legend>
+          <div class="col-lg-6 col-6 column">
+            <label for="end-ducks" class="form-label field-label"><img src="assets/2022-duck.png"
+                class="field-label-icon" alt="Duck logo"> Ducks</label>
+            <label class="form-radio">
+              <input type="radio" name="end-duck" id="end-duck-dnt">
+              <i class="form-icon"></i> <abbr title="Did Not Try">DNT</abbr>
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="end-duck" id="end-duck-attempted">
+              <i class="form-icon"></i> Scored
+            </label>
+            <input type="number" class="form-input" id="end-ducks" min="0" max="30" placeholder="# ducks">
           </div>
-          <div class="col-sm-8">
-            Balanced
-            <input type="radio" name="endgame-alliance-hub-balance" value="Balanced">
-            Unbalanced
-            <input type="radio" name="endgame-alliance-hub-balance" value="Unbalanced">
+          <div class="col-lg-6 col-6 column">
+            <label for="end-tse" class="form-label field-label">
+              <img src="assets/capstone_blue_small.png" alt="TSE logo" class="field-label-icon">
+              <abbr title="Team Shipping Element">TSE</abbr>
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="end-tse" checked id="end-tse-dnt">
+              <i class="form-icon"></i> No TSE
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="end-tse" id="end-tse-failed">
+              <i class="form-icon"></i> Failed
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="end-tse" id="end-tse-scored">
+              <i class="form-icon"></i> Scored
+            </label>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-4">
-            <b>Shared Hub Balanced?</b>
+          <div class="col-lg-6 col-6 column">
+            <label for="end-park" class="form-label field-label">
+              <img src="assets/parking_blue20.png" alt="Parking logo" class="field-label-icon">
+              Parking
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="end-park" checked id="end-park-failed">
+              <i class="form-icon"></i> Failed
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="end-park" id="end-park-partial">
+              <i class="form-icon"></i> Partially
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="end-park" id="end-park-complete">
+              <i class="form-icon"></i> Completely
+            </label>
           </div>
-          <div class="col-sm-8">
-            Toward self
-            <input type="radio" name="endgame-shared-hub-balance" value="Friendly-Alliance">
-            Balanced
-            <input type="radio" name="endgame-shared-hub-balance" value="Neutral">
-            Towards opponent
-            <input type="radio" name="endgame-shared-hub-balance" value="Opposing-Alliance">
+          <div class="col-lg-6 col-6 column">
+            <label for="end-sh" class="form-label field-label">
+              <img src="assets/2022-leaning-sh.png" alt="Leaning shared hub logo" class="field-label-icon">
+              Shared Hub Lean
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="end-sh" checked id="end-sh-blue">
+              <i class="form-icon"></i> Toward <span style="color: #0066b3">Blue</span>
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="end-sh" id="end-sh-neutral">
+              <i class="form-icon"></i> Neutral
+            </label>
+            <label class="form-radio">
+              <input type="radio" name="end-sh" id="end-sh-red">
+              <i class="form-icon"></i> Toward <span style="color: #ed1c24">Red</span>
+            </label>
           </div>
-        </div>
-        <h4>Parking</h4>
-        <div class="row">
-          <div class="col-sm-5">
-            <b>Parked in Warehouse?</b>
-          </div>
-          <div class="col-sm-7">
-            Completely
-            <input type="radio" name="endgame-parked" value="Completely">
-            Partially
-            <input type="radio" name="endgame-parked" value="Partially">
-            Failed
-            <input type="radio" name="endgame-parked" value="Failed">
-            <abbr title="Did Not Try">DNT</abbr>
-            <input type="radio" name="endgame-parked" value="DNT" checked>
-          </div>
-        </div>
-        <h4>Team Shipping Element</h4>
-        <div class="row">
-          <div class="col-sm-5">
-            <b>Shipping Element Capped?</b>
-          </div>
-          <div class="col-sm-7">
-            Succeeded
-            <input type="radio" name="endgame-cap" value="Succeeded">
-            Failed
-            <input type="radio" name="endgae-cap" value="Failed">
-            <abbr title="Did Not Try">DNT</abbr>
-            <input type="radio" name="endgame-cap" value="DNT" checked>
-          </div>
-        </div>
+          <penalties period="end"></penalties>
+        </fieldset>
       </div>
-      <div class="col-sm-12 col-md-6">
-        <h2>Scoring</h2>
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-8">Autonomous</div>
-            <div class="col-sm-4 subscore" id="auto-score">0</div>
-          </div>
-          <div class="row">
-            <div class="col-sm-8">TeleOp</div>
-            <div class="col-sm-4 subscore" id="teleop-score">0</div>
-          </div>
-          <div class="row">
-            <div class="col-sm-8">Endgame</div>
-            <div class="col-sm-4 subscore" id="endgame-score">0</div>
-          </div>
-          <div class="row">
-            <div class="col-sm-8"><b>TOTAL</b></div>
-            <div class="col-sm-4 score" id="total-score">0</div>
-          </div>
+      <div class="column col-sm-12 col-4">
+        <fieldset class="container columns">
+          <legend class="m-1">💯 Score</legend>
+          <div class="col-6 column align-right form-label">Autonomous</div>
+          <div class="col-6 column score">0</div>
+          <div class="col-6 column align-right form-label">TeleOp</div>
+          <div class="col-6 column score">0</div>
+          <div class="col-6 column align-right form-label">Endgame</div>
+          <div class="col-6 column score">0</div>
+          <div class="col-6 column align-right form-label text-error">Penalties</div>
+          <div class="col-6 column score text-error">0</div>
+          <div class="col-6 column field-label align-right form-label">Total</div>
+          <div class="col-6 column score"><b>0</b></div>
+        </fieldset>
+        <div class="form-group">
+          <label class="form-label field-label" for="remarks">Remarks</label>
+          <textarea class="form-input" id="remarks" placeholder="Additional comments..." rows="3"></textarea>
         </div>
+        <div class="col-sm" id="message"></div>
+        <div class="col-sm-3 col-md-2" vertical-stack>
+          <button class="btn btn-primary" id="submit">Submit</button>
+        </div>
+        <div class="col-sm-1"></div>
       </div>
     </div>
-  </div>
+  </form>
   <div class="row">
-    <div class="col-sm" id="message"></div>
-    <div class="col-sm-3 col-md-2" vertical-stack>
-      <button class="primary big" id="submit">Submit</button>
-    </div>
-    <div class="col-sm-1"></div>
+
   </div>
   <br>
   <code id="output"></code>
@@ -307,14 +294,21 @@
     }
 
     .subscore {
-      font-family: monospace;
-      font-size: 1.3rem;
+      font-family: "SF Mono", "Segoe UI Mono", "Roboto Mono", Consolas, Menlo, Courier, monospace;
+      font-size: 1rem;
     }
 
     .score {
-      font-family: monospace;
-      font-size: 1.6rem;
+      font-family: "SF Mono", "Segoe UI Mono", "Roboto Mono", Consolas, Menlo, Courier, monospace;
+      font-size: 1.2rem;
+    }
+
+    .field-label {
       font-weight: bold;
+    }
+
+    .field-label-icon {
+      height: 14px;
     }
 
     #metadata label {
@@ -323,36 +317,16 @@
       font-weight: bold;
     }
 
+    .block-group {
+      display: block !important;
+    }
+
     label {
       padding: 0 0;
     }
 
-    #auto-display-attempt::before {
-      content: "Attempts: ";
-    }
-
-    #auto-display-placed::before {
-      content: "Placed: ";
-    }
-
-    #auto-display-delivered .row {
-      align-items: center;
-    }
-
-    #teleop-display-alliance-deliver::before {
-      content: "Alliance delivered: ";
-    }
-
-    #teleop-display-neutral-deliver::before {
-      content: "Neutral delivered: ";
-    }
-
-    #teleop-stacked-stones input {
-      padding: 4px 4px;
-    }
-
-    .icon-delete::before {
-      content: "×";
+    .align-right {
+      text-align: right;
     }
 
     .icon-delete {
@@ -377,7 +351,48 @@
       display: inline !important;
       font-weight: normal !important;
     }
+
+    #submit {
+      width: 5.3rem;
+      margin-left: auto;
+    }
   </style>
+  <template id="penalties-template">
+    <div class="col-12 column columns text-error has-error">
+      <div class="col-12 column">
+        <label class="field-label">🚫 Penalties</label>
+      </div>
+      <div class="col-6 column">
+        <label :for="`${period}-pen-minor`">Minor</label>
+        <input type="number" class="form-input" min="0" max="10" :id="`${period}-pen-minor`">
+      </div>
+      <div class="col-6 column">
+        <label :for="`${period}-pen-major`">Major</label>
+        <input type="number" class="form-input" min="0" max="10" id="`${period}-pen-major`">
+      </div>
+    </div>
+  </template>
+  <template id="ash-template">
+    <div class="col-12 column columns">
+      <div class="col-12 column">
+        <label class="field-label">
+          <img src="assets/2022-ash-blue.png" class="field-label-icon" alt="Alliance Shipping Hub logo">
+          Alliance Shipping Hub</label>
+      </div>
+      <div class="col-4 column">
+        <label :for="`${period}-ash-1`">Level 1</label>
+        <input type="number" class="form-input" min="0" max="30" placeholder="Low" :id="`${period}-ash-1`">
+      </div>
+      <div class="col-4 column">
+        <label :for="`${period}-ash-2`">Level 2</label>
+        <input type="number" class="form-input" min="0" max="30" placeholder="Mid" :id="`${period}-ash-2`">
+      </div>
+      <div class="col-4 column">
+        <label :for="`${period}-ash-3`">Level 3</label>
+        <input type="number" class="form-input" min="0" max="30" placeholder="High" :id="`${period}-ash-3`">
+      </div>
+    </div>
+  </template>
   <script src="js/performance.js"></script>
 </body>
 
