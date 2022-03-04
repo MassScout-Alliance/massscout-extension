@@ -1,15 +1,15 @@
 import {
-    MatchEntry,
     AllianceColor,
-    ScoringResult,
-    ParkArea,
     AutonomousPerformance,
-    TeleOpPerformance,
-    EndgamePerformance,
-    isValidMatchCode,
     DisconnectStatus,
+    EndgamePerformance,
     HubState,
-    ParkingResult
+    isValidMatchCode,
+    MatchEntry,
+    ParkArea,
+    ParkingResult,
+    ScoringResult,
+    TeleOpPerformance
 } from "../match";
 
 export const kEmptyAuto: AutonomousPerformance = {
@@ -24,7 +24,7 @@ export const kEmptyAuto: AutonomousPerformance = {
 
 export const kEmptyTeleOp: TeleOpPerformance = {
     freightScoredOnSharedHub: 0,
-    freightInStorageUnit: 0,
+    freightScoredInStorageUnit: 0,
     freightScoredPerLevel: [0, 0, 0],
     warningsPenalties: [0, 0, 0]
 };
@@ -51,7 +51,7 @@ test('MatchEntry constructor', () => {
     };
     const teleop: TeleOpPerformance = {
         freightScoredOnSharedHub: 9,
-        freightInStorageUnit: 1,
+        freightScoredInStorageUnit: 1,
         freightScoredPerLevel: [0, 3, 14], //TODO: add the auto scored freight to this
         warningsPenalties: [1, 0, 0]
     };
@@ -90,7 +90,7 @@ test('MatchEntry 8644 Robostorm F1', () => {
     };
     const teleop: TeleOpPerformance = {
         freightScoredOnSharedHub: 11,
-        freightInStorageUnit: 0,
+        freightScoredInStorageUnit: 0,
         freightScoredPerLevel: [0, 0, 1], //TODO: add the auto scored freight to this
         warningsPenalties: [0, 0, 0]
     };
@@ -161,4 +161,52 @@ test('MatchEntry metadata validation team number', () => {
         .toThrowError('Invalid team number');
     expect(() => new MatchEntry('Q13', 1.5, AllianceColor.RED, kEmptyAuto, kEmptyTeleOp, kEmptyEndgame, DisconnectStatus.NO_DISCONNECT))
         .toThrowError('Team number 1.5 is invalid');
+});
+
+function makeEntry(overrides: {auto?: Partial<AutonomousPerformance>, teleOp?: Partial<TeleOpPerformance>, endgame?: Partial<EndgamePerformance>}) {
+    return new MatchEntry('Q2', 1, AllianceColor.RED,
+        {...kEmptyAuto, ...overrides.auto}, {...kEmptyTeleOp, ...overrides.teleOp},
+        {...kEmptyEndgame, ...overrides.endgame}, DisconnectStatus.NO_DISCONNECT);
+}
+
+test('Match Entry input validation', () => {
+
+    //Endgame Tests
+    expect(() => makeEntry({endgame: {duckDeliveryAttempted: true, ducksDelivered: 5}}))
+        .not.toThrowError();
+    expect(() => makeEntry({ endgame: { duckDeliveryAttempted: true, ducksDelivered: -69 }}))
+        .toThrowError('Invalid number of ducks delivered during endgame');
+    expect(() => makeEntry({endgame: {duckDeliveryAttempted: true, ducksDelivered: 69 }}))
+        .toThrowError('Invalid number of ducks delivered');
+    expect(() => makeEntry({endgame: {duckDeliveryAttempted: false, ducksDelivered: 4 }}))
+        .toThrowError('Cannot deliver ducks if not attempted during endgame');
+    expect( () => makeEntry({endgame: {warningsPenalties: [-3, 40, -2]}}))
+        .toThrowError('Invalid amount of penalties during endgame');
+
+    //Teleop Tests
+    expect(() => makeEntry({teleOp: {freightScoredOnSharedHub: -32}}))
+        .toThrowError('Invalid number of scored freight during teleop');
+    expect(() => makeEntry({teleOp: {freightScoredOnSharedHub: 500}}))
+        .toThrowError('Invalid number of scored freight during teleop');
+    expect( () => makeEntry({teleOp: {freightScoredInStorageUnit: -59}}))
+        .toThrowError('Invalid number of scored freight during teleop');
+    expect( () => makeEntry({teleOp: {freightScoredInStorageUnit: 589}}))
+        .toThrowError('Invalid number of scored freight during teleop');
+    expect( () => makeEntry({teleOp: {freightScoredPerLevel: [-54, 5002, -102983]}}))
+        .toThrowError('Invalid number of scored freight during teleop');
+    expect( () => makeEntry({teleOp: {warningsPenalties: [-43, 8009, 91233]}}))
+        .toThrowError('Invalid amount of penalties during teleop');
+
+    //Auto Tests
+    expect(() => makeEntry({auto: { freightScoredPerLevel: [2, 1, 18] }}))
+        .not.toThrowError();
+    expect(() => makeEntry({auto: { freightScoredPerLevel: [-5, 67, 420] }}))
+        .toThrowError('Invalid amount of freight on the Alliance Hub during autonomous');
+    expect(() => makeEntry({auto: {freightScoredInStorageUnit: -4}}))
+        .toThrowError('Invalid amount of freight in the Storage Unit during autonomous');
+    expect( () => makeEntry({auto: {freightScoredInStorageUnit: 79 }}))
+        .toThrowError('Invalid amount of freight in the Storage Unit during autonomous');
+    expect( () => makeEntry({auto: {warningsPenalties: [-3, 40, -3]}}))
+        .toThrowError('Invalid amount of penalties during autonomous');
+
 });

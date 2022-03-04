@@ -37,7 +37,7 @@ function getEmptyMatchEntry(): MatchEntry {
     };
     const teleOp: TeleOpPerformance = {
         freightScoredOnSharedHub: 0,
-        freightInStorageUnit: 0,
+        freightScoredInStorageUnit: 0,
         freightScoredPerLevel: [0, 0, 0] as [number, number, number],
         warningsPenalties: [0, 0, 0] as [number, number, number]
     };

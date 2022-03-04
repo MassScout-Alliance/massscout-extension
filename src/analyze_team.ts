@@ -81,7 +81,7 @@ function populateAutonomous(matches: MatchEntry[]) {
 }
 
 function populateTeleOp(matches: MatchEntry[]) {
-    const storageUnitCounts = matches.map(it => it.teleOp.freightInStorageUnit);
+    const storageUnitCounts = matches.map(it => it.teleOp.freightScoredInStorageUnit);
     const sharedHubCounts = matches.map(it => it.teleOp.freightScoredOnSharedHub);
     const [lowCounts, midCounts, highCounts] = [0, 1, 2].map(index => matches.map(it => it.teleOp.freightScoredPerLevel[index]));
     const matchCodes = matches.map(it => it.matchCode);
@@ -183,7 +183,7 @@ async function relativeStats(team: number): Promise<RelativeStatistics> {
         autoOver: comparativeRatio(it => it.getAutonomousScore()),
 
         ashScoreOver: comparativeRatio(it => it.getAshTotalScore()),
-        sharedScoreOver: comparativeRatio(it => it.teleOp.freightInStorageUnit * 2),
+        sharedScoreOver: comparativeRatio(it => it.teleOp.freightScoredInStorageUnit * 2),
         teleOpOver: comparativeRatio(it => it.getTeleOpScore()),
 
         endgameDuckOver: comparativeRatio(it => it.endgame.ducksDelivered),

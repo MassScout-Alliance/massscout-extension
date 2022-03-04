@@ -118,7 +118,7 @@ export class MatchEntry {
 
     score += this.getAshTotalScore();
     score += this.teleOp.freightScoredOnSharedHub * 4;
-    score += this.teleOp.freightInStorageUnit * 2;
+    score += this.teleOp.freightScoredInStorageUnit * 2;
     score -= MatchEntry.pointsPenalizedDuring(this.teleOp);
 
     return score;
@@ -173,7 +173,7 @@ export interface AutonomousPerformance extends PeriodPerformance {
 
 export interface TeleOpPerformance extends PeriodPerformance {
   freightScoredOnSharedHub: number;
-  freightInStorageUnit: number;
+  freightScoredInStorageUnit: number;
   freightScoredPerLevel: [number, number, number];
 }
 
