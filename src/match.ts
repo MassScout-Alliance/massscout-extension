@@ -49,8 +49,10 @@ export class MatchEntry {
     this.disconnect = disconnect;
     this.remarks = remarks;
 
-    this.validateAutonomous();
     this.validateMetadata();
+    this.validateAutonomous();
+    this.validateTeleOp();
+    this.validateEndgame();
   }
 
   public validateMetadata() {
@@ -65,12 +67,41 @@ export class MatchEntry {
     }
   }
 
-  public validateAutonomous() {
-    // TODO??
+  validateAutonomous() {
+    MatchEntry.validateRange(this.auto.freightScoredInStorageUnit, 0, 40,
+        'Invalid amount of freight in the Storage Unit during autonomous');
+    MatchEntry.validateFreightLevels(this.auto.freightScoredPerLevel,
+        'Invalid amount of freight on the Alliance Hub during autonomous');
+  }
+
+  validateTeleOp() {
+    MatchEntry.validateRange(this.teleOp.freightScoredInStorageUnit, 0, 40,
+        'Invalid amount of freight in the Storage Unit during TeleOp');
+    MatchEntry.validateFreightLevels(this.teleOp.freightScoredPerLevel,
+        'Invalid number of scored freight during teleop');
+  }
+
+  validateEndgame() {
+    if (!this.endgame.duckDeliveryAttempted && this.endgame.ducksDelivered !== 0) {
+      throw new Error('Cannot deliver ducks if not attempted');
+    }
+    MatchEntry.validateRange(this.endgame.ducksDelivered, 0, 10, 'Invalid number of ducks delivered');
   }
 
   static pointsPenalizedDuring(period: PeriodPerformance): number {
     return period.warningsPenalties[1] * 10 + period.warningsPenalties[2] * 20;
+  }
+
+  private static validateFreightLevels(levels: [number, number, number], msg: string) {
+    for (const num of levels) {
+      this.validateRange(num, 0, 40, 'Invalid amount of freight on the Alliance Hub');
+    }
+  }
+
+  private static validateRange(num: number, min: number, max: number, msg: string) {
+    if (num < min || num > max) {
+      throw new RangeError(msg);
+    }
   }
 
   // TODO test
