@@ -33,18 +33,3 @@ esbuild
     }
   })
   .catch(() => process.exit(1));
-
-favicons.then(i => i.default('public/icon.png', {
-  appName: 'MassScout Extension',
-  appShortName: 'MassScout',
-  developerName: 'MassScout Alliance',
-  icons: {
-    android: false,
-    appleIcon: false,
-    appleStartup: false,
-    favicons: true,
-    windows: false,
-    yandex: false
-  },
-  path: 'dist/'
-}).catch(console.error));

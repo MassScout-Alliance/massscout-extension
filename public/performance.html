@@ -175,7 +175,7 @@
           <div class="col-6 column mt-2">
             <label for="teleop-su" class="form-label field-label"><img src="assets/2022-su-blue.png"
                 class="field-label-icon" alt="Storage Unit logo"> Storage Unit</label>
-            <input type="number" class="form-input" id="teleop-su" min="0" max="30" placeholder="# elements" v-model="entry.teleOp.freightInStorageUnit" :disabled="submitted">
+            <input type="number" class="form-input" id="teleop-su" min="0" max="30" placeholder="# elements" v-model="entry.teleOp.freightScoredInStorageUnit" :disabled="submitted">
           </div>
           <div class="col-6 column mt-2 mb-2">
             <label for="teleop-shared" class="form-label field-label"><img src="assets/2022-shared-hub.png"
@@ -197,7 +197,7 @@
               <input type="radio" name="end-duck" id="end-duck-attempted" v-model="entry.endgame.duckDeliveryAttempted" :value="true" :disabled="submitted">
               <i class="form-icon"></i> Scored
             </label>
-            <input type="number" class="form-input" id="end-ducks" min="0" max="30" placeholder="# ducks" :disabled="!entry.endgame.duckDeliveryAttempted" v-model.number="entry.endgame.ducksDelivered" :disabled="submitted">
+            <input type="number" class="form-input" id="end-ducks" min="0" max="30" placeholder="# ducks" :disabled="!entry.endgame.duckDeliveryAttempted || submitted" v-model.number="entry.endgame.ducksDelivered">
           </div>
           <div class="col-lg-6 col-6 column">
             <label for="end-tse" class="form-label field-label">

@@ -99,7 +99,7 @@ function renderTeamGraphs(team: number, entries: MatchEntry[], maxStats: MaxStat
         }),
 
         renderBarGraph(`graph-teleop-su-${team}`, 'Storage hub', labels,
-            matches.map(it => it.teleOp.freightInStorageUnit), maxStats.maxTeleOpStorageUnit)];
+            matches.map(it => it.teleOp.freightScoredInStorageUnit), maxStats.maxTeleOpStorageUnit)];
 
 }
 
@@ -114,7 +114,7 @@ function getMaxStats(matches: MatchEntry[]): MaxStatistics {
     return {
         maxAutoFreightScored: Math.max(...matches.map(it => stats.sum(it.auto.freightScoredPerLevel))),
         maxTeleOpHub: Math.max(...matches.map(it => Math.max(it.teleOp.freightScoredOnSharedHub, stats.sum(it.teleOp.freightScoredPerLevel)))),
-        maxTeleOpStorageUnit: Math.max(...matches.map(it => it.teleOp.freightInStorageUnit))
+        maxTeleOpStorageUnit: Math.max(...matches.map(it => it.teleOp.freightScoredInStorageUnit))
     };
 }
 

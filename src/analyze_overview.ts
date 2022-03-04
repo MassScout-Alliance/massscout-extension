@@ -70,7 +70,7 @@ export function analyzeOverview(entries: MatchEntry[]): TeamOverviewInsights {
 
         teleOpAshDeliveryAvg: stats.average(entries.map(e => stats.sum(e.teleOp.freightScoredPerLevel))),
         sharedDeliveryAvg: stats.average(entries.map(e => e.teleOp.freightScoredOnSharedHub)),
-        storageUnitAvg: stats.average(entries.map(e => e.teleOp.freightInStorageUnit)),
+        storageUnitAvg: stats.average(entries.map(e => e.teleOp.freightScoredInStorageUnit)),
         teleOpTotalAvg: stats.average(entries.map(entry => entry.getTeleOpScore())),
         teleOpPenaltiesAvg: stats.average(entries.map(e => MatchEntry.pointsPenalizedDuring(e.teleOp))),
 
