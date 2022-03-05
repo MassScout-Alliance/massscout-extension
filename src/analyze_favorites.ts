@@ -5,6 +5,14 @@ import { ScoringResult, MatchEntry } from './match';
 import { getFavoriteTeams } from './favorites';
 import { stats } from './stats';
 
+/*
+
+Quantitative:
+Desired capability (how well do they do shared hub)
+Power and consistency in each capability
+
+*/
+
 function renderBarGraph(id: string, field: string, labels: string[], data: number[], maxY?: number) {
     return new Chart(id, {
         type: 'bar',
