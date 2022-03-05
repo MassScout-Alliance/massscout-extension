@@ -1,6 +1,6 @@
 {
   "name": "massscout-extension",
-  "version": "2.0.0-pre",
+  "version": "2.1.0",
   "description": "Browser extension for the MassScout Alliance, a group of FIRST Tech Challenge teams in Massachusetts that shares performance scouting data and insights in competitions",
   "main": "index.js",
   "scripts": {
