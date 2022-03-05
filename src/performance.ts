@@ -8,10 +8,9 @@ import {
     TeleOpPerformance,
     DisconnectStatus, ParkArea, EndgamePerformance, HubState, ParkingResult
 } from './match';
-import { createApp, onMounted, reactive, Ref, ref } from 'vue';
+import { createApp, onMounted, Ref, ref } from 'vue';
 import clone from 'just-clone';
-import { storeMatch, getMatch, getMatchByKey, entryKey } from './local-storage';
-import { stats } from './stats';
+import { storeMatch, getMatchByKey, entryKey } from './local-storage';
 import { searchParams } from './utils';
 
 
@@ -109,20 +108,15 @@ const app = createApp({
 
         async function trySubmit() {
             if (submitted.value) return;
-            console.debug('1', {submitted});
             const error = validate();
-            console.debug('2', {error});
             if (error !== undefined) {
                 message.value = ['error', error];
                 return;
             }
             try {
-                console.debug('3', {error});
                 await storeMatch(clone(entry.value));
-                console.debug('4', {entry});
                 message.value = ['success', 'Successfully stored match ' + entryKey(entry.value)];
                 submitted.value = true;
-                console.debug('5', [message.value, submitted.value]);
             } catch (e: any) {
                 message.value = ['error', (e instanceof Error) ? e.message : e.toString()];
             }

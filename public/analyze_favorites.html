@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <title>Analyze Favorite Teams</title>
     <!-- <link rel="stylesheet" href="css/mini-default.min.css"> -->
 </head>
@@ -11,20 +12,26 @@
     <div id="app">
         <h2 v-if="false"><i>Loading...</i></h2>
         <div>
-            <label for="sorter">Sort by:</label>
+            <label for="sorter">Sort by (in increasing order):</label>
             <select name="sorter" id="sorter" @change="resort(sortingMethod)" v-model="sortingMethod">
                 <option value="natural">Order of entry</option>
                 <option value="number">Team number</option>
+                <option value="auto-duck">Auto. duck reliability</option>
+                <option value="auto-preload">Auto. preloaded bonus reliability</option>
                 <option value="auto">Avg. autonomous score</option>
-                <option value="delivery">Avg. delivery</option>
-                <option value="stack">Avg. stack level</option>
+                <option value="ash">Avg. alliance shipping hub score</option>
+                <option value="shared">Avg. shared hub score</option>
                 <option value="teleop">Avg. TeleOp score</option>
+                <option value="end-duck">Avg. endgame ducks</option>
+                <option value="end-cap">Endgame TSE capping reliability</option>
                 <option value="endgame">Avg. endgame score</option>
                 <option value="total">Avg. total score</option>
+                <option value="penalties">Avg. penalties</option>
             </select>
             <br>
             <br>
         </div>
+        <canvas id="graph-boxplot" width="600" height="300"></canvas>
         <table>
             <thead>
                 <tr>
@@ -36,9 +43,6 @@
             <tbody>
                 <tr>
                     <td rowspan="4">Autonomous</td>
-                    <td v-for="team in favoriteTeams" v-cloak>
-                        <canvas v-bind:id="'graph-auto-' + team" width="190" height="140"></canvas>
-                    </td>
                 </tr>
                 <tr>
                     <td><img src="assets/2022-ash-blue.png" alt="Auto ASH placement"></td>
@@ -60,12 +64,6 @@
                 </tr>
                 <tr>
                     <td rowspan="2">TeleOp</td>
-                    <td><img src="assets/deliver_neutral.png" alt="Deliveries"></td>
-                    <td v-for="team in favoriteTeams" v-cloak>
-                        <canvas v-bind:id="'graph-teleop-delivery-' + team" width="190" height="140"></canvas>
-                    </td>
-                </tr>
-                <tr>
                     <td><img src="assets/2022-ash-blue.png" alt="ASH TeleOp"></td>
                     <td v-for="team in favoriteTeams" v-cloak>
                         <canvas v-bind:id="'graph-teleop-freight-' + team" width="190" height="140"></canvas>
@@ -82,6 +80,12 @@
                     <td><img src="assets/capstone_blue_one.png" alt="TSE capping"></td>
                     <td v-for="team in favoriteTeams" v-cloak>
                         <scoring-summary period="endgame" task="tseScored" v-bind:team="team"></scoring-summary>
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="assets/2022-duck.png" alt="Duck deliveries"></td>
+                    <td v-for="team in favoriteTeams" v-cloak>
+                        <canvas v-bind:id="'graph-endgame-duck-' + team" width="190" height="140"></canvas>
                     </td>
                 </tr>
                 <tr>
