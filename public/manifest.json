@@ -3,7 +3,7 @@
 
   "name": "MassScout",
   "description": "Scouting data entry and team analysis application for the MassScout Alliance",
-  "version": "2.0.1",
+  "version": "2.1.0",
 
   "options_ui": {
     "page": "options.html",

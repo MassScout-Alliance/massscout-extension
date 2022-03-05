@@ -15,6 +15,7 @@
     "url": "https://github.com/MassScout-Alliance/massscout-extension"
   },
   "dependencies": {
+    "@sgratzl/chartjs-chart-boxplot": "^3.7.1",
     "@types/chart.js": "^2.9.12",
     "@vue/compiler-sfc": "^3.2.31",
     "ag-grid-community": "^27.0.1",
