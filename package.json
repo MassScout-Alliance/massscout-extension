@@ -25,7 +25,7 @@
     "jquery": "^3.6.0",
     "just-clone": "^5.0.1",
     "mini.css": "^3.0.1",
-    "moment": "~2.29.1",
+    "moment": "~2.29.4",
     "spectre.css": "^0.5.9",
     "vue": "^3.2.31"
   },
